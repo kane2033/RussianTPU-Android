@@ -11,6 +11,8 @@ import java.util.List;
 
 import com.example.russiantpu.utility.LinkItem;
 
+import org.jetbrains.annotations.NotNull;
+
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
     private LayoutInflater inflater;
@@ -31,8 +33,8 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(DataAdapter.ViewHolder holder, int position) {
         LinkItem item = items.get(position);
-        String text = item.getName() + "(id = )" + item.getId();
-        holder.nameView.setText(text);
+        String text = item.getName() + "; id = " + item.getId();
+        holder.nameText.setText(text);
         //holder.companyView.setText(item.getCompany());
     }
 
@@ -43,11 +45,11 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
     //класс, хранящий элементы управления
     public class ViewHolder extends RecyclerView.ViewHolder {
-        final TextView nameView;
+        final TextView nameText;
         final Button button;
         ViewHolder(View view){
             super(view);
-            nameView = view.findViewById(R.id.name);
+            nameText = view.findViewById(R.id.name);
             button = view.findViewById(R.id.link_button);
             //companyView = (TextView) view.findViewById(R.id.company);
         }

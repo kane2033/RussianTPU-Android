@@ -42,10 +42,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     //создание фрагмента LinksFragment с передачей атрибутов
     public LinksFragment newLinksFragmentInstance(int id) {
-        /*
-        тут должен быть get запрос на получение содержимого выбранного пункта,
-        которое будет передано в фрагмент
-         */
         LinksFragment fragment = new LinksFragment();
         Bundle args = new Bundle();
 
