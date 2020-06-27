@@ -1,4 +1,4 @@
-package com.example.russiantpu;
+package com.example.russiantpu.dataAdapters;
 
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
@@ -9,10 +9,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import java.util.List;
 
-import com.example.russiantpu.utility.LinkItem;
+import com.example.russiantpu.R;
+import com.example.russiantpu.items.LinkItem;
 
-import org.jetbrains.annotations.NotNull;
-
+//DataAdapter для списка ссылок
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
     private LayoutInflater inflater;
@@ -22,6 +22,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         this.items = items;
         this.inflater = LayoutInflater.from(context);
     }
+
     //создание объекта ViewHolder, хранящего данные по одному пункту LinkItem
     @Override
     public DataAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

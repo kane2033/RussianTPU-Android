@@ -1,4 +1,6 @@
-package com.example.russiantpu.utility;
+package com.example.russiantpu.items;
+
+import com.example.russiantpu.enums.ContentType;
 
 //класс отображает один пункт в меню ссылок (кнопок)
 public class LinkItem {
@@ -9,7 +11,7 @@ public class LinkItem {
     private int id;
     //по этой переменной решается,
     // какой фрагмент запустится при выборе элемента
-    private boolean isLink;
+    private ContentType type;
 
     public String getName() {
         return name;
@@ -19,6 +21,13 @@ public class LinkItem {
         this.name = name;
     }
 
+    public ContentType getType() {
+        return type;
+    }
+
+    public void setType(ContentType type) {
+        this.type = type;
+    }
 
     public int getId() {
         return id;
@@ -28,17 +37,9 @@ public class LinkItem {
         this.id = id;
     }
 
-    public boolean isLink() {
-        return isLink;
-    }
-
-    public void setLink(boolean link) {
-        isLink = link;
-    }
-
-    public LinkItem(String name, int id, boolean isLink) {
+    public LinkItem(String name, int id, ContentType type) {
         this.name = name;
         this.id = id;
-        this.isLink = isLink;
+        this.type = type;
     }
 }

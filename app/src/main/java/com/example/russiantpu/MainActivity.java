@@ -6,14 +6,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.russiantpu.enums.ContentType;
 import com.example.russiantpu.fragments.*;
-import com.example.russiantpu.utility.DrawerItem;
+import com.example.russiantpu.items.DrawerItem;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -23,36 +25,44 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private DrawerLayout drawer;
 
-    //private List<String> menus = new ArrayList<>();
-
-    private List<DrawerItem> drawerItems = new ArrayList<>();
-
-    private FragmentManager fragmentManager;
+    private List<DrawerItem> drawerItems;
 
     private List<DrawerItem> getDrawerItems() {
         /* TODO: GET запрос на сервис для получения списка пунктов из выдвигающегося меню
         *   (1 уровень) */
         List<DrawerItem> items = new ArrayList<>();
-        items.add(new DrawerItem(1, "Учёба"));
-        items.add(new DrawerItem(2, "Общежитие"));
-        items.add(new DrawerItem(3, "Правовая поддержка"));
-        items.add(new DrawerItem(4, "Контакты с ТПУ"));
+        items.add(new DrawerItem(1, "Учёба", ContentType.LINKS_LIST));
+        items.add(new DrawerItem(2, "Общежитие", ContentType.LINKS_LIST));
+        items.add(new DrawerItem(3, "Правовая поддержка", ContentType.LINKS_LIST));
+        items.add(new DrawerItem(4, "Контакты с ТПУ", ContentType.LINKS_LIST));
         return items;
     }
 
-    //создание фрагмента LinksFragment с передачей атрибутов
-    public LinksFragment newLinksFragmentInstance(int id) {
-        LinksFragment fragment = new LinksFragment();
+    private void goToFragment(ContentType type, int id) {
+        Fragment fragment;
         Bundle args = new Bundle();
+        args.putInt("id", id); //id меню 1 уровня
+        switch (type) {
+            case LINKS_LIST: //список ссылок на следующие пункты
+                fragment = new LinksFragment();
+                fragment.setArguments(args);
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        fragment).commit();
+                break;
+            case FEED_LIST: //список статей
+                fragment = new FeedFragment();
+                fragment.setArguments(args);
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        fragment).commit();
+                break;
+            case LINK: //ссылка на сайт
 
-        args.putInt("id", id);
-        //args.putString("linksMessage", message);
+                break;
+            case ARTICLE: //статья
 
-        fragment.setArguments(args);
-        return fragment;
+                break;
+        }
     }
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,12 +83,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         for (DrawerItem item: drawerItems) {
             menu.add(1, item.getId(), 0, item.getName());
         }
-        fragmentManager = getSupportFragmentManager();
+        //FragmentManager fragmentManager = getSupportFragmentManager();
 
         toggle.syncState();
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    newLinksFragmentInstance(drawerItems.get(0).getId())).commit();
+            DrawerItem initialItem = drawerItems.get(0);
+            goToFragment(initialItem.getType(), initialItem.getId());
             //navigationView.setCheckedItem(R.id.nav_links);
         }
     }
@@ -86,16 +96,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
+        DrawerItem selectedItem = drawerItems.get(itemId);
+        goToFragment(selectedItem.getType(), itemId);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                newLinksFragmentInstance(itemId)).commit();
+        /*getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                newFragmentInstance(itemId)).commit();
         //int itemGroup = item.getGroupId();
-/*        if (itemId == R.id.nav_links) {
+        if (itemId == R.id.nav_links) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new LinksFragment()).commit();
-        }*/
+        }
 
-/*        switch (itemId) {
+        switch (itemId) {
             case 1:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new LinksFragment()).commit();
@@ -104,9 +116,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new FeedFragment()).commit();
                 break;
-        }*/
+        }
 
-/*        switch (item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.nav_home:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new HomeFragment()).commit();
