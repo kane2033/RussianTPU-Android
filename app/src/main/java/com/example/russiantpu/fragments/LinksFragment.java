@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.russiantpu.dataAdapters.DataAdapter;
+import com.example.russiantpu.dataAdapters.LinksDataAdapter;
 import com.example.russiantpu.R;
 import com.example.russiantpu.enums.ContentType;
 import com.example.russiantpu.items.LinkItem;
@@ -31,6 +31,8 @@ import okhttp3.Response;
 //фрагмент, отображающий список статей (новостей)
 public class LinksFragment extends Fragment {
 
+    private List<LinkItem> items;
+
     private List<LinkItem> getItemsById(int id) {
         /*
         тут должен быть get запрос на получение содержимого выбранного пункта,
@@ -38,14 +40,14 @@ public class LinksFragment extends Fragment {
         */
         List<LinkItem> itemsById = new ArrayList<>();
         switch (id) {
-            case 1:
-                itemsById.add(new LinkItem("Новости", 1, ContentType.FEED_LIST));
-                itemsById.add(new LinkItem("Расписание", 2, ContentType.LINK));
-                itemsById.add(new LinkItem("Личный кабинет", 3, ContentType.LINK));
+            case 0:
+                itemsById.add(new LinkItem("Новости", 0, ContentType.FEED_LIST));
+                itemsById.add(new LinkItem("Расписание", 1, ContentType.LINK));
+                itemsById.add(new LinkItem("Личный кабинет", 2, ContentType.LINK));
                 break;
-            case 2:
-                itemsById.add(new LinkItem("Новости", 4, ContentType.FEED_LIST));
-                itemsById.add(new LinkItem("Советы", 5, ContentType.FEED_LIST));
+            case 1:
+                itemsById.add(new LinkItem("Новости", 3, ContentType.FEED_LIST));
+                itemsById.add(new LinkItem("Советы", 4, ContentType.FEED_LIST));
                 break;
         }
         return itemsById;
@@ -82,14 +84,30 @@ public class LinksFragment extends Fragment {
                 }
             }
         });
-        //вставка полученного результата из запроса
 
-        int selectedItemId = getArguments().getInt("id", 1);
-        List<LinkItem> items = getItemsById(selectedItemId);
+        int selectedItemId = getArguments().getInt("id", 0);
+        items = getItemsById(selectedItemId);
         RecyclerView recyclerView = layoutInflater.findViewById(R.id.list); //список
 
         //создаем адаптер
-        DataAdapter adapter = new DataAdapter(this.getContext(), items);
+        LinksDataAdapter adapter = new LinksDataAdapter(this.getContext(), items);
+        //установка
+        adapter.setOnItemClickListener(new LinksDataAdapter.ClickListener() {
+            @Override
+            public void onItemClick(int position, View v) {
+                Bundle args = new Bundle();
+                args.putInt("id", items.get(position).getId());
+                FeedFragment fragment = new FeedFragment();
+                fragment.setArguments(args);
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        fragment).commit();
+            }
+
+            @Override
+            public void onItemLongClick(int position, View v) {
+
+            }
+        });
         //устанавливаем для списка адаптер
         recyclerView.setAdapter(adapter);
         return layoutInflater;

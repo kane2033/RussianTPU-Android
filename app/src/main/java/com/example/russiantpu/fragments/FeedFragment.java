@@ -11,8 +11,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.russiantpu.dataAdapters.DataAdapter;
+import com.example.russiantpu.dataAdapters.FeedDataAdapter;
+import com.example.russiantpu.dataAdapters.LinksDataAdapter;
 import com.example.russiantpu.R;
+import com.example.russiantpu.enums.ContentType;
+import com.example.russiantpu.items.FeedItem;
+import com.example.russiantpu.items.LinkItem;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -29,21 +33,23 @@ import okhttp3.Response;
 //фрагмент, отображающий список статей (новостей)
 public class FeedFragment extends Fragment {
 
-   /* private List<FeedItem> getItemsById(int id) {
-        *//*
-        тут должен быть get запрос на получение содержимого выбранного пункта,
-        которое будет передано в фрагмент
-        *//*
+    private List<FeedItem> getItemsById(int id) {
+
+        /*тут должен быть get запрос на получение содержимого выбранного пункта,
+        которое будет передано в фрагмент*/
+
         List<FeedItem> itemsById = new ArrayList<>();
         switch (id) {
-            case 1:
-                itemsById.add(new FeedItem("Новости", 1, false));
-                itemsById.add(new FeedItem("Расписание", 2, true));
-                itemsById.add(new FeedItem("Личный кабинет", 3, true));
+            case 0:
+                itemsById.add(new FeedItem(0, "Заголовок статьи 1", null, "Первые ~50 слов", "22.02.2020"));
+                itemsById.add(new FeedItem(1, "Заголовок статьи 2", null, "Первые ~50 слов", "20.02.2020"));
+                itemsById.add(new FeedItem(2, "Заголовок статьи 3", null, "Первые ~50 слов", "18.02.2020"));
+                itemsById.add(new FeedItem(3, "Заголовок статьи 4", null, "Первые ~50 слов", "05.02.2020"));
                 break;
-            case 2:
-                itemsById.add(new FeedItem("Новости", 4, false));
-                itemsById.add(new FeedItem("Советы", 5, false));
+            case 3:
+                itemsById.add(new FeedItem(4, "Заголовок статьи 5", null, "Первые ~50 слов", "21.02.2020"));
+                itemsById.add(new FeedItem(5, "Заголовок статьи 6", null, "Первые ~50 слов", "19.02.2020"));
+                itemsById.add(new FeedItem(6, "Заголовок статьи 7", null, "Первые ~50 слов", "01.02.2020"));
                 break;
         }
         return itemsById;
@@ -53,8 +59,8 @@ public class FeedFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         RelativeLayout layoutInflater = (RelativeLayout)inflater.inflate(R.layout.fragment_feed, container, false);
-        final TextView textView = layoutInflater.findViewById(R.id.);
-        //HTTP запрос (пока тестовый)
+        final TextView textView = layoutInflater.findViewById(R.id.nav_feed_text);
+        /*//HTTP запрос (пока тестовый)
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url("https://reqres.in/api/users/2")
@@ -79,18 +85,17 @@ public class FeedFragment extends Fragment {
                     });
                 }
             }
-        });
-        //вставка полученного результата из запроса
+        });*/
 
         int selectedItemId = getArguments().getInt("id", 1);
         List<FeedItem> items = getItemsById(selectedItemId);
         RecyclerView recyclerView = layoutInflater.findViewById(R.id.list); //список
 
         //создаем адаптер
-        DataAdapter adapter = new DataAdapter(this.getContext(), items);
+        FeedDataAdapter adapter = new FeedDataAdapter(this.getContext(), items);
         //устанавливаем для списка адаптер
         recyclerView.setAdapter(adapter);
         return layoutInflater;
-    }*/
+    }
 
 }

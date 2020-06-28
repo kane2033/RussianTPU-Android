@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import com.example.russiantpu.enums.ContentType;
 import com.example.russiantpu.fragments.*;
 import com.example.russiantpu.items.DrawerItem;
+import com.example.russiantpu.utility.FragmentReplacer;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -24,17 +25,17 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawer;
-
     private List<DrawerItem> drawerItems;
+    private FragmentReplacer fragmentReplacer;
 
     private List<DrawerItem> getDrawerItems() {
         /* TODO: GET запрос на сервис для получения списка пунктов из выдвигающегося меню
         *   (1 уровень) */
         List<DrawerItem> items = new ArrayList<>();
-        items.add(new DrawerItem(1, "Учёба", ContentType.LINKS_LIST));
-        items.add(new DrawerItem(2, "Общежитие", ContentType.LINKS_LIST));
-        items.add(new DrawerItem(3, "Правовая поддержка", ContentType.LINKS_LIST));
-        items.add(new DrawerItem(4, "Контакты с ТПУ", ContentType.LINKS_LIST));
+        items.add(new DrawerItem(0, "Учёба", ContentType.LINKS_LIST));
+        items.add(new DrawerItem(1, "Общежитие", ContentType.LINKS_LIST));
+        items.add(new DrawerItem(2, "Правовая поддержка", ContentType.LINKS_LIST));
+        items.add(new DrawerItem(3, "Контакты с ТПУ", ContentType.LINKS_LIST));
         return items;
     }
 
