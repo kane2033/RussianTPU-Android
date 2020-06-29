@@ -15,6 +15,7 @@ import com.example.russiantpu.dataAdapters.LinksDataAdapter;
 import com.example.russiantpu.R;
 import com.example.russiantpu.enums.ContentType;
 import com.example.russiantpu.items.LinkItem;
+import com.example.russiantpu.utility.FragmentReplacer;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -32,6 +33,7 @@ import okhttp3.Response;
 public class LinksFragment extends Fragment {
 
     private List<LinkItem> items;
+    private FragmentReplacer fragmentReplacer;
 
     private List<LinkItem> getItemsById(int id) {
         /*
@@ -85,27 +87,25 @@ public class LinksFragment extends Fragment {
             }
         });
 
+        fragmentReplacer = new FragmentReplacer(getFragmentManager());
+
         int selectedItemId = getArguments().getInt("id", 0);
         items = getItemsById(selectedItemId);
         RecyclerView recyclerView = layoutInflater.findViewById(R.id.list); //список
 
         //создаем адаптер
         LinksDataAdapter adapter = new LinksDataAdapter(this.getContext(), items);
-        //установка
+        //установка действия при клике
         adapter.setOnItemClickListener(new LinksDataAdapter.ClickListener() {
             @Override
             public void onItemClick(int position, View v) {
-                Bundle args = new Bundle();
-                args.putInt("id", items.get(position).getId());
-                FeedFragment fragment = new FeedFragment();
-                fragment.setArguments(args);
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        fragment).commit();
+                LinkItem clickedItem = items.get(position);
+                fragmentReplacer.goToFragment(clickedItem.getType(), clickedItem.getId());
             }
 
+            //пока не используется, оставлен на будущее
             @Override
             public void onItemLongClick(int position, View v) {
-
             }
         });
         //устанавливаем для списка адаптер

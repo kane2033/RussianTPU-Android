@@ -84,12 +84,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         for (DrawerItem item: drawerItems) {
             menu.add(1, item.getId(), 0, item.getName());
         }
-        //FragmentManager fragmentManager = getSupportFragmentManager();
+
+        //передаем ссылку fragmentManager в класс, осуществляющий переход между фрагментами
+        fragmentReplacer = new FragmentReplacer(getSupportFragmentManager());
 
         toggle.syncState();
         if (savedInstanceState == null) {
             DrawerItem initialItem = drawerItems.get(0);
-            goToFragment(initialItem.getType(), initialItem.getId());
+            fragmentReplacer.goToFragment(initialItem.getType(), initialItem.getId());
             //navigationView.setCheckedItem(R.id.nav_links);
         }
     }
@@ -98,48 +100,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
         DrawerItem selectedItem = drawerItems.get(itemId);
-        goToFragment(selectedItem.getType(), itemId);
-
-        /*getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                newFragmentInstance(itemId)).commit();
-        //int itemGroup = item.getGroupId();
-        if (itemId == R.id.nav_links) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new LinksFragment()).commit();
-        }
-
-        switch (itemId) {
-            case 1:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new LinksFragment()).commit();
-                break;
-            case 2:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new FeedFragment()).commit();
-                break;
-        }
-
-        switch (item.getItemId()) {
-            case R.id.nav_home:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new HomeFragment()).commit();
-                break;
-
-                case R.id.nav_chat:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new ChatFragment()).commit();
-                break;
-            case R.id.nav_profile:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new ProfileFragment()).commit();
-                break;
-            case R.id.nav_share:
-                Toast.makeText(this, "Share", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.nav_send:
-                Toast.makeText(this, "Send", Toast.LENGTH_SHORT).show();
-                break;
-        }*/
+        fragmentReplacer.goToFragment(selectedItem.getType(), itemId);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
