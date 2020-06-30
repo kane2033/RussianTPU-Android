@@ -15,6 +15,8 @@ public class FragmentReplacer {
 
     private final FragmentManager fragmentManager;
 
+    private final String fragmentTag = "PREV_FRAGMENT";
+
     public FragmentReplacer(FragmentManager fragmentManager) {
         this.fragmentManager = fragmentManager;
     }
@@ -26,15 +28,11 @@ public class FragmentReplacer {
         switch (type) {
             case LINKS_LIST: //список ссылок на следующие пункты
                 fragment = new LinksFragment();
-                fragment.setArguments(args);
-                fragmentManager.beginTransaction().replace(R.id.fragment_container,
-                        fragment).commit();
+                replaceFragment(fragment, fragmentManager, args);
                 break;
             case FEED_LIST: //список статей
                 fragment = new FeedFragment();
-                fragment.setArguments(args);
-                fragmentManager.beginTransaction().replace(R.id.fragment_container,
-                        fragment).commit();
+                replaceFragment(fragment, fragmentManager, args);
                 break;
             case LINK: //ссылка на сайт
 
@@ -43,5 +41,11 @@ public class FragmentReplacer {
 
                 break;
         }
+    }
+
+    private void replaceFragment(Fragment fragment, FragmentManager fragmentManager, Bundle args) {
+        fragment.setArguments(args);
+        fragmentManager.beginTransaction().replace(R.id.fragment_container,
+                fragment).addToBackStack(fragmentTag).commit();
     }
 }
