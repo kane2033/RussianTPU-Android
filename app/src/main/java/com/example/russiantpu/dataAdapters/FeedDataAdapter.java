@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.russiantpu.R;
 import com.example.russiantpu.items.FeedItem;
-import com.example.russiantpu.items.LinkItem;
 
 import java.util.List;
 
@@ -21,6 +20,7 @@ public class FeedDataAdapter extends RecyclerView.Adapter<FeedDataAdapter.ViewHo
 
     private LayoutInflater inflater;
     private List<FeedItem> items;
+    private static ClickListener clickListener;
 
     public FeedDataAdapter(Context context, List<FeedItem> items) {
         this.items = items;
@@ -39,8 +39,7 @@ public class FeedDataAdapter extends RecyclerView.Adapter<FeedDataAdapter.ViewHo
     public void onBindViewHolder(FeedDataAdapter.ViewHolder holder, int position) {
         FeedItem item = items.get(position);
         holder.header.setText(item.getHeader());
-        holder.image.setImageDrawable(item.getImage());
-        holder.previewText.setText(item.getPreviewText());
+        holder.previewText.loadData(item.getPreviewText(), "text/html; charset=utf-8", "UTF-8");
         holder.date.setText(item.getDate());
     }
 
@@ -50,17 +49,35 @@ public class FeedDataAdapter extends RecyclerView.Adapter<FeedDataAdapter.ViewHo
     }
 
     //класс, хранящий элементы управления
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         final TextView header;
         final ImageView image;
-        final TextView previewText;
+        final WebView previewText;
         final TextView date;
+
         ViewHolder(View view){
             super(view);
+            view.setOnClickListener(this);
+            view.setOnLongClickListener(this);
             header = view.findViewById(R.id.header);
             image = view.findViewById(R.id.image);
             previewText = view.findViewById(R.id.previewText);
             date = view.findViewById(R.id.date);
         }
+
+        @Override
+        public void onClick(View v) {
+            clickListener.onItemClick(getAdapterPosition(), v);
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            clickListener.onItemLongClick(getAdapterPosition(), v);
+            return false;
+        }
+    }
+
+    public void setOnItemClickListener(ClickListener clickListener) {
+        FeedDataAdapter.clickListener = clickListener;
     }
 }

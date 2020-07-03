@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -11,10 +12,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.russiantpu.dataAdapters.ClickListener;
-import com.example.russiantpu.dataAdapters.LinksDataAdapter;
 import com.example.russiantpu.R;
+import com.example.russiantpu.dataAdapters.LinksDataAdapter;
 import com.example.russiantpu.enums.ContentType;
+import com.example.russiantpu.items.Article;
 import com.example.russiantpu.items.LinkItem;
 import com.example.russiantpu.utility.FragmentReplacer;
 
@@ -31,37 +32,59 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 //фрагмент, отображающий список статей (новостей)
-public class LinksFragment extends Fragment {
+public class ArticleFragment extends Fragment {
 
-    private List<LinkItem> items;
-    private FragmentReplacer fragmentReplacer;
+    private Article article;
 
-    private List<LinkItem> getItemsById(int id) {
+    private Article getArticleFromPreview(int id, String header, String date) {
         /*
         тут должен быть get запрос на получение содержимого выбранного пункта,
         которое будет передано в фрагмент
         */
-        List<LinkItem> itemsById = new ArrayList<>();
+        Article articleFromPreview = new Article();
         switch (id) {
             case 0:
-                itemsById.add(new LinkItem("Новости", 0, ContentType.FEED_LIST));
-                itemsById.add(new LinkItem("Расписание", 1, ContentType.LINK));
-                itemsById.add(new LinkItem("Личный кабинет", 2, ContentType.LINK));
+                articleFromPreview = new Article(id, header, "<h1>Статья 1</h1> полный текст", date);
                 break;
             case 1:
-                itemsById.add(new LinkItem("Новости", 3, ContentType.FEED_LIST));
-                itemsById.add(new LinkItem("Советы", 4, ContentType.FEED_LIST));
+                articleFromPreview = new Article(id, header, "<h1>Статья 2</h1> полный текст", date);
+                break;
+            case 2:
+                articleFromPreview = new Article(id, header, "<h1>Статья 31</h1> полный текст", date);
+                break;
+            case 3:
+                articleFromPreview = new Article(id, header, "<h1>Статья 4</h1> полный текст", date);
+                break;
+            case 4:
+                articleFromPreview = new Article(id, header, "<h1>Статья 5</h1> полный текст", date);
+                break;
+            case 5:
+                articleFromPreview = new Article(id, header, "<h1>Статья 6</h1> полный текст", date);
+                break;
+            case 6:
+                articleFromPreview = new Article(id, header, "<h1>Статья 7</h1> полный текст", date);
                 break;
         }
-        return itemsById;
+        return articleFromPreview;
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        RelativeLayout layoutInflater = (RelativeLayout)inflater.inflate(R.layout.fragment_links, container, false);
-        final TextView textView = layoutInflater.findViewById(R.id.nav_links_text);
-        //HTTP запрос (пока тестовый)
+        //формируем класс статьи из превью
+        article = getArticleFromPreview(getArguments().getInt("id"),
+                getArguments().getString("header"),
+                getArguments().getString("date"));
+
+        //отображаем в фрагменте
+        RelativeLayout layoutInflater = (RelativeLayout)inflater.inflate(R.layout.fragment_article, container, false);
+        final WebView webView = layoutInflater.findViewById(R.id.fullArticle);
+        //отображение в формате html
+        //webView.getSettings().setJavaScriptEnabled(true);
+        webView.loadData(article.getFullText(), "text/html; charset=utf-8", "UTF-8");
+        //webView.loadDataWithBaseURL("", article.getFullText(), "text/html", "UTF-8", "");
+
+        /*        //HTTP запрос (пока тестовый)
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url("https://reqres.in/api/users/2")
@@ -97,11 +120,11 @@ public class LinksFragment extends Fragment {
         //создаем адаптер
         LinksDataAdapter adapter = new LinksDataAdapter(this.getContext(), items);
         //установка действия при клике
-        adapter.setOnItemClickListener(new ClickListener() {
+        adapter.setOnItemClickListener(new LinksDataAdapter.ClickListener() {
             @Override
             public void onItemClick(int position, View v) {
-                LinkItem selectedItem = items.get(position);
-                fragmentReplacer.goToFragment(selectedItem);
+                LinkItem clickedItem = items.get(position);
+                fragmentReplacer.goToFragment(clickedItem.getType(), clickedItem.getId());
             }
 
             //пока не используется, оставлен на будущее
@@ -110,7 +133,7 @@ public class LinksFragment extends Fragment {
             }
         });
         //устанавливаем для списка адаптер
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(adapter);*/
         return layoutInflater;
     }
 

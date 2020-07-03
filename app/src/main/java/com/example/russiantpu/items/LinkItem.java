@@ -3,15 +3,9 @@ package com.example.russiantpu.items;
 import com.example.russiantpu.enums.ContentType;
 
 //класс отображает один пункт в меню ссылок (кнопок)
-public class LinkItem {
+public class LinkItem extends Item {
 
     private String name;
-    //по айди будет делаться get запрос на сервер
-    // для получения содержимого раздела
-    private int id;
-    //по этой переменной решается,
-    // какой фрагмент запустится при выборе элемента
-    private ContentType type;
 
     public String getName() {
         return name;
@@ -21,25 +15,8 @@ public class LinkItem {
         this.name = name;
     }
 
-    public ContentType getType() {
-        return type;
-    }
-
-    public void setType(ContentType type) {
-        this.type = type;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public LinkItem(String name, int id, ContentType type) {
+        super(id, type);
         this.name = name;
-        this.id = id;
-        this.type = type;
     }
 }

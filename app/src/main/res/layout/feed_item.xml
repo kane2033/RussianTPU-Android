@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     android:padding="16dp"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    android:background="@drawable/border">
 <!--    android:clickable="true"-->
 <!--    android:focusable="true"-->
 
@@ -18,25 +19,15 @@
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
-    <!--    с размером картинки могут быть проблемы,
-    в будущем следует проверить-->
-    <ImageView
-        android:id="@+id/image"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:scaleType="centerInside"
-        android:gravity="center"
-        android:padding="16dp"
-        android:contentDescription="Картинка статьи" />
-
-    <TextView
+    <WebView
         android:id="@+id/previewText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
         android:text="Превью текст (первые слова в статье)"
         android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        />
 
     <TextView
         android:id="@+id/date"
@@ -44,7 +35,7 @@
         android:layout_height="wrap_content"
         android:padding="8dp"
         android:text="22.02.2020"
-        android:textAlignment="viewStart"
+        android:textAlignment="textStart"
         android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
 </LinearLayout>

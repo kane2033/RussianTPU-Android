@@ -5,9 +5,9 @@ import android.graphics.drawable.Drawable;
 import com.example.russiantpu.enums.ContentType;
 
 //класс представляет собой единицу превью статьи
-public class FeedItem extends Item{
+public class Article extends Item {
     private String header; //заголовок
-    private String previewText;
+    private String fullText;
     private String date; //дата - пока что строка, с форматом даты не определились
 
     public String getHeader() {
@@ -18,12 +18,13 @@ public class FeedItem extends Item{
         this.header = header;
     }
 
-    public String getPreviewText() {
-        return previewText;
+
+    public String getFullText() {
+        return fullText;
     }
 
-    public void setPreviewText(String previewText) {
-        this.previewText = previewText;
+    public void setFullText(String fullText) {
+        this.fullText = fullText;
     }
 
     public String getDate() {
@@ -34,10 +35,14 @@ public class FeedItem extends Item{
         this.date = date;
     }
 
-    public FeedItem(int id, String header, String previewText, String date) {
+    public Article(int id, String header, String fullText, String date) {
         super(id, ContentType.ARTICLE);
         this.header = header;
-        this.previewText = previewText;
+        this.fullText = fullText;
         this.date = date;
+    }
+
+    public Article() {
+        super(0, ContentType.ARTICLE);
     }
 }

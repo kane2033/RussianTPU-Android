@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.russiantpu.enums.ContentType;
-import com.example.russiantpu.fragments.*;
 import com.example.russiantpu.items.DrawerItem;
 import com.example.russiantpu.utility.FragmentReplacer;
 import com.google.android.material.navigation.NavigationView;
@@ -27,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawer;
     private List<DrawerItem> drawerItems;
     private FragmentReplacer fragmentReplacer;
+    private FragmentManager fragmentManager;
 
     private List<DrawerItem> getDrawerItems() {
         /* TODO: GET запрос на сервис для получения списка пунктов из выдвигающегося меню
@@ -37,32 +36,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         items.add(new DrawerItem(2, "Правовая поддержка", ContentType.LINKS_LIST));
         items.add(new DrawerItem(3, "Контакты с ТПУ", ContentType.LINKS_LIST));
         return items;
-    }
-
-    private void goToFragment(ContentType type, int id) {
-        Fragment fragment;
-        Bundle args = new Bundle();
-        args.putInt("id", id); //id меню 1 уровня
-        switch (type) {
-            case LINKS_LIST: //список ссылок на следующие пункты
-                fragment = new LinksFragment();
-                fragment.setArguments(args);
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        fragment).commit();
-                break;
-            case FEED_LIST: //список статей
-                fragment = new FeedFragment();
-                fragment.setArguments(args);
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        fragment).commit();
-                break;
-            case LINK: //ссылка на сайт
-
-                break;
-            case ARTICLE: //статья
-
-                break;
-        }
     }
 
     @Override
@@ -86,12 +59,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         //передаем ссылку fragmentManager в класс, осуществляющий переход между фрагментами
-        fragmentReplacer = new FragmentReplacer(getSupportFragmentManager());
+        fragmentManager = getSupportFragmentManager();
+        fragmentReplacer = new FragmentReplacer(fragmentManager);
 
         toggle.syncState();
         if (savedInstanceState == null) {
             DrawerItem initialItem = drawerItems.get(0);
-            fragmentReplacer.goToFragment(initialItem.getType(), initialItem.getId());
+            fragmentReplacer.goToFragment(initialItem);
             //navigationView.setCheckedItem(R.id.nav_links);
         }
     }
@@ -100,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
         DrawerItem selectedItem = drawerItems.get(itemId);
-        fragmentReplacer.goToFragment(selectedItem.getType(), itemId);
+        fragmentReplacer.goToFragment(selectedItem);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -110,8 +84,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             drawer.closeDrawer(GravityCompat.START); //закрытие шторки
         }
         else {
-            if (getFragmentManager().getBackStackEntryCount() > 0) {
-                getFragmentManager().popBackStack(); //возврат на предыдущий фрагмент
+            if (fragmentManager.getBackStackEntryCount() > 0) {
+                fragmentManager.popBackStack(); //возврат на предыдущий фрагмент
             }
             else {
                 super.onBackPressed();

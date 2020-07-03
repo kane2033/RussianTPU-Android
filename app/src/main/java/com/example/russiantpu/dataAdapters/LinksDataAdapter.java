@@ -37,7 +37,6 @@ public class LinksDataAdapter extends RecyclerView.Adapter<LinksDataAdapter.View
         LinkItem item = items.get(position);
         String text = item.getName() + "; id = " + item.getId();
         holder.nameText.setText(text);
-        //holder.companyView.setText(item.getCompany());
     }
 
     @Override
@@ -57,7 +56,6 @@ public class LinksDataAdapter extends RecyclerView.Adapter<LinksDataAdapter.View
             button = view.findViewById(R.id.link_button);
             button.setOnClickListener(this);
             button.setOnLongClickListener(this);
-            //companyView = (TextView) view.findViewById(R.id.company);
         }
 
         @Override
@@ -74,11 +72,6 @@ public class LinksDataAdapter extends RecyclerView.Adapter<LinksDataAdapter.View
 
     public void setOnItemClickListener(ClickListener clickListener) {
         LinksDataAdapter.clickListener = clickListener;
-    }
-
-    public interface ClickListener {
-        void onItemClick(int position, View v);
-        void onItemLongClick(int position, View v);
     }
 
 }
