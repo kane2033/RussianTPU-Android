@@ -33,7 +33,7 @@ public class FeedItem extends Item{
     }
 
     public FeedItem(String id, int position, String header, String previewText, String date) {
-        super(id, position, ContentType.Article);
+        super(id, position, ContentType.ARTICLE);
         this.header = header;
         this.previewText = previewText;
         this.date = date;

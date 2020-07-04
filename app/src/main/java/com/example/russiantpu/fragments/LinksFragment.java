@@ -44,13 +44,13 @@ public class LinksFragment extends Fragment {
         List<LinkItem> itemsById = new ArrayList<>();
         switch (id) {
             case "144db080-3223-4449-b49f-45f392af6552":
-                itemsById.add(new LinkItem("Новости", "stringId1",1, ContentType.FeedList));
-                itemsById.add(new LinkItem("Расписание", "stringId2", 2, ContentType.Link));
-                itemsById.add(new LinkItem("Личный кабинет", "stringId3", 3, ContentType.Link));
+                itemsById.add(new LinkItem("Новости", "stringId1",1, ContentType.FEED_LIST));
+                itemsById.add(new LinkItem("Расписание", "stringId2", 2, ContentType.LINK));
+                itemsById.add(new LinkItem("Личный кабинет", "stringId3", 3, ContentType.LINK));
                 break;
             case "b9ac6dc4-9b72-4877-8714-b93e38d803aa":
-                itemsById.add(new LinkItem("Новости", "stringId4", 4, ContentType.FeedList));
-                itemsById.add(new LinkItem("Советы", "stringId5", 5, ContentType.FeedList));
+                itemsById.add(new LinkItem("Новости", "stringId4", 4, ContentType.FEED_LIST));
+                itemsById.add(new LinkItem("Советы", "stringId5", 5, ContentType.FEED_LIST));
                 break;
         }
         return itemsById;

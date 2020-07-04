@@ -29,22 +29,22 @@ public class FragmentReplacer {
         Bundle args = new Bundle();
         args.putString("id", item.getId()); //фрагмент формируется на основе переданного айди
         switch (item.getType()) {
-            case LinksList: //список ссылок на следующие пункты
+            case LINKS_LIST: //список ссылок на следующие пункты
                 fragment = new LinksFragment();
                 replaceFragment(fragment, args);
                 break;
-            case FeedList: //список статей
+            case FEED_LIST: //список статей
                 fragment = new FeedFragment();
                 replaceFragment(fragment, args);
                 break;
-            case Article: //статья
+            case ARTICLE: //статья
                 fragment = new ArticleFragment();
                 FeedItem article = (FeedItem)item;
                 args.putString("header", article.getHeader());
                 args.putString("date", article.getDate());
                 replaceFragment(fragment, args);
                 break;
-            case Link: //ссылка на сайт
+            case LINK: //ссылка на сайт
 
                 break;
         }

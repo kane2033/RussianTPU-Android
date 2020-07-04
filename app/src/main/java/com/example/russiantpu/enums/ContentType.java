@@ -1,8 +1,8 @@
 package com.example.russiantpu.enums;
 
 public enum ContentType {
-    Link,
-    FeedList,
-    LinksList,
-    Article
+    LINK,
+    FEED_LIST,
+    LINKS_LIST,
+    ARTICLE
 }

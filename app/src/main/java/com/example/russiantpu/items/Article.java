@@ -34,13 +34,13 @@ public class Article extends Item {
     }
 
     public Article(String id, String header, String fullText, String date) {
-        super(id, 1, ContentType.Article);
+        super(id, 1, ContentType.ARTICLE);
         this.header = header;
         this.fullText = fullText;
         this.date = date;
     }
 
     public Article() {
-        super("idString", 1, ContentType.Article);
+        super("idString", 1, ContentType.ARTICLE);
     }
 }
