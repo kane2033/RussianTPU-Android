@@ -15,8 +15,8 @@ public class LinkItem extends Item {
         this.name = name;
     }
 
-    public LinkItem(String name, int id, ContentType type) {
-        super(id, type);
+    public LinkItem(String name, String id, int position, ContentType type) {
+        super(id, position, type);
         this.name = name;
     }
 }

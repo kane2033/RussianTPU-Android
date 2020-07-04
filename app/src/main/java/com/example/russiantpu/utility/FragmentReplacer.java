@@ -6,11 +6,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.russiantpu.R;
-import com.example.russiantpu.enums.ContentType;
 import com.example.russiantpu.fragments.ArticleFragment;
 import com.example.russiantpu.fragments.FeedFragment;
 import com.example.russiantpu.fragments.LinksFragment;
-import com.example.russiantpu.items.Article;
 import com.example.russiantpu.items.FeedItem;
 import com.example.russiantpu.items.Item;
 
@@ -29,26 +27,24 @@ public class FragmentReplacer {
     public void goToFragment(Item item) {
         Fragment fragment;
         Bundle args = new Bundle();
+        args.putString("id", item.getId()); //фрагмент формируется на основе переданного айди
         switch (item.getType()) {
-            case LINKS_LIST: //список ссылок на следующие пункты
+            case LinksList: //список ссылок на следующие пункты
                 fragment = new LinksFragment();
-                args.putInt("id", item.getId()); //фрагмент формируется на основе переданного айди
                 replaceFragment(fragment, args);
                 break;
-            case FEED_LIST: //список статей
+            case FeedList: //список статей
                 fragment = new FeedFragment();
-                args.putInt("id", item.getId());
                 replaceFragment(fragment, args);
                 break;
-            case ARTICLE: //статья
+            case Article: //статья
                 fragment = new ArticleFragment();
                 FeedItem article = (FeedItem)item;
-                args.putInt("id", article.getId());
                 args.putString("header", article.getHeader());
                 args.putString("date", article.getDate());
                 replaceFragment(fragment, args);
                 break;
-            case LINK: //ссылка на сайт
+            case Link: //ссылка на сайт
 
                 break;
         }

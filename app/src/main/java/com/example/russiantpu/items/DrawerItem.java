@@ -14,8 +14,8 @@ public class DrawerItem extends Item {
         this.name = name;
     }
 
-    public DrawerItem(int id, String name, ContentType type) {
-        super(id, type);
+    public DrawerItem(String id, int position, String name, ContentType type) {
+        super(id, position, type);
         this.name = name;
     }
 }

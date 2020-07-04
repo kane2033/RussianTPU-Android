@@ -1,7 +1,5 @@
 package com.example.russiantpu.items;
 
-import android.graphics.drawable.Drawable;
-
 import com.example.russiantpu.enums.ContentType;
 
 //класс представляет собой единицу превью статьи
@@ -35,14 +33,14 @@ public class Article extends Item {
         this.date = date;
     }
 
-    public Article(int id, String header, String fullText, String date) {
-        super(id, ContentType.ARTICLE);
+    public Article(String id, String header, String fullText, String date) {
+        super(id, 1, ContentType.Article);
         this.header = header;
         this.fullText = fullText;
         this.date = date;
     }
 
     public Article() {
-        super(0, ContentType.ARTICLE);
+        super("idString", 1, ContentType.Article);
     }
 }
