@@ -16,24 +16,20 @@ import android.view.MenuItem;
 import com.example.russiantpu.items.DrawerItem;
 import com.example.russiantpu.utility.FragmentReplacer;
 import com.example.russiantpu.utility.GenericCallback;
+import com.example.russiantpu.utility.GsonService;
 import com.example.russiantpu.utility.RequestService;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawer;
-    private List<DrawerItem> drawerItems = new ArrayList<>();
+    private ArrayList<DrawerItem> drawerItems;
     private FragmentReplacer fragmentReplacer;
     private FragmentManager fragmentManager;
-
-    private List<DrawerItem> getDrawerItems() {
-         final ArrayList<DrawerItem> drawerItems = new ArrayList<>();
-        return null;
-    }
+    private GsonService gsonService = new GsonService();
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -48,12 +44,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
 
+        //запрос на сервис для получения пунктов выдвижного меню
         RequestService requestService = new RequestService();
-        requestService.getDrawerItems(new GenericCallback<ArrayList<DrawerItem>>() {
+        requestService.doRequest("menu/static", new GenericCallback<String>() {
             @Override
-            public void onResponse(ArrayList<DrawerItem> items) {
-                drawerItems = items;
-                Log.d("GET_REQUEST","MainActivity: Количество предметов: " + drawerItems.size());
+            public void onResponse(String jsonBody) {
+                drawerItems = gsonService.fromJsonToArrayList(jsonBody, DrawerItem.class);
+                Log.d("GET_REQUEST","Количество предметов: " + drawerItems.size());
 
                 //обновление элементов интерфейса в потоке UI
                 runOnUiThread(new Runnable() {
@@ -65,7 +62,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             menu.add(1, item.getPosition(), 0, item.getName());
                         }
 
-                        //передаем ссылку fragmentManager в класс, осуществляющий переход между фрагментами
+                        //передаем ссылку fragmentManager в класс,
+                        // осуществляющий переход между фрагментами
                         fragmentManager = getSupportFragmentManager();
                         fragmentReplacer = new FragmentReplacer(fragmentManager);
 
@@ -77,8 +75,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         }
                     }
                 });
-
-            }});
+            }
+        });
     }
 
     @Override
@@ -89,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
     @Override
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -103,6 +102,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
     }
-
 
 }

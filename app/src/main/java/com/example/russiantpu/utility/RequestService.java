@@ -1,6 +1,5 @@
 package com.example.russiantpu.utility;
 
-import android.app.Activity;
 import android.util.Log;
 
 import com.example.russiantpu.items.DrawerItem;
@@ -21,23 +20,21 @@ import okhttp3.Response;
 
 public class RequestService {
 
+    private final String API_URL = "http://109.123.155.178:8080/";
     private OkHttpClient client = new OkHttpClient();
-    private Activity activity = null;
+    private Request request = null; //стоит сделать поля локальными?
 
     public RequestService() {
 
     }
 
-    public RequestService(Activity activity) {
-        this.activity = activity;
-    }
-
-    public void getDrawerItems(final GenericCallback<ArrayList<DrawerItem>> callback) {
-        //List<DrawerItem> items = new ArrayList<>();
+    //делает запрос на url
+    //возвращает тело ответа в json, доступное в реализации callback
+    public void doRequest(String url, final GenericCallback<String> callback) {
         Request request = new Request.Builder()
-                .url("http://109.123.155.178:8080/menu/static")
+                .url(API_URL + url)
                 .build();
-        client.newCall(request).enqueue(new Callback() {
+        client.newCall(request).enqueue(new Callback() { //enqueue - асинхр., execute - синхр.
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 e.printStackTrace();
@@ -46,22 +43,37 @@ public class RequestService {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    final String jsonStr = response.body().string();
-                    final Type listType = new TypeToken<ArrayList<DrawerItem>>(){}.getType();
-                    ArrayList<DrawerItem> items = new Gson().fromJson(jsonStr, listType);
+                    final String jsonBody = response.body().string(); //тело ответа
+                    callback.onResponse(jsonBody);
+                }
+            }
+        });
+    }
 
+    //делает запрос на получение статического меню
+    //возвращает десериализированный список пунктов меню
+    public void getDrawerItems(final GenericCallback<ArrayList<DrawerItem>> callback) {
+        Request request = new Request.Builder()
+                .url(API_URL + "menu/static")
+                .build();
+        client.newCall(request).enqueue(new Callback() { //enqueue - асинхр., execute - синхр.
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    final String jsonStr = response.body().string(); //тело ответа
+                    final Type listType = new TypeToken<ArrayList<DrawerItem>>(){}.getType();
+
+                    ArrayList<DrawerItem> items = new Gson().fromJson(jsonStr, listType); //десериализация
                     Log.d("GET_REQUEST","Количество предметов: " + items.size());
 
+                    //возврат полученного массива предметов через интерфейс коллбек
+                    //(в реализации обрабатывается полученное значение
                     callback.onResponse(items);
-
-/*                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            items = new Gson().fromJson(jsonStr, listType);
-                            System.out.println("Количество предметов: " + items.size());
-                            Log.d("GET_REQUEST","Количество предметов: " + items.size());
-                        }
-                    });*/
                 }
             }
         });
