@@ -11,12 +11,14 @@ import com.example.russiantpu.fragments.FeedFragment;
 import com.example.russiantpu.fragments.LinksFragment;
 import com.example.russiantpu.items.FeedItem;
 import com.example.russiantpu.items.Item;
+import com.example.russiantpu.items.LinkItem;
+
+import java.util.ArrayList;
 
 //класс осуществляет переход в новый фрагмент
 public class FragmentReplacer {
 
     private final FragmentManager fragmentManager;
-
     private final String fragmentTag = "PREV_FRAGMENT";
 
     public FragmentReplacer(FragmentManager fragmentManager) {
@@ -31,6 +33,10 @@ public class FragmentReplacer {
         switch (item.getType()) {
             case LINKS_LIST: //список ссылок на следующие пункты
                 fragment = new LinksFragment();
+                LinkItem linkItem = (LinkItem)item;
+                ArrayList<LinkItem> children = linkItem.getChildren();
+                //передача дочерних пунктов в след. фрагмент
+                args.putParcelableArrayList("children", children);
                 replaceFragment(fragment, args);
                 break;
             case FEED_LIST: //список статей

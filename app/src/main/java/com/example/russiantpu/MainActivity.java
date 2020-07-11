@@ -13,7 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.russiantpu.items.DrawerItem;
+import com.example.russiantpu.items.LinkItem;
 import com.example.russiantpu.utility.FragmentReplacer;
 import com.example.russiantpu.utility.GenericCallback;
 import com.example.russiantpu.utility.GsonService;
@@ -26,7 +26,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawer;
-    private ArrayList<DrawerItem> drawerItems;
+    private ArrayList<LinkItem> drawerItems;
     private FragmentReplacer fragmentReplacer;
     private FragmentManager fragmentManager;
     private GsonService gsonService = new GsonService();
@@ -46,11 +46,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //запрос на сервис для получения пунктов выдвижного меню
         RequestService requestService = new RequestService();
-        requestService.doRequest("menu/static", new GenericCallback<String>() {
+        requestService.doRequest("menu?language=Русский", new GenericCallback<String>() {
             @Override
-            public void onResponse(String jsonBody) {
-                drawerItems = gsonService.fromJsonToArrayList(jsonBody, DrawerItem.class);
-                Log.d("GET_REQUEST","Количество предметов: " + drawerItems.size());
+            public void onResponse(String jsonBody) { //Русский = %D0%A0%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9
+                //получение списка пунктов бокового меню (1 уровень)
+                drawerItems = gsonService.fromJsonToArrayList(jsonBody, LinkItem.class);
+                Log.d("GET_REQUEST", "Получены предметы шторки");
 
                 //обновление элементов интерфейса в потоке UI
                 runOnUiThread(new Runnable() {
@@ -58,31 +59,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     public void run() {
                         Menu menu = navigationView.getMenu();
                         //заполняем боковое меню пунктами 1 уровня
-                        for (DrawerItem item: drawerItems) {
+                        for (LinkItem item: drawerItems) {
                             menu.add(1, item.getPosition(), 0, item.getName());
                         }
 
-                        //передаем ссылку fragmentManager в класс,
-                        // осуществляющий переход между фрагментами
-                        fragmentManager = getSupportFragmentManager();
-                        fragmentReplacer = new FragmentReplacer(fragmentManager);
-
                         toggle.syncState();
                         if (savedInstanceState == null) {
-                            DrawerItem initialItem = drawerItems.get(0);
+                            LinkItem initialItem = drawerItems.get(0);
                             fragmentReplacer.goToFragment(initialItem);
-                            //navigationView.setCheckedItem(R.id.nav_links);
                         }
                     }
                 });
             }
         });
+
+        //передаем ссылку fragmentManager в класс,
+        // осуществляющий переход между фрагментами
+        fragmentManager = getSupportFragmentManager();
+        fragmentReplacer = new FragmentReplacer(fragmentManager);
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId() - 1;
-        DrawerItem selectedItem = drawerItems.get(itemId);
+        LinkItem selectedItem = drawerItems.get(itemId);
         fragmentReplacer.goToFragment(selectedItem);
         drawer.closeDrawer(GravityCompat.START);
         return true;

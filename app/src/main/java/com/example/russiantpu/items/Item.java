@@ -41,4 +41,6 @@ public abstract class Item {
         this.position = position;
         this.type = type;
     }
+
+    public Item() {}
 }

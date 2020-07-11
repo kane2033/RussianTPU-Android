@@ -35,7 +35,7 @@ public class LinksDataAdapter extends RecyclerView.Adapter<LinksDataAdapter.View
     @Override
     public void onBindViewHolder(LinksDataAdapter.ViewHolder holder, int position) {
         LinkItem item = items.get(position);
-        String text = item.getName() + "; id = " + item.getId();
+        String text = item.getName();
         holder.nameText.setText(text);
     }
 
