@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,7 +29,7 @@ public class LinksFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         RelativeLayout layoutInflater = (RelativeLayout)inflater.inflate(R.layout.fragment_links, container, false);
-        fragmentReplacer = new FragmentReplacer(getFragmentManager());
+        fragmentReplacer = new FragmentReplacer((AppCompatActivity) getActivity());
 
         /*String selectedItemId = getArguments().getString("id", "stringId1");
         items = getItemsById(selectedItemId); получение пунктов без запросов*/

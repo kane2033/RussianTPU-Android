@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -52,7 +53,7 @@ public class FeedFragment extends Fragment {
         String selectedItemId = getArguments().getString("id", "stringId1");
         final List<FeedItem> items = getItemsById(selectedItemId);
         final RecyclerView recyclerView = layoutInflater.findViewById(R.id.list); //список
-        final FragmentReplacer fragmentReplacer = new FragmentReplacer(getFragmentManager());
+        final FragmentReplacer fragmentReplacer = new FragmentReplacer((AppCompatActivity) getActivity());
 
         //создаем адаптер
         final FeedDataAdapter adapter = new FeedDataAdapter(this.getContext(), items);

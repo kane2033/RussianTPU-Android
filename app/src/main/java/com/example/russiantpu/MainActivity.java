@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //передаем ссылку fragmentManager в класс,
         // осуществляющий переход между фрагментами
         fragmentManager = getSupportFragmentManager();
-        fragmentReplacer = new FragmentReplacer(fragmentManager);
+        fragmentReplacer = new FragmentReplacer(this);
     }
 
     @Override

@@ -1,7 +1,10 @@
 package com.example.russiantpu.utility;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -19,10 +22,12 @@ import java.util.ArrayList;
 public class FragmentReplacer {
 
     private final FragmentManager fragmentManager;
+    private final AppCompatActivity activity;
     private final String fragmentTag = "PREV_FRAGMENT";
 
-    public FragmentReplacer(FragmentManager fragmentManager) {
-        this.fragmentManager = fragmentManager;
+    public FragmentReplacer(AppCompatActivity activity) {
+        this.activity = activity;
+        this.fragmentManager = activity.getSupportFragmentManager();
     }
 
     //метод загрузки фрагмента на основне передаваемого предмета
@@ -51,7 +56,8 @@ public class FragmentReplacer {
                 replaceFragment(fragment, args);
                 break;
             case LINK: //ссылка на сайт
-
+                LinkItem itemWithUrl = (LinkItem)item;
+                activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(itemWithUrl.getUrl())));
                 break;
         }
     }
