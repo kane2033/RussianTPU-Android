@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //запрос на сервис для получения пунктов выдвижного меню
         RequestService requestService = new RequestService();
-        requestService.doRequest("menu?language=Русский", new GenericCallback<String>() {
+        requestService.doRequest("menu", "language", "Русский", new GenericCallback<String>() {
             @Override
             public void onResponse(String jsonBody) { //Русский = %D0%A0%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9
                 //получение списка пунктов бокового меню (1 уровень)
@@ -59,8 +59,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     public void run() {
                         Menu menu = navigationView.getMenu();
                         //заполняем боковое меню пунктами 1 уровня
-                        for (LinkItem item: drawerItems) {
-                            menu.add(1, item.getPosition(), 0, item.getName());
+                        for (int i = 0; i < drawerItems.size(); i++) {
+                            menu.add(1, i, 0, drawerItems.get(i).getName());
                         }
 
                         toggle.syncState();
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        int itemId = item.getItemId() - 1;
+        int itemId = item.getItemId();
         LinkItem selectedItem = drawerItems.get(itemId);
         fragmentReplacer.goToFragment(selectedItem);
         drawer.closeDrawer(GravityCompat.START);
