@@ -34,7 +34,6 @@ public class FragmentReplacer {
     public void goToFragment(Item item) {
         Fragment fragment;
         Bundle args = new Bundle();
-        args.putString("id", item.getId()); //фрагмент формируется на основе переданного айди
         switch (item.getType()) {
             case LINKS_LIST: //список ссылок на следующие пункты
                 fragment = new LinksFragment();
@@ -46,13 +45,18 @@ public class FragmentReplacer {
                 break;
             case FEED_LIST: //список статей
                 fragment = new FeedFragment();
+                //передаем айди выбранного пункта
+                args.putString("id", item.getId());
                 replaceFragment(fragment, args);
                 break;
             case ARTICLE: //статья
                 fragment = new ArticleFragment();
+                //если articleId != null
+                //загружаем статью без промежуточного
+                //списка статей
                 FeedItem article = (FeedItem)item;
-                args.putString("header", article.getHeader());
-                args.putString("date", article.getDate());
+                args.putString("header", article.getTopic());
+                args.putString("date", article.getCreateDate());
                 replaceFragment(fragment, args);
                 break;
             case LINK: //ссылка на сайт

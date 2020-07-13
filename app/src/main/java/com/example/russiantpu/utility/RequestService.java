@@ -1,5 +1,7 @@
 package com.example.russiantpu.utility;
 
+import android.util.Log;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -21,10 +23,13 @@ public class RequestService {
 
     }
 
-    //запрос на url с параметрами
-    public void doRequest(String url, String paramName, String paramValue, final GenericCallback<String> callback) {
+    //запрос на url с произвольным количеством параметров:
+    //параметры вводятся форматом - название параметра, значение параметра, ...
+    public void doRequest(String url, final GenericCallback<String> callback, String... params) {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(API_URL + url).newBuilder();
-        urlBuilder.addQueryParameter(paramName, paramValue);
+        for (int i = 0; i < params.length; i++) {
+            urlBuilder.addQueryParameter(params[i], params[++i]);
+        }
         String builtUrl = urlBuilder.build().toString();
 
         Request request = new Request.Builder()
@@ -56,6 +61,7 @@ public class RequestService {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (response.isSuccessful()) {
                     final String jsonBody = response.body().string(); //тело ответа
+                    Log.d("JSON_RESPONSE", "onResponse: " + jsonBody);
                     callback.onResponse(jsonBody);
                 }
             }

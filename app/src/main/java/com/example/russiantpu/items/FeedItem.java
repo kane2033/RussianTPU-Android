@@ -4,38 +4,48 @@ import com.example.russiantpu.enums.ContentType;
 
 //класс представляет собой единицу превью статьи
 public class FeedItem extends Item{
-    private String header; //заголовок
-    private String previewText;
-    private String date; //дата - пока что строка, с форматом даты не определились
+    private String topic; //заголовок
+    private String briefText;
+    private String subject;
+    private String createDate; //дата - пока что строка, с форматом даты не определились
 
-    public String getHeader() {
-        return header;
+    public String getTopic() {
+        return topic;
     }
 
-    public void setHeader(String header) {
-        this.header = header;
+    public void setTopic(String topic) {
+        this.topic = topic;
     }
 
-    public String getPreviewText() {
-        return previewText;
+    public String getBriefText() {
+        return briefText;
     }
 
-    public void setPreviewText(String previewText) {
-        this.previewText = previewText;
+    public void setBriefText(String briefText) {
+        this.briefText = briefText;
     }
 
-    public String getDate() {
-        return date;
+    public String getSubject() {
+        return subject;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
-    public FeedItem(String id, int position, String header, String previewText, String date) {
+    public String getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
+    }
+
+    public FeedItem(String id, int position, String topic, String briefText, String subject, String createDate) {
         super(id, position, ContentType.ARTICLE);
-        this.header = header;
-        this.previewText = previewText;
-        this.date = date;
+        this.topic = topic;
+        this.briefText = briefText;
+        this.subject = subject;
+        this.createDate = createDate;
     }
 }

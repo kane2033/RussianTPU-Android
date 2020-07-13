@@ -46,9 +46,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //запрос на сервис для получения пунктов выдвижного меню
         RequestService requestService = new RequestService();
-        requestService.doRequest("menu", "language", "Русский", new GenericCallback<String>() {
+        //реализация коллбека - что произойдет при получении данных с сервиса
+        GenericCallback<String> callback = new GenericCallback<String>() {
             @Override
-            public void onResponse(String jsonBody) { //Русский = %D0%A0%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9
+            public void onResponse(String jsonBody) {
                 //получение списка пунктов бокового меню (1 уровень)
                 drawerItems = gsonService.fromJsonToArrayList(jsonBody, LinkItem.class);
                 Log.d("GET_REQUEST", "Получены предметы шторки");
@@ -71,7 +72,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 });
             }
-        });
+        };
+        //делаем запрос на получение пунктов меню на русском языке
+        requestService.doRequest("menu", callback, "language", "Русский");
 
         //передаем ссылку fragmentManager в класс,
         // осуществляющий переход между фрагментами

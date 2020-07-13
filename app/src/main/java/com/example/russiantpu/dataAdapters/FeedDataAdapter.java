@@ -38,9 +38,9 @@ public class FeedDataAdapter extends RecyclerView.Adapter<FeedDataAdapter.ViewHo
     @Override
     public void onBindViewHolder(FeedDataAdapter.ViewHolder holder, int position) {
         FeedItem item = items.get(position);
-        holder.header.setText(item.getHeader());
-        holder.previewText.loadData(item.getPreviewText(), "text/html; charset=utf-8", "UTF-8");
-        holder.date.setText(item.getDate());
+        holder.header.setText(item.getTopic());
+        holder.previewText.loadData(item.getBriefText(), "text/html; charset=utf-8", "UTF-8");
+        holder.date.setText(item.getCreateDate());
     }
 
     @Override
