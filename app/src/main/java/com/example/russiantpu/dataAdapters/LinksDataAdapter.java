@@ -1,16 +1,18 @@
 package com.example.russiantpu.dataAdapters;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.russiantpu.R;
 import com.example.russiantpu.items.LinkItem;
+
+import java.util.List;
 
 //DataAdapter для списка ссылок
 public class LinksDataAdapter extends RecyclerView.Adapter<LinksDataAdapter.ViewHolder> {

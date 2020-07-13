@@ -11,9 +11,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.russiantpu.R;
 import com.example.russiantpu.dataAdapters.ClickListener;
 import com.example.russiantpu.dataAdapters.LinksDataAdapter;
-import com.example.russiantpu.R;
 import com.example.russiantpu.items.LinkItem;
 import com.example.russiantpu.utility.FragmentReplacer;
 

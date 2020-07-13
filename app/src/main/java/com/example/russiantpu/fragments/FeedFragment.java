@@ -13,9 +13,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.russiantpu.R;
 import com.example.russiantpu.dataAdapters.ClickListener;
 import com.example.russiantpu.dataAdapters.FeedDataAdapter;
-import com.example.russiantpu.R;
 import com.example.russiantpu.items.FeedItem;
 import com.example.russiantpu.utility.FragmentReplacer;
 import com.example.russiantpu.utility.GenericCallback;
@@ -23,7 +23,6 @@ import com.example.russiantpu.utility.GsonService;
 import com.example.russiantpu.utility.RequestService;
 
 import java.util.ArrayList;
-import java.util.List;
 
 //фрагмент, отображающий список статей (новостей)
 public class FeedFragment extends Fragment {
