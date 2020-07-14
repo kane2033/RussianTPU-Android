@@ -1,10 +1,10 @@
 package com.example.russiantpu.dataAdapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.russiantpu.R;
 import com.example.russiantpu.items.FeedItem;
+import com.example.russiantpu.utility.ImageConverter;
 
 import java.util.List;
 
@@ -38,8 +39,14 @@ public class FeedDataAdapter extends RecyclerView.Adapter<FeedDataAdapter.ViewHo
     @Override
     public void onBindViewHolder(FeedDataAdapter.ViewHolder holder, int position) {
         FeedItem item = items.get(position);
+
+        //конвертация строки base64 в картинку
+        ImageConverter imageConverter = new ImageConverter();
+        Bitmap imgBitmap = imageConverter.stringToBitmap(item.getArticleImage());
+        holder.image.setImageBitmap(imgBitmap);
+
         holder.header.setText(item.getTopic());
-        holder.previewText.loadData(item.getBriefText(), "text/html; charset=utf-8", "UTF-8");
+        holder.previewText.setText(item.getBriefText());
         holder.date.setText(item.getCreateDate());
     }
 
@@ -52,7 +59,7 @@ public class FeedDataAdapter extends RecyclerView.Adapter<FeedDataAdapter.ViewHo
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         final TextView header;
         final ImageView image;
-        final WebView previewText;
+        final TextView previewText;
         final TextView date;
 
         ViewHolder(View view){

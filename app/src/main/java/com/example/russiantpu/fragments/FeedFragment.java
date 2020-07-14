@@ -36,10 +36,6 @@ public class FeedFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final RelativeLayout layoutInflater = (RelativeLayout)inflater.inflate(R.layout.fragment_feed, container, false);
         recyclerView = layoutInflater.findViewById(R.id.list); //список
-        /*//создаем адаптер
-        adapter = new FeedDataAdapter(this.getContext(), items);
-        //устанавливаем для списка адаптер
-        recyclerView.setAdapter(adapter);*/
         return layoutInflater;
     }
 
@@ -62,11 +58,11 @@ public class FeedFragment extends Fragment {
                 Log.d("FEED_FRAGMENT", "Сколько статей получено: " + items.size());
 
                 //отрисовываем список статей в потоке интерфейса
+                //возможно, это стоит перенести в onCreateView
+                //и при успешном запросе вызывать обновление recycleview
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        //уведомление адаптера об обновлении данных
-                        //adapter.notifyDataSetChanged();
                         adapter = new FeedDataAdapter(getContext(), items);
                         adapter.setOnItemClickListener(new ClickListener() {
                             @Override

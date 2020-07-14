@@ -18,16 +18,26 @@
         android:text="Название"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+    
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:scaleType="centerInside"
+        android:src="@mipmap/ic_launcher_round"/>
 
-    <WebView
+    <!--элемент ImageView точно придется изменить так,
+    чтобы корректно отображалась любая картинка-->
+
+    <TextView
         android:id="@+id/previewText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:text="Превью текст (первые слова в статье)"
+        android:text="Название"
         android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        />
+        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
     <TextView
         android:id="@+id/date"

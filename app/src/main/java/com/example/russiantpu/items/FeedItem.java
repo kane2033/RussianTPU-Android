@@ -8,6 +8,7 @@ public class FeedItem extends Item{
     private String briefText;
     private String subject;
     private String createDate; //дата - пока что строка, с форматом даты не определились
+    private String articleImage; //картинка хранится строкой base64
 
     public String getTopic() {
         return topic;
@@ -41,11 +42,20 @@ public class FeedItem extends Item{
         this.createDate = createDate;
     }
 
-    public FeedItem(String id, int position, String topic, String briefText, String subject, String createDate) {
+    public String getArticleImage() {
+        return articleImage;
+    }
+
+    public void setArticleImage(String articleImage) {
+        this.articleImage = articleImage;
+    }
+
+    public FeedItem(String id, int position, String topic, String briefText, String subject, String createDate, String articleImage) {
         super(id, position, ContentType.ARTICLE);
         this.topic = topic;
         this.briefText = briefText;
         this.subject = subject;
         this.createDate = createDate;
+        this.articleImage = articleImage;
     }
 }
