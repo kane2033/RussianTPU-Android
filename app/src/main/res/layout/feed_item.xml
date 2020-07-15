@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:padding="16dp"
         android:text="Название"
-        android:textAlignment="center"
+        android:textAlignment="textStart"
         android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
     <TextView

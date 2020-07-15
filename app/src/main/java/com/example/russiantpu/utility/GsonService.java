@@ -23,4 +23,8 @@ public class GsonService {
         final Type listType = TypeToken.getParameterized(ArrayList.class, clazz).getType();
         return gson.fromJson(json, listType);
     }
+
+    public <T> T fromJsonToObject(String json, Class<T> clazz) {
+        return gson.fromJson(json, clazz);
+    }
 }

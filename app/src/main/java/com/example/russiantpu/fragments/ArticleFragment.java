@@ -1,71 +1,78 @@
 package com.example.russiantpu.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.russiantpu.R;
+import com.example.russiantpu.dataAdapters.ClickListener;
+import com.example.russiantpu.dataAdapters.FeedDataAdapter;
 import com.example.russiantpu.items.Article;
+import com.example.russiantpu.items.FeedItem;
+import com.example.russiantpu.utility.GenericCallback;
+import com.example.russiantpu.utility.GsonService;
+import com.example.russiantpu.utility.RequestService;
 
 //фрагмент, отображающий список статей (новостей)
 public class ArticleFragment extends Fragment {
 
-    private Article article;
+    private WebView webView;
+    private TextView date;
 
-    private Article getArticleFromPreview(String id, String header, String date) {
-        /*
-        тут должен быть get запрос на получение содержимого выбранного пункта,
-        которое будет передано в фрагмент
-        */
-        Article articleFromPreview = new Article();
-        switch (id) {
-            case "stringId1":
-                articleFromPreview = new Article(id, header, "<h1>Статья 1</h1> полный текст", date);
-                break;
-            case "stringId2":
-                articleFromPreview = new Article(id, header, "<h1>Статья 2</h1> полный текст", date);
-                break;
-            case "stringId3":
-                articleFromPreview = new Article(id, header, "<h1>Статья 31</h1> полный текст", date);
-                break;
-            case "stringId4":
-                articleFromPreview = new Article(id, header, "<h1>Статья 4</h1> полный текст", date);
-                break;
-            case "stringId5":
-                articleFromPreview = new Article(id, header, "<h1>Статья 5</h1> полный текст", date);
-                break;
-            case "stringId6":
-                articleFromPreview = new Article(id, header, "<h1>Статья 6</h1> полный текст", date);
-                break;
-            case "stringId7":
-                articleFromPreview = new Article(id, header, "<h1>Статья 7</h1> полный текст", date);
-                break;
-        }
-        return articleFromPreview;
-    }
+    private Article article;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        //формируем класс статьи из превью
-        article = getArticleFromPreview(getArguments().getString("id"),
-                getArguments().getString("header"),
-                getArguments().getString("date"));
-
         //отображаем в фрагменте
-        RelativeLayout layoutInflater = (RelativeLayout)inflater.inflate(R.layout.fragment_article, container, false);
-        final WebView webView = layoutInflater.findViewById(R.id.fullArticle);
-        //отображение в формате html
-        //webView.getSettings().setJavaScriptEnabled(true);
-        webView.loadData(article.getFullText(), "text/html; charset=utf-8", "UTF-8");
-        //webView.loadDataWithBaseURL("", article.getFullText(), "text/html", "UTF-8", "");
+        LinearLayout layoutInflater = (LinearLayout) inflater.inflate(R.layout.fragment_article, container, false);
+        webView = layoutInflater.findViewById(R.id.fullArticle); //статья
+        date = layoutInflater.findViewById(R.id.date); //дата создания
         return layoutInflater;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        //вспомогательные классы
+        final RequestService requestService = new RequestService();
+        final GsonService gsonService = new GsonService();
+
+        String selectedArticleId = getArguments().getString("id");
+
+        //реализация коллбека - что произойдет при получении данных с сервера
+        GenericCallback<String> callback = new GenericCallback<String>() {
+            @Override
+            public void onResponse(String jsonBody) {
+                article = gsonService.fromJsonToObject(jsonBody, Article.class);
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //отображение в формате html
+                        webView.getSettings().setLoadWithOverviewMode(true);
+                        webView.getSettings().setUseWideViewPort(true);
+                        webView.loadData(article.getText(), "text/html; charset=utf-8", "UTF-8");
+                        date.setText(article.getCreateDate());
+                    }
+                });
+
+            }
+        };
+        //запрос за получение списка статей по айди пункта меню
+        requestService.doRequest("article/" + selectedArticleId, callback, "fromMenu", "true");
+
+
     }
 
 }

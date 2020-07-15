@@ -51,12 +51,8 @@ public class FragmentReplacer {
                 break;
             case ARTICLE: //статья
                 fragment = new ArticleFragment();
-                //если articleId != null
-                //загружаем статью без промежуточного
-                //списка статей
-                FeedItem article = (FeedItem)item;
-                args.putString("header", article.getTopic());
-                args.putString("date", article.getCreateDate());
+                //передаем айди выбранного пункта
+                args.putString("id", item.getId());
                 replaceFragment(fragment, args);
                 break;
             case LINK: //ссылка на сайт

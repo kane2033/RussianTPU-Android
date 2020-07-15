@@ -16,7 +16,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.russiantpu.R;
 import com.example.russiantpu.dataAdapters.ClickListener;
 import com.example.russiantpu.dataAdapters.FeedDataAdapter;
+import com.example.russiantpu.enums.ContentType;
 import com.example.russiantpu.items.FeedItem;
+import com.example.russiantpu.items.Item;
 import com.example.russiantpu.utility.FragmentReplacer;
 import com.example.russiantpu.utility.GenericCallback;
 import com.example.russiantpu.utility.GsonService;
@@ -67,7 +69,8 @@ public class FeedFragment extends Fragment {
                         adapter.setOnItemClickListener(new ClickListener() {
                             @Override
                             public void onItemClick(int position, View v) {
-                                FeedItem selectedItem = items.get(position);
+                                Item selectedItem = items.get(position);
+                                selectedItem.setType(ContentType.ARTICLE);
                                 fragmentReplacer.goToFragment(selectedItem);
                             }
                             //пока не используется, оставлен на будущее
