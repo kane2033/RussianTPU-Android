@@ -14,10 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.russiantpu.R;
-import com.example.russiantpu.dataAdapters.ClickListener;
-import com.example.russiantpu.dataAdapters.FeedDataAdapter;
 import com.example.russiantpu.items.Article;
-import com.example.russiantpu.items.FeedItem;
 import com.example.russiantpu.utility.GenericCallback;
 import com.example.russiantpu.utility.GsonService;
 import com.example.russiantpu.utility.RequestService;
@@ -27,6 +24,7 @@ public class ArticleFragment extends Fragment {
 
     private WebView webView;
     private TextView date;
+    private TextView missingContentText;
 
     private Article article;
 
@@ -37,6 +35,7 @@ public class ArticleFragment extends Fragment {
         LinearLayout layoutInflater = (LinearLayout) inflater.inflate(R.layout.fragment_article, container, false);
         webView = layoutInflater.findViewById(R.id.fullArticle); //статья
         date = layoutInflater.findViewById(R.id.date); //дата создания
+        missingContentText = layoutInflater.findViewById(R.id.missingContentText);
         return layoutInflater;
     }
 
@@ -56,16 +55,21 @@ public class ArticleFragment extends Fragment {
             public void onResponse(String jsonBody) {
                 article = gsonService.fromJsonToObject(jsonBody, Article.class);
 
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //отображение в формате html
-                        webView.getSettings().setLoadWithOverviewMode(true);
-                        webView.getSettings().setUseWideViewPort(true);
-                        webView.loadData(article.getText(), "text/html; charset=utf-8", "UTF-8");
-                        date.setText(article.getCreateDate());
-                    }
-                });
+                if (article == null) { //если нет контента, уведомляем
+                    missingContentText.setText(R.string.missing_content);
+                }
+                else { //иначе заполняем фрагмент содержимым статьи
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //отображение в формате html
+                            webView.getSettings().setLoadWithOverviewMode(true);
+                            webView.getSettings().setUseWideViewPort(true);
+                            webView.loadData(article.getText(), "text/html; charset=utf-8", "UTF-8");
+                            date.setText(article.getCreateDate());
+                        }
+                    });
+                }
 
             }
         };

@@ -6,6 +6,8 @@
 
     <!--Заголовок лучше отобразить в тулбаре-->
 
+
+
     <WebView
         android:id="@+id/fullArticle"
         android:layout_width="match_parent"
@@ -18,5 +20,13 @@
         android:padding="8dp"
         android:text="Дата написания статьи: 22.02.2020"
         android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+    <TextView
+        android:id="@+id/missingContentText"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center_vertical|center_horizontal"
+        android:padding="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
 </LinearLayout>

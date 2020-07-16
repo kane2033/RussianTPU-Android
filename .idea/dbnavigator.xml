@@ -23,11 +23,7 @@
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
-    <loaded-nodes>
-      <connection connection-id="5e664fd2-0efd-4ca5-846e-c5d0579c2e81">
-        <schema name="dbo" object-types="column, view, constraint, index, function, table, procedure" />
-      </connection>
-    </loaded-nodes>
+    <loaded-nodes />
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="5e664fd2-0efd-4ca5-846e-c5d0579c2e81">
@@ -35,9 +31,7 @@
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files>
-      <object connection-id="5e664fd2-0efd-4ca5-846e-c5d0579c2e81" object-ref="schemas/dbo/tables/Статья" />
-    </open-files>
+    <open-files />
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="5e664fd2-0efd-4ca5-846e-c5d0579c2e81" />

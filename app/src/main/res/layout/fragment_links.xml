@@ -11,4 +11,12 @@
         android:layout_height="wrap_content"
         android:layout_margin="4dp" />
 
+    <TextView
+        android:id="@+id/missingContentText"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center_vertical|center_horizontal"
+        android:padding="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+
     </RelativeLayout>
