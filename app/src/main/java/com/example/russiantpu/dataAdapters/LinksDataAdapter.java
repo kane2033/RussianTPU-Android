@@ -50,14 +50,12 @@ public class LinksDataAdapter extends RecyclerView.Adapter<LinksDataAdapter.View
     //класс, хранящий элементы управления
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         final TextView nameText;
-        final Button button;
 
         ViewHolder(View view){
             super(view);
             nameText = view.findViewById(R.id.name);
-            button = view.findViewById(R.id.link_button);
-            button.setOnClickListener(this);
-            button.setOnLongClickListener(this);
+            view.setOnClickListener(this);
+            view.setOnLongClickListener(this);
         }
 
         @Override

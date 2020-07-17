@@ -3,7 +3,10 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="@drawable/border">
 
     <TextView
         android:id="@+id/name"
@@ -12,10 +15,4 @@
         android:text="Название"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
-
-    <Button
-        android:id="@+id/link_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Перейти" />
 </LinearLayout>
