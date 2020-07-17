@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -61,11 +62,15 @@ public class ArticleFragment extends Fragment {
                         @Override
                         public void run() {
                             //отображение в формате html
-                            //беда тут
-                            webView.getSettings().setLoadWithOverviewMode(true);
-                            webView.getSettings().setUseWideViewPort(true);
-                            webView.loadData(article.getText(), "text/html; charset=utf-8", "UTF-8");
+                            //либо картинка слишком большая, либо текст слишком маленький
+                            WebSettings settings = webView.getSettings();
+                            settings.setMinimumFontSize(32); //меняет размер шрифта
+                            settings.setLoadWithOverviewMode(true);
+                            settings.setUseWideViewPort(true);
+                            settings.setBuiltInZoomControls(true);
+                            settings.setDisplayZoomControls(false);
 
+                            webView.loadData(article.getText(), "text/html; charset=utf-8", "UTF-8");
                             String dateStr = "Дата создания: " + article.getCreateDate();
                             date.setText(dateStr);
                         }
