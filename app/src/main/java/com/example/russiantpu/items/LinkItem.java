@@ -14,7 +14,7 @@ public class LinkItem extends Item implements Parcelable {
     //ссылка на сторонний ресурс
     private String url;
     //айди статьи, по которой будет получена полная статья
-    private String articleId;
+    private String idArticle;
     //дочерние пункты
     private ArrayList<LinkItem> children;
 
@@ -34,12 +34,12 @@ public class LinkItem extends Item implements Parcelable {
         this.url = url;
     }
 
-    public String getArticleId() {
-        return articleId;
+    public String getIdArticle() {
+        return idArticle;
     }
 
-    public void setArticleId(String articleId) {
-        this.articleId = articleId;
+    public void setIdArticle(String idArticle) {
+        this.idArticle = idArticle;
     }
 
     public ArrayList<LinkItem> getChildren() {
@@ -56,11 +56,11 @@ public class LinkItem extends Item implements Parcelable {
         this.children = children;
     }
 
-    public LinkItem(String name, String id, int position, ContentType type, String url, String articleId) {
+    public LinkItem(String name, String id, int position, ContentType type, String url, String idArticle) {
         super(id, position, type);
         this.name = name;
         this.url = url;
-        this.articleId = articleId;
+        this.idArticle = idArticle;
     }
     //стоит добавить отдельный конструктор, когда нет link или articleId?
 
@@ -73,7 +73,7 @@ public class LinkItem extends Item implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.name);
         dest.writeString(this.url);
-        dest.writeString(this.articleId);
+        dest.writeString(this.idArticle);
         dest.writeList(this.children);
         dest.writeString(getId());
         dest.writeInt(getPosition());
@@ -83,7 +83,7 @@ public class LinkItem extends Item implements Parcelable {
     protected LinkItem(Parcel in) {
         this.name = in.readString();
         this.url = in.readString();
-        this.articleId = in.readString();
+        this.idArticle = in.readString();
         this.children = new ArrayList<>();
         in.readList(this.children, LinkItem.class.getClassLoader());
         setId(in.readString());

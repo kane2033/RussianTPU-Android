@@ -37,8 +37,7 @@ public class FragmentReplacer {
         switch (item.getType()) {
             case LINKS_LIST: //список ссылок на следующие пункты
                 fragment = new LinksFragment();
-                LinkItem linkItem = (LinkItem)item;
-                ArrayList<LinkItem> children = linkItem.getChildren();
+                ArrayList<LinkItem> children = ((LinkItem) item).getChildren();
                 //передача дочерних пунктов в след. фрагмент
                 args.putParcelableArrayList("children", children);
                 replaceFragment(fragment, args);
@@ -52,12 +51,16 @@ public class FragmentReplacer {
             case ARTICLE: //статья
                 fragment = new ArticleFragment();
                 //передаем айди выбранного пункта
-                args.putString("id", item.getId());
+                if (item instanceof FeedItem) { //если переход был совершен из FEED_LIST
+                    args.putString("id", item.getId());
+                }
+                else { //переход из FEED_LIST
+                    args.putString("id", ((LinkItem) item).getIdArticle());
+                }
                 replaceFragment(fragment, args);
                 break;
             case LINK: //ссылка на сайт
-                LinkItem itemWithUrl = (LinkItem)item;
-                activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(itemWithUrl.getUrl())));
+                activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(((LinkItem) item).getUrl())));
                 break;
         }
     }

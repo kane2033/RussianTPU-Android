@@ -1,13 +1,11 @@
 package com.example.russiantpu.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -55,7 +53,7 @@ public class ArticleFragment extends Fragment {
             public void onResponse(String jsonBody) {
                 article = gsonService.fromJsonToObject(jsonBody, Article.class);
 
-                if (article == null) { //если нет контента, уведомляем
+                if (article.getSubject() == null) { //если нет контента, уведомляем
                     missingContentText.setText(R.string.missing_content);
                 }
                 else { //иначе заполняем фрагмент содержимым статьи
@@ -63,10 +61,13 @@ public class ArticleFragment extends Fragment {
                         @Override
                         public void run() {
                             //отображение в формате html
+                            //беда тут
                             webView.getSettings().setLoadWithOverviewMode(true);
                             webView.getSettings().setUseWideViewPort(true);
                             webView.loadData(article.getText(), "text/html; charset=utf-8", "UTF-8");
-                            date.setText(article.getCreateDate());
+
+                            String dateStr = "Дата создания: " + article.getCreateDate();
+                            date.setText(dateStr);
                         }
                     });
                 }
