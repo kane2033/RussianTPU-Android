@@ -36,8 +36,9 @@ public class LinksFragment extends Fragment {
         RecyclerView recyclerView = layoutInflater.findViewById(R.id.list); //список
         fragmentReplacer = new FragmentReplacer((AppCompatActivity) getActivity());
 
-        //получение пунктов из родительского фрагмента
-        items = getArguments().getParcelableArrayList("children");
+        items = getArguments().getParcelableArrayList("children"); //получение пунктов из родительского фрагмента
+        String header = getArguments().getString("header"); //название выбранного пункта будет отображаться в тулбаре
+        getActivity().setTitle(header); //установка названия пункта в тулбар
 
         if (items == null) { //если нет контента, уведомляем
             contentMissingText.setText(R.string.missing_content);
@@ -60,7 +61,6 @@ public class LinksFragment extends Fragment {
             //устанавливаем для списка адаптер
             recyclerView.setAdapter(adapter);
         }
-
         return layoutInflater;
     }
 

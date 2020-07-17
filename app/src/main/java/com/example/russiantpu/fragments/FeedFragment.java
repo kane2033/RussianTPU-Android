@@ -56,6 +56,8 @@ public class FeedFragment extends Fragment {
         final GsonService gsonService = new GsonService();
 
         String selectedItemId = getArguments().getString("id"); //айди родительского пункта
+        String header = getArguments().getString("header"); //название выбранного пункта будет отображаться в тулбаре
+        activity.setTitle(header); //установка названия пункта в тулбар
         //реализация коллбека - что произойдет при получении данных с сервера
         GenericCallback<String> callback = new GenericCallback<String>() {
             @Override

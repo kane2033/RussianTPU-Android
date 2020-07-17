@@ -34,33 +34,42 @@ public class FragmentReplacer {
     public void goToFragment(Item item) {
         Fragment fragment;
         Bundle args = new Bundle();
+        LinkItem castedItem;
         switch (item.getType()) {
+            case LINK: //ссылка на сайт
+                activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(((LinkItem) item).getUrl())));
+                break;
             case LINKS_LIST: //список ссылок на следующие пункты
                 fragment = new LinksFragment();
-                ArrayList<LinkItem> children = ((LinkItem) item).getChildren();
-                //передача дочерних пунктов в след. фрагмент
+                castedItem = (LinkItem) item;
+                ArrayList<LinkItem> children = castedItem.getChildren();
+                //передача дочерних пунктов и заголовка в след. фрагмент
                 args.putParcelableArrayList("children", children);
+                //передача названия выбранного пункта для установки в тулбаре
+                args.putString("header", castedItem.getName());
                 replaceFragment(fragment, args);
                 break;
             case FEED_LIST: //список статей
                 fragment = new FeedFragment();
+                castedItem = (LinkItem) item;
                 //передаем айди выбранного пункта
-                args.putString("id", item.getId());
+                args.putString("id", castedItem.getId());
+                //передача названия выбранного пункта для установки в тулбаре
+                args.putString("header", castedItem.getName());
                 replaceFragment(fragment, args);
                 break;
             case ARTICLE: //статья
                 fragment = new ArticleFragment();
                 //передаем айди выбранного пункта
                 if (item instanceof FeedItem) { //если переход был совершен из FEED_LIST
-                    args.putString("id", item.getId());
+                    FeedItem feedItem = (FeedItem) item;
+                    args.putString("id", feedItem.getId());
                 }
                 else { //переход из FEED_LIST
-                    args.putString("id", ((LinkItem) item).getIdArticle());
+                    castedItem = (LinkItem) item;
+                    args.putString("id", castedItem.getIdArticle());
                 }
                 replaceFragment(fragment, args);
-                break;
-            case LINK: //ссылка на сайт
-                activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(((LinkItem) item).getUrl())));
                 break;
         }
     }

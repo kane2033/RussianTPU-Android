@@ -1,5 +1,6 @@
 package com.example.russiantpu.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,6 +46,7 @@ public class ArticleFragment extends Fragment {
         //вспомогательные классы
         final RequestService requestService = new RequestService();
         final GsonService gsonService = new GsonService();
+        final Activity activity = getActivity();
 
         String selectedArticleId = getArguments().getString("id");
 
@@ -58,9 +60,12 @@ public class ArticleFragment extends Fragment {
                     missingContentText.setText(R.string.missing_content);
                 }
                 else { //иначе заполняем фрагмент содержимым статьи
-                    getActivity().runOnUiThread(new Runnable() {
+                    activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            //установка заголовка в тулбаре
+                            activity.setTitle(article.getSubject());
+
                             //отображение в формате html
                             //либо картинка слишком большая, либо текст слишком маленький
                             WebSettings settings = webView.getSettings();
