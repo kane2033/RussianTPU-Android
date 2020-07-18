@@ -25,13 +25,13 @@
     <show-object-properties value="true" />
     <loaded-nodes>
       <connection connection-id="5e664fd2-0efd-4ca5-846e-c5d0579c2e81">
-        <schema name="dbo" object-types="table, view, constraint, column, function, index, procedure" />
+        <schema name="dbo" object-types="table, view" />
       </connection>
     </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="5e664fd2-0efd-4ca5-846e-c5d0579c2e81">
-      <console name="russiantpu" type="STANDARD" schema="dbo" session="Main"><![CDATA[update Статья set Текст]]></console>
+      <console name="russiantpu" type="STANDARD" schema="dbo" session="Main">update Статья set Текст</console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
