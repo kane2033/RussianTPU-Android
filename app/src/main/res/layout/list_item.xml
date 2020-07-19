@@ -14,5 +14,6 @@
         android:layout_height="wrap_content"
         android:text="Название"
         android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="34sp" />
 </LinearLayout>
