@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -14,6 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.russiantpu.R;
 import com.example.russiantpu.items.Article;
+import com.example.russiantpu.utility.ChromeClient;
 import com.example.russiantpu.utility.GenericCallback;
 import com.example.russiantpu.utility.GsonService;
 import com.example.russiantpu.utility.RequestService;
@@ -22,8 +24,8 @@ import com.example.russiantpu.utility.RequestService;
 public class ArticleFragment extends Fragment {
 
     private WebView webView;
-    private TextView date;
     private TextView missingContentText;
+    private FrameLayout frameLayout;
 
     private Article article;
 
@@ -33,8 +35,8 @@ public class ArticleFragment extends Fragment {
         //отображаем в фрагменте
         LinearLayout layoutInflater = (LinearLayout) inflater.inflate(R.layout.fragment_article, container, false);
         webView = layoutInflater.findViewById(R.id.fullArticle); //статья
-        date = layoutInflater.findViewById(R.id.date); //дата создания
         missingContentText = layoutInflater.findViewById(R.id.missingContentText);
+        frameLayout = layoutInflater.findViewById(R.id.fullscreen_container); //контейнер для полноэкранного режима
         return layoutInflater;
     }
 
@@ -63,13 +65,14 @@ public class ArticleFragment extends Fragment {
                         @Override
                         public void run() {
                             //установка заголовка в тулбаре
-                            activity.setTitle(article.getSubject());
+                            activity.setTitle(article.getTopic());
+
+                            //настройки для отображения видео
+                            webView.getSettings().setJavaScriptEnabled(true);
+                            webView.setWebChromeClient(new ChromeClient(webView, frameLayout));
 
                             //отображение в формате html
-                            //webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
                             webView.loadData(article.getText(), "text/html; charset=utf-8", "UTF-8");
-                            String dateStr = "Дата создания: " + article.getCreateDate();
-                            date.setText(dateStr);
                         }
                     });
                 }

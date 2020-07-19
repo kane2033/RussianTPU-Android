@@ -64,18 +64,18 @@ public class FeedFragment extends Fragment {
             public void onResponse(String jsonBody) {
                 items = gsonService.fromJsonToArrayList(jsonBody, FeedItem.class);
 
-                if (items == null) { //если нет контента, уведомляем
-                    missingContentText.setText(R.string.missing_content);
-                }
-                else { //иначе заполняем recycleview
-                    Log.d("FEED_FRAGMENT", "Сколько статей получено: " + items.size());
-
-                    //отрисовываем список статей в потоке интерфейса
-                    //возможно, это стоит перенести в onCreateView
-                    //и при успешном запросе вызывать обновление recycleview
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
+                //иначе заполняем recycleview
+                //отрисовываем список статей в потоке интерфейса
+                //возможно, это стоит перенести в onCreateView
+                //и при успешном запросе вызывать обновление recycleview
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (items.size() == 0) { //если нет контента, уведомляем
+                            missingContentText.setText(R.string.missing_content);
+                        }
+                        else {
+                            Log.d("FEED_FRAGMENT", "Сколько статей получено: " + items.size());
                             adapter = new FeedDataAdapter(getContext(), items);
                             adapter.setOnItemClickListener(new ClickListener() {
                                 @Override
@@ -91,8 +91,9 @@ public class FeedFragment extends Fragment {
                             });
                             recyclerView.setAdapter(adapter);
                         }
-                    });
-                }
+                    }
+
+                });
             }
         };
         //запрос за получение списка статей по айди пункта меню
