@@ -23,7 +23,7 @@ public class FragmentReplacer {
 
     private final FragmentManager fragmentManager;
     private final AppCompatActivity activity;
-    private final String fragmentTag = "PREV_FRAGMENT";
+    private final String fragmentTag = String.valueOf(R.string.prev_frag_tag);
 
     public FragmentReplacer(AppCompatActivity activity) {
         this.activity = activity;

@@ -1,8 +1,5 @@
 package com.example.russiantpu.utility;
 
-import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.webkit.WebChromeClient;
 import android.view.View;
 import android.webkit.WebView;

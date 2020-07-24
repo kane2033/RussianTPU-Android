@@ -1,7 +1,29 @@
 <resources>
     <string name="app_name">RussianTPU</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open">Открыть шторку</string>
+    <string name="navigation_drawer_close">Закрыть шторку</string>
+
+    <!--Поля ввода для логина-->
+    <string name="email">E-mail</string>
+    <string name="password">Пароль</string>
+    <string name="remember_me">Запомнить меня?</string>
+    <string name="login">Войти</string>
+    <string name="goto_register">Нет аккаунта? Зарегистрируйтесь!</string>
+
+    <!--Поля ввода для регистрации-->
+    <string name="first_name">Имя</string>
+    <string name="last_name">Фамилия</string>
+    <string name="gender">Пол</string>
+    <string name="male">Мужской</string>
+    <string name="female">Женский</string>
+    <string name="language">Язык</string>
+    <string name="phone_number">Номер телефона</string>
+    <string name="register">Зарегистрироваться</string>
+
     <string name="missing_content">Пустовато тут… Контент отсутствует!</string>
+
+    <!--Тэг, необходимый для перехода на предыдущий фрагмент-->
+    <string name="prev_frag_tag">PREV_FRAGMENT</string>
+    <string name="prev_auth_frag_tag">PREV_AUTH_FRAGMENT</string>
 </resources>
