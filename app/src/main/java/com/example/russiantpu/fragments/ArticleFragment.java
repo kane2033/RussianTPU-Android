@@ -1,6 +1,8 @@
 package com.example.russiantpu.fragments;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -79,8 +81,11 @@ public class ArticleFragment extends Fragment {
 
             }
         };
+        //получение JWT токена
+        SharedPreferences sharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("token", "");
         //запрос за получение списка статей по айди пункта меню
-        requestService.doRequest("article/" + selectedArticleId, callback, "fromMenu", "true");
+        requestService.doRequest("article/" + selectedArticleId, callback, token, "fromMenu", "true");
 
 
     }

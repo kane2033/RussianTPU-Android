@@ -27,4 +27,8 @@ public class GsonService {
     public <T> T fromJsonToObject(String json, Class<T> clazz) {
         return gson.fromJson(json, clazz);
     }
+
+    public String fromObjectToJson(Object object) {
+        return gson.toJson(object);
+    }
 }

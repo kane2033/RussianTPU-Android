@@ -9,15 +9,17 @@ import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.HttpUrl;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class RequestService {
 
-    private final String API_URL = "http://109.123.155.178:8080/";
+    private final String API_URL = "http://109.123.155.178:8080/api/";
+    final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private OkHttpClient client = new OkHttpClient();
-    private Request request = null; //стоит сделать поля локальными?
 
     public RequestService() {
 
@@ -25,7 +27,7 @@ public class RequestService {
 
     //запрос на url с произвольным количеством параметров:
     //параметры вводятся форматом - название параметра, значение параметра, ...
-    public void doRequest(String url, final GenericCallback<String> callback, String... params) {
+    public void doRequest(String url, final GenericCallback<String> callback, String token, String... params) {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(API_URL + url).newBuilder();
         for (int i = 0; i < params.length; i++) {
             urlBuilder.addQueryParameter(params[i], params[++i]);
@@ -34,15 +36,28 @@ public class RequestService {
 
         Request request = new Request.Builder()
                 .url(builtUrl)
+                .addHeader("Authorization", "Bearer " + token) //JWT
                 .build();
 
         enqueue(request, callback);
     }
 
     //запрос на url без параметров
-    public void doRequest(String url, final GenericCallback<String> callback) {
+    public void doRequest(String url, final GenericCallback<String> callback, String token) {
         Request request = new Request.Builder()
-                .url(url)
+                .url(API_URL + url)
+                .addHeader("Authorization", "Bearer " + token)
+                .build();
+
+        enqueue(request, callback);
+    }
+
+    //post запрос
+    public void doPostRequest(String url, final GenericCallback<String> callback, String json) {
+        RequestBody body = RequestBody.create(json, JSON);
+        Request request = new Request.Builder()
+                .url(API_URL + url)
+                .post(body)
                 .build();
 
         enqueue(request, callback);

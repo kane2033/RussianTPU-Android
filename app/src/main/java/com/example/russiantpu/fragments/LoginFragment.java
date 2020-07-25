@@ -16,7 +16,12 @@ import androidx.fragment.app.Fragment;
 
 import com.example.russiantpu.MainActivity;
 import com.example.russiantpu.R;
+import com.example.russiantpu.dto.LoginDTO;
+import com.example.russiantpu.dto.TokensDTO;
 import com.example.russiantpu.items.LinkItem;
+import com.example.russiantpu.utility.GenericCallback;
+import com.example.russiantpu.utility.GsonService;
+import com.example.russiantpu.utility.RequestService;
 
 public class LoginFragment extends Fragment {
 
@@ -31,18 +36,34 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final ScrollView layoutInflater = (ScrollView)inflater.inflate(R.layout.fragment_login, container, false);
+
         emailInput = layoutInflater.findViewById(R.id.input_email);
         passwordInput = layoutInflater.findViewById(R.id.input_password);
         loginButton = layoutInflater.findViewById(R.id.button_login);
         gotoRegisterButton = layoutInflater.findViewById(R.id.goto_register);
 
+        final RequestService requestService = new RequestService();
+        final GsonService gsonService = new GsonService();
+
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*TODO
-                *  post запрос на логин*/
+                LoginDTO dto = new LoginDTO(emailInput.getText().toString(), passwordInput.getText().toString(), true);
+                final String json = gsonService.fromObjectToJson(dto);
 
-                getActivity().startActivity(new Intent(getContext(), MainActivity.class));
+                GenericCallback<String> callback = new GenericCallback<String>() {
+                    @Override
+                    public void onResponse(String jsonBody) {
+                        //переносим в главную активити токены для последующего сохранения
+                        TokensDTO tokens = gsonService.fromJsonToObject(jsonBody, TokensDTO.class);
+                        Intent intent = new Intent(getContext(), MainActivity.class);
+                        intent.putExtra("token", tokens.getToken());
+                        intent.putExtra("refreshToken", tokens.getRefreshToken());
+                        getActivity().startActivity(intent);
+                    }
+                };
+
+                requestService.doPostRequest("auth/login", callback, json);
             }
         });
 

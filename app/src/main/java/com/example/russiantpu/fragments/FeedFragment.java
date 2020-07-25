@@ -1,6 +1,8 @@
 package com.example.russiantpu.fragments;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -96,8 +98,12 @@ public class FeedFragment extends Fragment {
                 });
             }
         };
+        //получение JWT токена
+        SharedPreferences sharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("token", "");
+
         //запрос за получение списка статей по айди пункта меню
-        requestService.doRequest("article/list/" + selectedItemId, callback, "fromMenu", "true");
+        requestService.doRequest("article/list/" + selectedItemId, callback, token, "fromMenu", "true");
     }
 
 }
