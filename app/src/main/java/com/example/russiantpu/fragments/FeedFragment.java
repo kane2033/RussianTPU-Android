@@ -26,6 +26,7 @@ import com.example.russiantpu.utility.FragmentReplacer;
 import com.example.russiantpu.utility.GenericCallback;
 import com.example.russiantpu.utility.GsonService;
 import com.example.russiantpu.utility.RequestService;
+import com.example.russiantpu.utility.SharedPreferencesService;
 
 import java.util.ArrayList;
 
@@ -99,8 +100,8 @@ public class FeedFragment extends Fragment {
             }
         };
         //получение JWT токена
-        SharedPreferences sharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
-        String token = sharedPreferences.getString("token", "");
+        SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(activity);
+        String token = sharedPreferencesService.getToken();
 
         //запрос за получение списка статей по айди пункта меню
         requestService.doRequest("article/list/" + selectedItemId, callback, token, "fromMenu", "true");

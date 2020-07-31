@@ -1,7 +1,5 @@
 package com.example.russiantpu;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -20,6 +18,7 @@ import com.example.russiantpu.utility.FragmentReplacer;
 import com.example.russiantpu.utility.GenericCallback;
 import com.example.russiantpu.utility.GsonService;
 import com.example.russiantpu.utility.RequestService;
+import com.example.russiantpu.utility.SharedPreferencesService;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -49,22 +48,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        String token = "";
-        String refreshToken = "";
-        //получаем их активити логина токены
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            token = extras.getString("token");
-            refreshToken = extras.getString("refreshToken");
-
-            //сохраняем токены для последующего использования в каждом запросе
-            SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString("token", token);
-            editor.putString("refreshToken", refreshToken);
-            editor.commit();
-        }
-
+        //получение JWT токена
+        SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(this);
+        String token = sharedPreferencesService.getToken();
 
         //запрос на сервис для получения пунктов выдвижного меню
         RequestService requestService = new RequestService();

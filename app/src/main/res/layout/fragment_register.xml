@@ -44,6 +44,21 @@
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:hint="@string/last_name">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/input_lastname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
         <!--  Name Label -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -60,19 +75,20 @@
                 android:inputType="textCapWords" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!--  Name Label -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:hint="@string/last_name">
+            android:hint="@string/middle_name">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/input_lastname"
+                android:id="@+id/input_middlename"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textCapWords" />
 
+                android:inputType="textCapWords" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView

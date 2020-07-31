@@ -14,6 +14,7 @@
     <!--Поля ввода для регистрации-->
     <string name="first_name">Имя</string>
     <string name="last_name">Фамилия</string>
+    <string name="middle_name">Отчество</string>
     <string name="gender">Пол</string>
     <string name="male">Мужской</string>
     <string name="female">Женский</string>
@@ -26,4 +27,11 @@
     <!--Тэг, необходимый для перехода на предыдущий фрагмент-->
     <string name="prev_frag_tag">PREV_FRAGMENT</string>
     <string name="prev_auth_frag_tag">PREV_AUTH_FRAGMENT</string>
+
+    <!--Имя выбранного для авторизации сервиса-->
+    <string name="provider_google">google</string>
+    <string name="provider_facebook">facebook</string>
+
+    <!--OAuth ID Android клиента для google-->
+    <string name="server_client_id_google">827029366413-ckl58bbhvkl57qq2f4vnejpoijig0r2s.apps.googleusercontent.com</string>
 </resources>

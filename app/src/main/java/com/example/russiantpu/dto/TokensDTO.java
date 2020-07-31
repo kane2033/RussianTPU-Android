@@ -3,6 +3,7 @@ package com.example.russiantpu.dto;
 public class TokensDTO {
     private String token;
     private String refreshToken;
+    private UserDTO user;
 
     public TokensDTO(String token, String refreshToken) {
         this.token = token;
@@ -23,5 +24,13 @@ public class TokensDTO {
 
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+    }
+
+    public UserDTO getUser() {
+        return user;
+    }
+
+    public void setUser(UserDTO user) {
+        this.user = user;
     }
 }

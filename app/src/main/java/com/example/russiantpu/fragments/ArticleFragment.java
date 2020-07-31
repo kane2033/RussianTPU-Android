@@ -21,6 +21,7 @@ import com.example.russiantpu.utility.ChromeClient;
 import com.example.russiantpu.utility.GenericCallback;
 import com.example.russiantpu.utility.GsonService;
 import com.example.russiantpu.utility.RequestService;
+import com.example.russiantpu.utility.SharedPreferencesService;
 
 //фрагмент, отображающий список статей (новостей)
 public class ArticleFragment extends Fragment {
@@ -82,8 +83,8 @@ public class ArticleFragment extends Fragment {
             }
         };
         //получение JWT токена
-        SharedPreferences sharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
-        String token = sharedPreferences.getString("token", "");
+        SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(activity);
+        String token = sharedPreferencesService.getToken();
         //запрос за получение списка статей по айди пункта меню
         requestService.doRequest("article/" + selectedArticleId, callback, token, "fromMenu", "true");
 

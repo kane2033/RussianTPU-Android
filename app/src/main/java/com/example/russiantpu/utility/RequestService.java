@@ -21,11 +21,17 @@ public class RequestService {
     final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private OkHttpClient client = new OkHttpClient();
 
+    private int responseCode;
+
+    public int getResponseCode() {
+        return responseCode;
+    }
+
     public RequestService() {
 
     }
 
-    //запрос на url с произвольным количеством параметров:
+    //GET запрос на url с произвольным количеством параметров:
     //параметры вводятся форматом - название параметра, значение параметра, ...
     public void doRequest(String url, final GenericCallback<String> callback, String token, String... params) {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(API_URL + url).newBuilder();
@@ -42,7 +48,7 @@ public class RequestService {
         enqueue(request, callback);
     }
 
-    //запрос на url без параметров
+    //GET запрос на url без параметров
     public void doRequest(String url, final GenericCallback<String> callback, String token) {
         Request request = new Request.Builder()
                 .url(API_URL + url)
@@ -52,7 +58,7 @@ public class RequestService {
         enqueue(request, callback);
     }
 
-    //post запрос
+    //post запрос - в параметрах получаем строку формата json, которая отправляется в теле запроса
     public void doPostRequest(String url, final GenericCallback<String> callback, String json) {
         RequestBody body = RequestBody.create(json, JSON);
         Request request = new Request.Builder()
@@ -65,19 +71,27 @@ public class RequestService {
 
     //делает запрос на url
     //возвращает тело ответа в json, доступное в реализации callback
-    private void enqueue(Request request, final GenericCallback<String> callback) {
+    private void enqueue(final Request request, final GenericCallback<String> callback) {
         client.newCall(request).enqueue(new Callback() { //enqueue - асинхр., execute - синхр.
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 e.printStackTrace();
+                //callback.onFailure
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful()) { //code [200;300]
+                    //при успешном запросе заносим код в переменную для случаев, когда требуется знать код
+                    responseCode = response.code();
                     final String jsonBody = response.body().string(); //тело ответа
                     Log.d("JSON_RESPONSE", "onResponse: " + jsonBody);
                     callback.onResponse(jsonBody);
+                }
+                else {
+                    //следует сделать отображение ошибок на экране:
+                    //callback.onError()
+                    Log.d("RESPONSE_ERR", "Response code: " + response.code() + "; text: " + response.body().string());
                 }
             }
         });

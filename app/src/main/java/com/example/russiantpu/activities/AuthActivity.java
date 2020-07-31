@@ -3,10 +3,17 @@ package com.example.russiantpu.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.russiantpu.MainActivity;
 import com.example.russiantpu.R;
+import com.example.russiantpu.dto.CheckTokenDTO;
 import com.example.russiantpu.fragments.LoginFragment;
+import com.example.russiantpu.utility.GenericCallback;
+import com.example.russiantpu.utility.GsonService;
+import com.example.russiantpu.utility.RequestService;
+import com.example.russiantpu.utility.SharedPreferencesService;
 
 public class AuthActivity extends AppCompatActivity {
 
@@ -18,8 +25,34 @@ public class AuthActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
 
+        SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(this);
+        RequestService requestService = new RequestService();
+        GsonService gsonService = new GsonService();
+
+        //получение JWT токена
+        String token = sharedPreferencesService.getToken();
+        String email = sharedPreferencesService.getEmail();
+        String json = gsonService.fromObjectToJson(new CheckTokenDTO(token, email));
+
+        final Intent intent = new Intent(this, MainActivity.class);
+
+        /*
+        * возможно, стоит перенести проверку токена в фрагмент логина,
+        * потому что переход в фрагмент логина после проверки может все равно произойти (?)
+        * */
+
+        //если запрос успешен (код 200), вызовется коллбэк с переходом в главную активити
+        //(запрос успешен, если токен валиден)
+        GenericCallback<String> callback = new GenericCallback<String>() {
+            @Override
+            public void onResponse(String value) {
+                startActivity(intent);
+            }
+        };
+        requestService.doPostRequest("auth/check", callback, json);
+
+        //иначе запустится фрагмент логина
         fragmentManager = getSupportFragmentManager();
-        //при запуске приложения, открывается фрагмент логина
         fragmentManager.beginTransaction().replace(R.id.fragment_container,
                 new LoginFragment()).addToBackStack(fragmentTag).commit();
     }
@@ -32,5 +65,10 @@ public class AuthActivity extends AppCompatActivity {
         else {
             finish();
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
