@@ -1,9 +1,11 @@
 package com.example.russiantpu;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -13,6 +15,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.russiantpu.activities.AuthActivity;
 import com.example.russiantpu.items.LinkItem;
 import com.example.russiantpu.utility.FragmentReplacer;
 import com.example.russiantpu.utility.GenericCallback;
@@ -40,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
         drawer = findViewById(R.id.drawer_layout);
         final NavigationView navigationView = findViewById(R.id.nav_view);
+        final View header = navigationView.getHeaderView(0);
         navigationView.setNavigationItemSelectedListener(this);
 /*        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);*/
@@ -49,8 +53,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
 
         //получение JWT токена
-        SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(this);
+        final SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(this);
         String token = sharedPreferencesService.getToken();
+
+        final Intent intent = new Intent(this, AuthActivity.class);
+        //установка действия при клике на хэдер
+        //выдвижного меню
+        header.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sharedPreferencesService.clearCredentials(); //удаляем токен из памяти
+                startActivity(intent); //переходим обратно в активити логина
+            }
+        });
 
         //запрос на сервис для получения пунктов выдвижного меню
         RequestService requestService = new RequestService();

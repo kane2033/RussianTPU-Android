@@ -34,4 +34,8 @@
 
     <!--OAuth ID Android клиента для google-->
     <string name="server_client_id_google">827029366413-ckl58bbhvkl57qq2f4vnejpoijig0r2s.apps.googleusercontent.com</string>
+
+    <!--Facebook-->
+    <string name="facebook_app_id">347824149711941</string>
+    <string name="fb_login_protocol_scheme">fb347824149711941</string>
 </resources>

@@ -41,6 +41,12 @@ public class SharedPreferencesService {
         editor.commit();
     }
 
+    //метод вызывается при выходе из аккаунта,
+    //удаляет токены из sharedPreferences
+    public void clearCredentials() {
+        sharedPreferences.edit().clear().commit();
+    }
+
     public void setToken(String token) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(tokenKey, token);
