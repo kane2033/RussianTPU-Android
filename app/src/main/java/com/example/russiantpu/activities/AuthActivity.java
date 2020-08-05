@@ -1,6 +1,7 @@
 package com.example.russiantpu.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
@@ -14,8 +15,9 @@ import com.example.russiantpu.utility.GenericCallback;
 import com.example.russiantpu.utility.GsonService;
 import com.example.russiantpu.utility.RequestService;
 import com.example.russiantpu.utility.SharedPreferencesService;
+import com.example.russiantpu.utility.VKAuthService;
 
-public class AuthActivity extends AppCompatActivity {
+public class AuthActivity extends FragmentActivity {
 
     private FragmentManager fragmentManager;
     private final String fragmentTag = String.valueOf(R.string.prev_auth_frag_tag);
@@ -69,6 +71,8 @@ public class AuthActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+        if (VKAuthService.onActivityResult(requestCode, resultCode, data)) {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

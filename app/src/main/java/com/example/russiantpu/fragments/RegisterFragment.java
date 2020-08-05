@@ -33,7 +33,7 @@ public class RegisterFragment extends Fragment {
     private EditText phoneNumberInput;
     private Button registerButton;
 
-    private UserDTO fromLoginDto;
+    private UserDTO dto = new UserDTO();
 
     @Nullable
     @Override
@@ -56,10 +56,10 @@ public class RegisterFragment extends Fragment {
         //если юзер регистрируется после авторизации
         //через сторонний сервис, заполняем имеющиеся поля
         if (getArguments() != null) {
-            fromLoginDto = getArguments().getParcelable("registerDTO");
-            emailInput.setText(fromLoginDto.getEmail());
-            firstNameInput.setText(fromLoginDto.getFirstName());
-            lastNameInput.setText(fromLoginDto.getLastName());
+            dto = getArguments().getParcelable("registerDTO");
+            emailInput.setText(dto.getEmail());
+            firstNameInput.setText(dto.getFirstName());
+            lastNameInput.setText(dto.getLastName());
 
             //запрещаем редактировать уже заполненные поля
             emailInput.setEnabled(false);
@@ -82,9 +82,9 @@ public class RegisterFragment extends Fragment {
 
                 //заполняем дто регистрации, которое будем отправлять на сервис
                 //если поля не заполнены, они равны null
-                UserDTO dto = new UserDTO(getTextFromInput(emailInput), getTextFromInput(passwordInput), getTextFromInput(firstNameInput),
-                        getTextFromInput(lastNameInput), getTextFromInput(middleNameInput), gender, getTextFromInput(languageInput), getTextFromInput(phoneNumberInput));
-                dto.setProvider(fromLoginDto.getProvider()); //possible nullPointerException?
+                dto.updateFields(getTextFromInput(emailInput), getTextFromInput(passwordInput), getTextFromInput(firstNameInput),
+                        getTextFromInput(lastNameInput), getTextFromInput(middleNameInput), gender, getTextFromInput(languageInput),
+                        getTextFromInput(phoneNumberInput));
 
                 //если регистрация происходит через сторонние сервисы (поле != null), выбираем соответствующий юрл
                 String url = dto.getProvider() != null ? "auth/register/provider" : "auth/register";

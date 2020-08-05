@@ -67,7 +67,55 @@
             android:text="@string/goto_register"
             android:gravity="center" />
 
-        <com.google.android.gms.common.SignInButton
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:gravity="center"
+            android:text="@string/login_via_service"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp">
+
+            <ImageView
+                android:id="@+id/button_login_google"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:cropToPadding="true"
+                android:src="@drawable/ic_google_icon" />
+
+            <ImageView
+                android:id="@+id/button_login_facebook"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:cropToPadding="true"
+                android:src="@drawable/ic_facebook" />
+
+            <ImageView
+                android:id="@+id/button_login_vk"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:cropToPadding="true"
+                android:src="@drawable/ic_vk" />
+        </LinearLayout>
+
+<!--        <com.google.android.gms.common.SignInButton
             android:id="@+id/button_login_google"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -79,7 +127,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:paddingTop="12dp"
-            android:paddingBottom="12dp" />
+            android:paddingBottom="12dp" />-->
 
     </LinearLayout>
 </ScrollView>

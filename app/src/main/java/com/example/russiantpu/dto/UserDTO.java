@@ -29,6 +29,21 @@ public class UserDTO implements Parcelable {
         this.phoneNumber = phoneNumber;
     }
 
+    //метод используется в тех случаях, когда нельзя создавать новый экземпляр объекта,
+    //потому что в нем может храниться информация (provider)
+    public void updateFields(String email, String password, String firstName,
+                             String lastName, String middleName, String gender,
+                             String language, String phoneNumber) {
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.middleName = middleName;
+        this.gender = gender;
+        this.language = language;
+        this.phoneNumber = phoneNumber;
+    }
+
     public String getEmail() {
         return email;
     }

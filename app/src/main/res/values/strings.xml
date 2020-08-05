@@ -10,6 +10,7 @@
     <string name="remember_me">Запомнить меня?</string>
     <string name="login">Войти</string>
     <string name="goto_register">Нет аккаунта? Зарегистрируйтесь!</string>
+    <string name="login_via_service">Войдите через социальные сети</string>
 
     <!--Поля ввода для регистрации-->
     <string name="first_name">Имя</string>
@@ -31,6 +32,7 @@
     <!--Имя выбранного для авторизации сервиса-->
     <string name="provider_google">google</string>
     <string name="provider_facebook">facebook</string>
+    <string name="provider_vk">vk</string>
 
     <!--OAuth ID Android клиента для google-->
     <string name="server_client_id_google">827029366413-ckl58bbhvkl57qq2f4vnejpoijig0r2s.apps.googleusercontent.com</string>
@@ -38,4 +40,7 @@
     <!--Facebook-->
     <string name="facebook_app_id">347824149711941</string>
     <string name="fb_login_protocol_scheme">fb347824149711941</string>
+
+    <!--VK app id for SDK-->
+    <integer name="com_vk_sdk_AppId">7556989</integer>
 </resources>

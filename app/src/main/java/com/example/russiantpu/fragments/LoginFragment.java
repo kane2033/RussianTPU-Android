@@ -25,8 +25,8 @@ import com.example.russiantpu.utility.GoogleAuthService;
 import com.example.russiantpu.utility.GsonService;
 import com.example.russiantpu.utility.RequestService;
 import com.example.russiantpu.utility.SharedPreferencesService;
-import com.facebook.login.widget.LoginButton;
-import com.google.android.gms.common.SignInButton;
+import com.example.russiantpu.utility.VKAuthService;
+import com.example.russiantpu.utility.VKTokenCallback;
 
 public class LoginFragment extends Fragment implements View.OnClickListener {
 
@@ -36,13 +36,15 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private EditText passwordInput;
     private Button loginButton;
     private Button gotoRegisterButton;
-    private SignInButton loginGoogle;
-    private LoginButton loginFacebook;
+    private ImageView loginGoogle;
+    private ImageView loginFacebook;
+    private ImageView loginVK;
 
     private RequestService requestService;
     private GsonService gsonService;
     private GoogleAuthService googleAuth;
     private FacebookAuthService fbAuth;
+    private VKAuthService vkAuth;
 
     private GenericCallback<String> toMainActivityCallback;
     private GenericCallback<String> providerAuthCallback;
@@ -58,25 +60,39 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         gotoRegisterButton = layoutInflater.findViewById(R.id.goto_register);
         loginGoogle = layoutInflater.findViewById(R.id.button_login_google);
         loginFacebook = layoutInflater.findViewById(R.id.button_login_facebook);
+        loginVK = layoutInflater.findViewById(R.id.button_login_vk);
 
         loginButton.setOnClickListener(this);
         gotoRegisterButton.setOnClickListener(this);
         loginGoogle.setOnClickListener(this);
+        loginFacebook.setOnClickListener(this);
+        loginVK.setOnClickListener(this);
 
         requestService = new RequestService();
         gsonService = new GsonService();
-        //передаем ссылку на фрагмент для вызова onActivityResult через класс
-        googleAuth = new GoogleAuthService(this);
-        fbAuth = new FacebookAuthService(loginFacebook, this);
 
         //инициализация коллбэка
-        // при нажатии кнопки логина через fb
-        fbAuth.initCallback(new GenericCallback<String>() {
+        // при нажатии кнопки логина через сервис
+        GenericCallback<String> getTokenCallback = new GenericCallback<String>() {
             @Override
             public void onResponse(String token) {
                 sendIdTokenToService(token, getResources().getString(R.string.provider_facebook));
             }
-        });
+        };
+
+        //специальный коллбэк для VK, потому что требуется отослать
+        //дополнительно email и userId
+        VKTokenCallback getVKTokenCallback = new VKTokenCallback() {
+            @Override
+            public void onResponse(String token, Integer userId, String email) {
+                sendIdTokenToService(token, userId.toString(), email, getResources().getString(R.string.provider_vk));
+            }
+        };
+
+        //создаем классы, осуществляющие авторизацию через сервисы
+        googleAuth = new GoogleAuthService(this);
+        fbAuth = new FacebookAuthService(this, getTokenCallback);
+        vkAuth = new VKAuthService(this, getVKTokenCallback);
 
         //коллбэк при успешном запросе - переход в основное активити
         toMainActivityCallback = new GenericCallback<String>() {
@@ -121,6 +137,20 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         return layoutInflater;
     }
 
+    //метод отправляет переданный токен с указанным провайдером на сервис
+    private void sendIdTokenToService(String idToken, String provider) {
+        //отправляет токен google на сервис для авторизации
+        String json = gsonService.fromObjectToJson(new LoginByProviderDTO(provider, idToken));
+        requestService.doPostRequest("auth/login/provider", providerAuthCallback, json);
+    }
+
+    //метод для ВК - с токеном необходимо отправить userId и email
+    private void sendIdTokenToService(String idToken, String userId, String email, String provider) {
+        //отправляет токен google на сервис для авторизации
+        String json = gsonService.fromObjectToJson(new LoginByProviderDTO(provider, idToken, userId,email));
+        requestService.doPostRequest("auth/login/provider", providerAuthCallback, json);
+    }
+
     @Override
     public void onClick(View v) {
         String json;
@@ -138,6 +168,12 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 //авторизация продолжается в onActivityResult
                 googleAuth.initLogin();
                 break;
+            case R.id.button_login_facebook:
+                fbAuth.initLogin();
+                break;
+            case R.id.button_login_vk:
+                vkAuth.initLogin();
+                break;
             default:
                 break;
         }
@@ -148,11 +184,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     //отсылкается на сервис
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        //менеджер коллбэка логина фб получает результаты логина
-        fbAuth.getCallbackManager().onActivityResult(requestCode, resultCode, data);
-
         //получение айди токена google при успешной авторизации
         if (requestCode == googleAuth.getRC_SIGN_IN()) {
             String idToken = googleAuth.handleSignInResult(data);
@@ -161,12 +192,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 sendIdTokenToService(idToken, getResources().getString(R.string.provider_google));
             }
         }
-    }
 
-    //метод отправляет переданный токен с указанным провайдером на сервис
-    private void sendIdTokenToService(String idToken, String provider) {
-        //отправляет токен google на сервис для авторизации
-        String json = gsonService.fromObjectToJson(new LoginByProviderDTO(provider, idToken));
-        requestService.doPostRequest("auth/login/provider", providerAuthCallback, json);
+        //менеджер коллбэка логина фб получает результаты логина
+        fbAuth.getCallbackManager().onActivityResult(requestCode, resultCode, data);
+
+        //!!! vkAuth.onActivityResult() используется в AuthActivity, потому что SDK VK
+        //не поддерживает фрагменты
     }
 }

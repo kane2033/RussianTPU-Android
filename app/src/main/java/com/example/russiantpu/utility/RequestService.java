@@ -19,7 +19,7 @@ public class RequestService {
 
     private final String API_URL = "http://109.123.155.178:8080/api/";
     final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    private OkHttpClient client = new OkHttpClient();
+    private OkHttpClient client;
 
     private int responseCode;
 
@@ -28,7 +28,7 @@ public class RequestService {
     }
 
     public RequestService() {
-
+        client = new OkHttpClient();
     }
 
     //GET запрос на url с произвольным количеством параметров:
