@@ -1,0 +1,14 @@
+<resources>
+    <!--Ошбики при валидации-->
+    <string name="email_error">Адрес почты некорректен</string>
+    <string name="password_error">Пароль должен содержать минимум 8 символов, 
+        одну прописную букву, одну цифру</string>
+    <string name="lastname_error">Превышен лимит символов</string>
+    <string name="firstname_error">Превышен лимит символов</string>
+    <string name="middlename_error">Превышен лимит символов</string>
+    <string name="language_error">Язык не выбран</string>
+    <string name="phone_error">Превышен лимит символов</string>
+    <string name="min_char_error"></string>
+    <string name="empty_field_error">Поле должно быть заполнено</string>
+    <string name="checkbox_error">Вы должны согласиться на обработку персональных данных</string>
+</resources>

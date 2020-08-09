@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/colorPrimary"
@@ -10,7 +11,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingLeft="24dp"
-        android:paddingTop="56dp"
+        android:paddingTop="24dp"
         android:paddingRight="24dp"
         android:focusableInTouchMode="true">
 
@@ -20,13 +21,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:hint="@string/email">
+            android:hint="@string/email_reg">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/input_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textEmailAddress" />
+                android:inputType="textEmailAddress"
+                app:errorEnabled="true"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Password Label -->
@@ -35,13 +37,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:hint="@string/password">
+            android:hint="@string/password_reg">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/input_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                app:errorEnabled="true"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -87,11 +90,10 @@
                 android:id="@+id/input_middlename"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:inputType="textCapWords" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -106,36 +108,65 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <RadioButton
-                android:id="@+id/male"
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:id="@+id/gender_male"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/male"
+                android:layout_height="match_parent"
+                android:text="@string/gender_male"
                 android:textSize="18sp" />
 
-            <RadioButton
-                android:id="@+id/female"
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:id="@+id/gender_female"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/female"
+                android:layout_height="match_parent"
+                android:text="@string/gender_female"
+                android:textSize="18sp" />
+
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:id="@+id/gender_none"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/gender_none"
                 android:textSize="18sp" />
 
         </RadioGroup>
 
-        <!--Ввод языка - нужно поменять способ ввода на фиксированное-->
-        <com.google.android.material.textfield.TextInputLayout
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:hint="@string/language">
+            android:text="@string/choose_language"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textSize="18sp"/>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/input_language"
+        <Spinner
+            android:id="@+id/input_language_spinner"
+            style="@android:style/Widget.Material.Spinner.Underlined"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:entries="@array/languages_array"
+            android:textSize="18sp" />
+
+
+<!--        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:hint="@string/choose_language">
+
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                android:id="@+id/input_language_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textCapWords" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:hint="@string/choose_language"
+                android:dropDownHeight="match_parent"/>
+
+        </com.google.android.material.textfield.TextInputLayout>-->
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -148,17 +179,27 @@
                 android:id="@+id/input_phone_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="phone" />
+                android:inputType="phone"
+                app:errorEnabled="true"
+                />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Signup Button -->
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:textSize="18sp"
+            android:text="@string/checkbox"
+            />
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button_register"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="24dp"
-            android:padding="12dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
             android:text="@string/register" />
 
     </LinearLayout>

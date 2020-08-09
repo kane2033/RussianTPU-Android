@@ -4,6 +4,20 @@
     <string name="navigation_drawer_open">Открыть шторку</string>
     <string name="navigation_drawer_close">Закрыть шторку</string>
 
+    <!--Список поддерживаемых языков: значения первого массива
+    будут отсылаться (всегда на английском),
+    второй массив служит для отображения в интерфейсе-->
+    <string-array name="languages_array_keys">
+        <item>rus</item>
+        <item>eng</item>
+        <item>zh</item>
+    </string-array>
+    <string-array name="languages_array">
+        <item>Русский</item>
+        <item>Английский</item>
+        <item>Китайский</item>
+    </string-array>
+
     <!--Поля ввода для логина-->
     <string name="email">E-mail</string>
     <string name="password">Пароль</string>
@@ -13,15 +27,23 @@
     <string name="login_via_service">Войдите через социальные сети</string>
 
     <!--Поля ввода для регистрации-->
-    <string name="first_name">Имя</string>
+    <string name="email_reg">E-mail*</string>
+    <string name="password_reg">Пароль*</string>
+    <string name="first_name">Имя*</string>
     <string name="last_name">Фамилия</string>
     <string name="middle_name">Отчество</string>
     <string name="gender">Пол</string>
-    <string name="male">Мужской</string>
-    <string name="female">Женский</string>
+    <string name="gender_male">Мужской</string>
+    <string name="gender_female">Женский</string>
+    <string name="gender_none">Не указ.</string>
+    <string name="choose_language">Выберите язык*</string>
     <string name="language">Язык</string>
     <string name="phone_number">Номер телефона</string>
+    <string name="checkbox">Согласие на обработку персональных данных*</string>
     <string name="register">Зарегистрироваться</string>
+    <!--Текст ошибок и статусов выполнения-->
+    <string name="validation_success">Все поля корректны</string>
+    <string name="reg_success">Регистрация успешна</string>
 
     <string name="missing_content">Пустовато тут… Контент отсутствует!</string>
 

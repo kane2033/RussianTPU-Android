@@ -38,4 +38,5 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:18.1.0'
     implementation 'com.facebook.android:facebook-android-sdk:7.1.0'
     implementation 'com.vk:androidsdk:2.2.4'
+    implementation 'com.mobsandgeeks:android-saripaar:2.0.3'
 }
