@@ -42,7 +42,7 @@
     <string name="checkbox">Согласие на обработку персональных данных*</string>
     <string name="register">Зарегистрироваться</string>
     <!--Текст ошибок и статусов выполнения-->
-    <string name="validation_success">Все поля корректны</string>
+    <string name="validation_success">Все поля корректны, регистрируем вашу учетную запись…</string>
     <string name="reg_success">Регистрация успешна</string>
 
     <string name="missing_content">Пустовато тут… Контент отсутствует!</string>

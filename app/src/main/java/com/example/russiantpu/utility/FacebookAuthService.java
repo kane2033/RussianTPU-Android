@@ -1,12 +1,7 @@
 package com.example.russiantpu.utility;
 
-import android.util.Log;
-import android.view.View;
-import android.widget.ImageView;
-
 import androidx.fragment.app.Fragment;
 
-import com.example.russiantpu.R;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;

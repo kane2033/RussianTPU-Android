@@ -5,20 +5,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
-
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-
-import com.example.russiantpu.utility.SpinnerValidatorAdapter;
-import com.google.android.material.checkbox.MaterialCheckBox;
-import com.google.android.material.textfield.TextInputEditText;
-
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -28,6 +18,10 @@ import com.example.russiantpu.dto.UserDTO;
 import com.example.russiantpu.utility.GenericCallback;
 import com.example.russiantpu.utility.GsonService;
 import com.example.russiantpu.utility.RequestService;
+import com.example.russiantpu.utility.SpinnerValidatorAdapter;
+import com.example.russiantpu.utility.ToastService;
+import com.google.android.material.checkbox.MaterialCheckBox;
+import com.google.android.material.textfield.TextInputEditText;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.Checked;
@@ -72,15 +66,16 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
     private Button registerButton;
 
     private UserDTO dto = new UserDTO();
-    private Context context;
+    private Context applicationContext;
     private RequestService requestService;
     private GsonService gsonService;
+    private ToastService toastService;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final ScrollView layoutInflater = (ScrollView)inflater.inflate(R.layout.fragment_register, container, false);
-        context = getContext();
+        applicationContext = getActivity().getApplicationContext();
 
         emailInput = layoutInflater.findViewById(R.id.input_email);
         passwordInput = layoutInflater.findViewById(R.id.input_password);
@@ -101,6 +96,7 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
         //вспомогательные классы для отправки запроса
         requestService = new RequestService();
         gsonService = new GsonService();
+        toastService = new ToastService(applicationContext);
 
         //если юзер регистрируется после авторизации
         //через сторонний сервис, заполняем имеющиеся поля
@@ -127,7 +123,7 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
     //если все поля пройдут валидацию
     @Override
     public void onValidationSucceeded() {
-        Toast.makeText(context, R.string.validation_success, Toast.LENGTH_SHORT).show();
+        toastService.showToast(R.string.validation_success);
         //берем выбраный пол, отсылаем всегда на английском
         String gender = null; //пол не обязательное поле, поэтому может быть null
         switch (genderInput.getCheckedRadioButtonId()) {
@@ -150,15 +146,14 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
         dto.updateFields(getTextFromInput(emailInput), getTextFromInput(passwordInput), getTextFromInput(firstNameInput),
                 getTextFromInput(lastNameInput), getTextFromInput(middleNameInput), gender, selectedLanguage,
                 getTextFromInput(phoneNumberInput));
-        String json = gsonService.fromObjectToJson(dto);
 
-        GenericCallback<String> callback = new GenericCallback<String>() {
+        final GenericCallback<String> callback = new GenericCallback<String>() {
             @Override
             public void onResponse(String jsonBody) {
                 //нужно уведомить об успешной регистрации
                 //нужно уведомить об процессе отправки запроса
 
-                Toast.makeText(context, R.string.reg_success, Toast.LENGTH_SHORT).show();
+                toastService.showToast(R.string.reg_success);
 
                 // переход обратно на фрагмент логина при успешной регистрации
                 getFragmentManager().beginTransaction().replace(R.id.fragment_container,
@@ -167,22 +162,30 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
         };
 
         //если регистрация происходит через сторонние сервисы (поле != null), выбираем соответствующий юрл
-        String url = dto.getProvider() != null ? "auth/register/provider" : "auth/register";
-        requestService.doPostRequest(url, callback, json);
+        final String url = dto.getProvider() != null ? "auth/register/provider" : "auth/register";
+
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                final String json = gsonService.fromObjectToJson(dto);
+                requestService.doPostRequest(url, callback, json);
+            }
+        });
+
     }
 
     @Override
     public void onValidationFailed(List<ValidationError> errors) {
         for (ValidationError error : errors) {
             View view = error.getView();
-            String message = error.getCollatedErrorMessage(context);
+            String message = error.getCollatedErrorMessage(applicationContext);
 
             //отображение ошибки
             if (view instanceof TextInputEditText) {
                 ((TextInputEditText) view).setError(message);
             }
             else {
-                Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+                toastService.showToast(message);
             }
         }
     }
