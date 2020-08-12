@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import com.example.russiantpu.R;
 import com.example.russiantpu.items.Article;
 import com.example.russiantpu.utility.ChromeClient;
+import com.example.russiantpu.utility.ErrorDialogService;
 import com.example.russiantpu.utility.GenericCallback;
 import com.example.russiantpu.utility.GsonService;
 import com.example.russiantpu.utility.RequestService;
@@ -78,6 +79,16 @@ public class ArticleFragment extends Fragment {
                     });
                 }
 
+            }
+
+            @Override
+            public void onError(String message) {
+                ErrorDialogService.showDialog(getResources().getString(R.string.article_error), message, getFragmentManager());
+            }
+
+            @Override
+            public void onFailure(String message) {
+                ErrorDialogService.showDialog(getResources().getString(R.string.article_error), message, getFragmentManager());
             }
         };
         //получение JWT токена

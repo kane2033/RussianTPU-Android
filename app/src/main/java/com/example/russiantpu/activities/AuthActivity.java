@@ -10,6 +10,7 @@ import com.example.russiantpu.MainActivity;
 import com.example.russiantpu.R;
 import com.example.russiantpu.dto.CheckTokenDTO;
 import com.example.russiantpu.fragments.LoginFragment;
+import com.example.russiantpu.utility.ErrorDialogService;
 import com.example.russiantpu.utility.GenericCallback;
 import com.example.russiantpu.utility.GsonService;
 import com.example.russiantpu.utility.RequestService;
@@ -49,10 +50,26 @@ public class AuthActivity extends FragmentActivity {
             public void onResponse(String value) {
                 startActivity(intent);
             }
+
+            //иначе запускаем фрагмент логина
+            @Override
+            public void onError(String message) {
+                goToLogin();
+            }
+
+            @Override
+            public void onFailure(String message) {
+                ErrorDialogService.showDialog(getResources().getString(R.string.auth_error), message, fragmentManager);
+                goToLogin();
+            }
         };
         requestService.doPostRequest("auth/check", callback, json);
 
-        //иначе запустится фрагмент логина
+
+    }
+
+    //метод запуска фрагмета логина
+    private void goToLogin() {
         fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fragment_container,
                 new LoginFragment()).addToBackStack(fragmentTag).commit();

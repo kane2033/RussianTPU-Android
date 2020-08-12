@@ -20,6 +20,7 @@ import com.example.russiantpu.dataAdapters.FeedDataAdapter;
 import com.example.russiantpu.enums.ContentType;
 import com.example.russiantpu.items.FeedItem;
 import com.example.russiantpu.items.Item;
+import com.example.russiantpu.utility.ErrorDialogService;
 import com.example.russiantpu.utility.FragmentReplacer;
 import com.example.russiantpu.utility.GenericCallback;
 import com.example.russiantpu.utility.GsonService;
@@ -95,6 +96,16 @@ public class FeedFragment extends Fragment {
                     }
 
                 });
+            }
+
+            @Override
+            public void onError(String message) {
+                ErrorDialogService.showDialog(getResources().getString(R.string.feed_error), message, getFragmentManager());
+            }
+
+            @Override
+            public void onFailure(String message) {
+                ErrorDialogService.showDialog(getResources().getString(R.string.feed_error), message, getFragmentManager());
             }
         };
         //получение JWT токена

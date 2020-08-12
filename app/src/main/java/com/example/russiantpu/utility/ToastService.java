@@ -18,9 +18,16 @@ public class ToastService {
         this.applicationContext = applicationContext;
     }
 
-    //метод для строк из strings.xml
+    //метод для строк из strings.xml,
+    //когда нужно вывести только строку из xml
     public void showToast(int message) {
         showToast(applicationContext.getResources().getString(message));
+    }
+
+    //метод для строк из strings.xml,
+    //когда необхоимдо вывести произвольную строку вместе со строкой из xml
+    public void showToast(int xmlString, String message) {
+        showToast(applicationContext.getResources().getString(xmlString) + message);
     }
 
     //отображает Toast сообщение в контексте applicationContext

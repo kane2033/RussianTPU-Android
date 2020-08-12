@@ -23,7 +23,8 @@ public class FragmentReplacer {
 
     private final FragmentManager fragmentManager;
     private final AppCompatActivity activity;
-    private final String fragmentTag = String.valueOf(R.string.prev_frag_tag);
+    private final String mainFragmentTag = "PREV_FRAGMENT";
+    private final String authFragmentTag = "PREV_AUTH_FRAGMENT";
 
     public FragmentReplacer(AppCompatActivity activity) {
         this.activity = activity;
@@ -77,6 +78,6 @@ public class FragmentReplacer {
     private void replaceFragment(Fragment fragment, Bundle args) {
         fragment.setArguments(args);
         fragmentManager.beginTransaction().replace(R.id.fragment_container,
-                fragment).addToBackStack(fragmentTag).commit();
+                fragment).addToBackStack(mainFragmentTag).commit();
     }
 }

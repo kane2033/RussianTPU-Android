@@ -50,6 +50,7 @@
     <!--Тэг, необходимый для перехода на предыдущий фрагмент-->
     <string name="prev_frag_tag">PREV_FRAGMENT</string>
     <string name="prev_auth_frag_tag">PREV_AUTH_FRAGMENT</string>
+    <string name="dialog_frag_tag">DIALOG_FRAGMENT</string>
 
     <!--Имя выбранного для авторизации сервиса-->
     <string name="provider_google">google</string>

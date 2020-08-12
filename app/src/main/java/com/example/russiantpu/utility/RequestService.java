@@ -5,6 +5,7 @@ import android.util.Log;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -28,7 +29,12 @@ public class RequestService {
     }
 
     public RequestService() {
-        client = new OkHttpClient();
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        //временное увеличение таймаута с целью успешной регистрации
+        builder.connectTimeout(30, TimeUnit.SECONDS);
+        builder.readTimeout(30, TimeUnit.SECONDS);
+        builder.writeTimeout(30, TimeUnit.SECONDS);
+        client = builder.build();
     }
 
     //GET запрос на url с произвольным количеством параметров:
@@ -76,22 +82,21 @@ public class RequestService {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 e.printStackTrace();
-                //callback.onFailure
+                callback.onFailure(e.getMessage());
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                responseCode = response.code();
+                final String jsonBody = response.body().string(); //тело ответа
                 if (response.isSuccessful()) { //code [200;300]
                     //при успешном запросе заносим код в переменную для случаев, когда требуется знать код
-                    responseCode = response.code();
-                    final String jsonBody = response.body().string(); //тело ответа
                     Log.d("JSON_RESPONSE", "onResponse: " + jsonBody);
                     callback.onResponse(jsonBody);
                 }
                 else {
-                    //следует сделать отображение ошибок на экране:
-                    //callback.onError()
-                    Log.d("RESPONSE_ERR", "Response code: " + response.code() + "; text: " + response.body().string());
+                    callback.onError(jsonBody);
+                    Log.d("RESPONSE_ERR", "Response code: " + response.code() + "; text: " + jsonBody);
                 }
             }
         });

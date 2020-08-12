@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.example.russiantpu.activities.AuthActivity;
 import com.example.russiantpu.items.LinkItem;
+import com.example.russiantpu.utility.ErrorDialogService;
 import com.example.russiantpu.utility.FragmentReplacer;
 import com.example.russiantpu.utility.GenericCallback;
 import com.example.russiantpu.utility.GsonService;
@@ -94,6 +95,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         }
                     }
                 });
+            }
+
+            @Override
+            public void onError(String message) {
+                ErrorDialogService.showDialog(getResources().getString(R.string.drawer_error), message, fragmentManager);
+            }
+
+            @Override
+            public void onFailure(String message) {
+                ErrorDialogService.showDialog(getResources().getString(R.string.drawer_error), message, fragmentManager);
             }
         };
         //делаем запрос на получение пунктов меню на русском языке

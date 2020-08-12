@@ -8,7 +8,17 @@
     <string name="middlename_error">Превышен лимит символов</string>
     <string name="language_error">Язык не выбран</string>
     <string name="phone_error">Превышен лимит символов</string>
-    <string name="min_char_error"></string>
     <string name="empty_field_error">Поле должно быть заполнено</string>
     <string name="checkbox_error">Вы должны согласиться на обработку персональных данных</string>
+
+    <!--Общие заголовки ошибок-->
+    <string name="auth_error">Ошибка при попытке авторизоваться</string>
+    <string name="login_error">Ошибка при попытке войти</string>
+    <string name="register_error">Ошибка при попытке зарегистрироваться</string>
+    <string name="drawer_error">Ошибка при получении предметов выдвижной шторки</string>
+    <string name="article_error">Ошибка при получении статьи</string>
+    <string name="feed_error">Ошибка при получении списка статей</string>
+
+
+    <string name="token_invalid_error">Вам необходимо авторизоваться</string>
 </resources>

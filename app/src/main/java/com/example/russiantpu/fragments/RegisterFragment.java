@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.russiantpu.R;
 import com.example.russiantpu.dto.UserDTO;
+import com.example.russiantpu.utility.ErrorDialogService;
 import com.example.russiantpu.utility.GenericCallback;
 import com.example.russiantpu.utility.GsonService;
 import com.example.russiantpu.utility.RequestService;
@@ -159,10 +160,23 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
                 getFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new LoginFragment()).addToBackStack(fragmentTag).commit();
             }
+
+            @Override
+            public void onError(String message) {
+                ErrorDialogService.showDialog(getResources().getString(R.string.register_error), message, getFragmentManager());
+            }
+
+            @Override
+            public void onFailure(String message) {
+                ErrorDialogService.showDialog(getResources().getString(R.string.register_error), message, getFragmentManager());
+            }
         };
 
         //если регистрация происходит через сторонние сервисы (поле != null), выбираем соответствующий юрл
         final String url = dto.getProvider() != null ? "auth/register/provider" : "auth/register";
+
+/*        final String json = gsonService.fromObjectToJson(dto);
+        requestService.doPostRequest(url, callback, json);*/
 
         getActivity().runOnUiThread(new Runnable() {
             @Override

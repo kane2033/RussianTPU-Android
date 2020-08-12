@@ -1,5 +1,6 @@
 package com.example.russiantpu.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,12 +20,14 @@ import com.example.russiantpu.dto.LoginByProviderDTO;
 import com.example.russiantpu.dto.LoginDTO;
 import com.example.russiantpu.dto.TokensDTO;
 import com.example.russiantpu.dto.UserDTO;
+import com.example.russiantpu.utility.ErrorDialogService;
 import com.example.russiantpu.utility.FacebookAuthService;
 import com.example.russiantpu.utility.GenericCallback;
 import com.example.russiantpu.utility.GoogleAuthService;
 import com.example.russiantpu.utility.GsonService;
 import com.example.russiantpu.utility.RequestService;
 import com.example.russiantpu.utility.SharedPreferencesService;
+import com.example.russiantpu.utility.ToastService;
 import com.example.russiantpu.utility.VKAuthService;
 import com.example.russiantpu.utility.VKTokenCallback;
 
@@ -53,6 +56,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final ScrollView layoutInflater = (ScrollView)inflater.inflate(R.layout.fragment_login, container, false);
+        final Activity activity = getActivity();
 
         emailInput = layoutInflater.findViewById(R.id.input_email);
         passwordInput = layoutInflater.findViewById(R.id.input_password);
@@ -70,6 +74,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
         requestService = new RequestService();
         gsonService = new GsonService();
+        final ToastService toastService = new ToastService(activity.getApplicationContext());
 
         //инициализация коллбэка
         // при нажатии кнопки логина через сервис
@@ -77,6 +82,16 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onResponse(String token) {
                 sendIdTokenToService(token, getResources().getString(R.string.provider_facebook));
+            }
+
+            @Override
+            public void onError(String message) {
+                ErrorDialogService.showDialog(getResources().getString(R.string.login_error), message, getFragmentManager());
+            }
+
+            @Override
+            public void onFailure(String message) {
+                ErrorDialogService.showDialog(getResources().getString(R.string.login_error), message, getFragmentManager());
             }
         };
 
@@ -102,10 +117,20 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 TokensDTO tokens = gsonService.fromJsonToObject(jsonBody, TokensDTO.class);
 
                 //сохраняем JWT токен в sharedPreferences для последующего использования
-                SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(getActivity());
+                SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(activity);
                 sharedPreferencesService.setCredentials(tokens.getToken(), tokens.getRefreshToken(), tokens.getUser().getEmail());
 
-                getActivity().startActivity(new Intent(getContext(), MainActivity.class));
+                activity.startActivity(new Intent(getContext(), MainActivity.class));
+            }
+
+            @Override
+            public void onError(String message) {
+                ErrorDialogService.showDialog(getResources().getString(R.string.login_error), message, getFragmentManager());
+            }
+
+            @Override
+            public void onFailure(String message) {
+                ErrorDialogService.showDialog(getResources().getString(R.string.login_error), message, getFragmentManager());
             }
         };
 
@@ -128,9 +153,19 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                     getFragmentManager().beginTransaction().replace(R.id.fragment_container,
                             fragment).addToBackStack(fragmentTag).commit();
                 }
-                else {
+                else { //код 200
                     toMainActivityCallback.onResponse(jsonBody); //обычный коллбэк, при котором переходим в приложение
                 }
+            }
+
+            @Override
+            public void onError(String message) {
+                ErrorDialogService.showDialog(getResources().getString(R.string.login_error), message, getFragmentManager());
+            }
+
+            @Override
+            public void onFailure(String message) {
+                ErrorDialogService.showDialog(getResources().getString(R.string.login_error), message, getFragmentManager());
             }
         };
 
