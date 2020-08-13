@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -16,6 +17,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.russiantpu.activities.AuthActivity;
+import com.example.russiantpu.dto.UserDTO;
 import com.example.russiantpu.items.LinkItem;
 import com.example.russiantpu.utility.ErrorDialogService;
 import com.example.russiantpu.utility.FragmentReplacer;
@@ -53,20 +55,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        //получение JWT токена
+        //получение JWT токена и пользователя из памяти
         final SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(this);
         String token = sharedPreferencesService.getToken();
+        UserDTO user = sharedPreferencesService.getUser();
 
-        final Intent intent = new Intent(this, AuthActivity.class);
-        //установка действия при клике на хэдер
-        //выдвижного меню
+        //установка действия при клике на хэдер выдвижного меню
         header.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sharedPreferencesService.clearCredentials(); //удаляем токен из памяти
-                startActivity(intent); //переходим обратно в активити логина
+                startActivity(new Intent(MainActivity.this, AuthActivity.class)); //переходим обратно в активити логина
             }
         });
+
+        //задаем данные пользователя в хэдере выдвижного меню
+        TextView firstNameTextView = header.findViewById(R.id.firstName);
+        TextView emailTextView = header.findViewById(R.id.email);
+        firstNameTextView.setText(user.getFirstName());
+        emailTextView.setText(user.getEmail());
 
         //запрос на сервис для получения пунктов выдвижного меню
         RequestService requestService = new RequestService();

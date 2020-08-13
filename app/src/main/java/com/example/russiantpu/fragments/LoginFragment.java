@@ -118,7 +118,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
                 //сохраняем JWT токен в sharedPreferences для последующего использования
                 SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(activity);
-                sharedPreferencesService.setCredentials(tokens.getToken(), tokens.getRefreshToken(), tokens.getUser().getEmail());
+                sharedPreferencesService.setCredentials(tokens.getToken(), tokens.getRefreshToken(), tokens.getUser());
 
                 activity.startActivity(new Intent(getContext(), MainActivity.class));
             }

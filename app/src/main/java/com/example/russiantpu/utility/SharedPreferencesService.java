@@ -4,12 +4,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.example.russiantpu.dto.UserDTO;
+
 public class SharedPreferencesService {
 
     private final String preferencesFileKey = "credentials";
     private final String tokenKey = "token";
     private final String refreshTokenKey = "refreshToken";
     private final String emailTokenKey = "email";
+    private final String firstNameKey = "firstName";
+    private final String languageKey = "language";
 
     private final Activity activity;
     private final SharedPreferences sharedPreferences;
@@ -33,11 +37,23 @@ public class SharedPreferencesService {
         return sharedPreferences.getString(emailTokenKey, "");
     }
 
-    public void setCredentials(String token, String refreshToken, String email) {
+    public String getFirstName() {return sharedPreferences.getString(firstNameKey, "");}
+
+    public String getLanguage() {return sharedPreferences.getString(languageKey, "");}
+
+    public UserDTO getUser() {
+        return new UserDTO(getEmail(), getFirstName(), getLanguage());
+    }
+
+    public void setCredentials(String token, String refreshToken, UserDTO user) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
+        //сохраняем токены
         editor.putString(tokenKey, token);
         editor.putString(refreshTokenKey, refreshToken);
-        editor.putString(emailTokenKey, email);
+        //сохраняем пользователя
+        editor.putString(emailTokenKey, user.getEmail());
+        editor.putString(firstNameKey, user.getFirstName());
+        editor.putString(languageKey, user.getLanguage());
         editor.commit();
     }
 
@@ -59,9 +75,29 @@ public class SharedPreferencesService {
         editor.commit();
     }
 
+    public void setUser(UserDTO user) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(emailTokenKey, user.getEmail());
+        editor.putString(firstNameKey, user.getFirstName());
+        editor.putString(languageKey, user.getLanguage());
+        editor.commit();
+    }
+
     public void setEmail(String email) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(emailTokenKey, email);
+        editor.commit();
+    }
+
+    public void setFirstName(String firstName) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(firstNameKey, firstName);
+        editor.commit();
+    }
+
+    public void setLanguage(String language) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(languageKey, language);
         editor.commit();
     }
 

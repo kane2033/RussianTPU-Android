@@ -20,13 +20,13 @@
         android:text="Нажмите на это поле, чтобы выйти с этого аккаунта."
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
     <TextView
+        android:id="@+id/firstName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
-        android:text="FirstName SecondName"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
     <TextView
+        android:id="@+id/email"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="email@mail.com" />
+        android:layout_height="wrap_content" />
 </LinearLayout>
