@@ -17,6 +17,8 @@ public class LinkItem extends Item implements Parcelable {
     private String idArticle;
     //дочерние пункты
     private ArrayList<LinkItem> children;
+    //картинка
+    private String image;
 
     public String getName() {
         return name;
@@ -50,19 +52,13 @@ public class LinkItem extends Item implements Parcelable {
         this.children = children;
     }
 
-    public LinkItem(String name, String id, int position, ContentType type, ArrayList<LinkItem> children) {
-        super(id, position, type);
-        this.name = name;
-        this.children = children;
+    public String getImage() {
+        return image;
     }
 
-    public LinkItem(String name, String id, int position, ContentType type, String url, String idArticle) {
-        super(id, position, type);
-        this.name = name;
-        this.url = url;
-        this.idArticle = idArticle;
+    public void setImage(String image) {
+        this.image = image;
     }
-    //стоит добавить отдельный конструктор, когда нет link или articleId?
 
     @Override
     public int describeContents() {
@@ -75,6 +71,7 @@ public class LinkItem extends Item implements Parcelable {
         dest.writeString(this.url);
         dest.writeString(this.idArticle);
         dest.writeList(this.children);
+        dest.writeString(this.image);
         dest.writeString(getId());
         dest.writeInt(getPosition());
         dest.writeString(getType().toString());
@@ -86,6 +83,7 @@ public class LinkItem extends Item implements Parcelable {
         this.idArticle = in.readString();
         this.children = new ArrayList<>();
         in.readList(this.children, LinkItem.class.getClassLoader());
+        this.image = in.readString();
         setId(in.readString());
         setPosition(in.readInt());
         setType(ContentType.valueOf(in.readString()));

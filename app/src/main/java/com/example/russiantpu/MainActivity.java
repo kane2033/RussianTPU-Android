@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         }
 
                         toggle.syncState();
-                        if (savedInstanceState == null) {
+                        if (!drawerItems.isEmpty()) {
                             LinkItem initialItem = drawerItems.get(0);
                             fragmentReplacer.goToFragment(initialItem);
                         }
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         };
         //делаем запрос на получение пунктов меню на русском языке
-        requestService.doRequest("menu", callback, token, "language", "Русский");
+        requestService.doRequest("menu", callback, token, "language", "rus");
 
         //передаем ссылку fragmentManager в класс,
         // осуществляющий переход между фрагментами
