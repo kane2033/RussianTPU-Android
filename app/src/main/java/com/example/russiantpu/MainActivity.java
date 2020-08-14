@@ -66,6 +66,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(View v) {
                 sharedPreferencesService.clearCredentials(); //удаляем токен из памяти
                 startActivity(new Intent(MainActivity.this, AuthActivity.class)); //переходим обратно в активити логина
+                //очистка фрагментов из стека при переходе в основную активити - в противном случае, при нажатии кнопки "назад"
+                //происходит непредвиденный переход в логин
+                fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             }
         });
 
@@ -138,11 +141,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             drawer.closeDrawer(GravityCompat.START); //закрытие шторки
         }
         else {
-            if (fragmentManager.getBackStackEntryCount() > 0) {
-                fragmentManager.popBackStack(); //возврат на предыдущий фрагмент
+            int fragments = getSupportFragmentManager().getBackStackEntryCount();
+            if (fragments > 1) {
+                getSupportFragmentManager().popBackStack();
             }
             else {
-                super.onBackPressed();
+                if (fragments == 1) {
+                    finishAffinity();
+                }
+                else {
+                    super.onBackPressed();
+                }
             }
         }
     }

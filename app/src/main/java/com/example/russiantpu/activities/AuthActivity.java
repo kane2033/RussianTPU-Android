@@ -77,11 +77,17 @@ public class AuthActivity extends FragmentActivity {
 
     @Override
     public void onBackPressed() {
-        if (fragmentManager.getBackStackEntryCount() > 1) {
-            fragmentManager.popBackStack(); //возврат на предыдущий фрагмент
+        int fragments = getSupportFragmentManager().getBackStackEntryCount();
+        if (fragments > 1) {
+            getSupportFragmentManager().popBackStack();
         }
         else {
-            finish();
+            if (fragments == 1) {
+                finishAffinity();
+            }
+            else {
+                super.onBackPressed();
+            }
         }
     }
 

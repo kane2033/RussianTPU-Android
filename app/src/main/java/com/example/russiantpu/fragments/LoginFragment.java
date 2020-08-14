@@ -13,6 +13,7 @@ import android.widget.ScrollView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.russiantpu.MainActivity;
 import com.example.russiantpu.R;
@@ -119,6 +120,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 //сохраняем JWT токен в sharedPreferences для последующего использования
                 SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(activity);
                 sharedPreferencesService.setCredentials(tokens.getToken(), tokens.getRefreshToken(), tokens.getUser());
+                //очистка фрагментов из стека при переходе в основную активити - в противном случае, при нажатии кнопки "назад"
+                //происходит непредвиденный переход в логин
+                getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
                 activity.startActivity(new Intent(getContext(), MainActivity.class));
             }
