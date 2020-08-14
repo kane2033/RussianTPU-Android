@@ -2,8 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:fitsSystemWindows="true"
-    android:background="@color/colorPrimary">
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:orientation="vertical"
@@ -14,11 +13,10 @@
         android:paddingRight="24dp"
         android:focusableInTouchMode="true">
 
-        <!--Логотип надо заменить на ТПУ-->
         <ImageView
-            android:src="@drawable/ic_launcher_foreground"
+            android:src="@drawable/ic_tpu"
             android:layout_width="wrap_content"
-            android:layout_height="72dp"
+            android:layout_height="150dp"
             android:layout_marginBottom="24dp"
             android:layout_gravity="center_horizontal" />
 
