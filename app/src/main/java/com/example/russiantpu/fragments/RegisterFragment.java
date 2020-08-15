@@ -31,6 +31,7 @@ import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.mobsandgeeks.saripaar.annotation.Pattern;
 
 import java.util.List;
+import java.util.Locale;
 
 public class RegisterFragment extends Fragment implements Validator.ValidationListener {
 
@@ -72,6 +73,8 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
     private GsonService gsonService;
     private ToastService toastService;
 
+    private String language;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -98,6 +101,9 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
         requestService = new RequestService();
         gsonService = new GsonService();
         toastService = new ToastService(applicationContext);
+
+        //получаем язык системы
+        language = Locale.getDefault().getLanguage();
 
         //если юзер регистрируется после авторизации
         //через сторонний сервис, заполняем имеющиеся поля
@@ -182,7 +188,7 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
             @Override
             public void run() {
                 final String json = gsonService.fromObjectToJson(dto);
-                requestService.doPostRequest(url, callback, json);
+                requestService.doPostRequest(url, callback, language, json);
             }
         });
 

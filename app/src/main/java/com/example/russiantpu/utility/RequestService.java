@@ -39,7 +39,7 @@ public class RequestService {
 
     //GET запрос на url с произвольным количеством параметров:
     //параметры вводятся форматом - название параметра, значение параметра, ...
-    public void doRequest(String url, final GenericCallback<String> callback, String token, String... params) {
+    public void doRequest(String url, final GenericCallback<String> callback, String token, String language, String... params) {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(API_URL + url).newBuilder();
         for (int i = 0; i < params.length; i++) {
             urlBuilder.addQueryParameter(params[i], params[++i]);
@@ -49,26 +49,29 @@ public class RequestService {
         Request request = new Request.Builder()
                 .url(builtUrl)
                 .addHeader("Authorization", "Bearer " + token) //JWT
+                .addHeader("Accept-Language", language) //язык
                 .build();
 
         enqueue(request, callback);
     }
 
     //GET запрос на url без параметров
-    public void doRequest(String url, final GenericCallback<String> callback, String token) {
+    public void doRequest(String url, final GenericCallback<String> callback, String token, String language) {
         Request request = new Request.Builder()
                 .url(API_URL + url)
                 .addHeader("Authorization", "Bearer " + token)
+                .addHeader("Accept-Language", language) //язык
                 .build();
 
         enqueue(request, callback);
     }
 
     //post запрос - в параметрах получаем строку формата json, которая отправляется в теле запроса
-    public void doPostRequest(String url, final GenericCallback<String> callback, String json) {
+    public void doPostRequest(String url, final GenericCallback<String> callback, String language, String json) {
         RequestBody body = RequestBody.create(json, JSON);
         Request request = new Request.Builder()
                 .url(API_URL + url)
+                .addHeader("Accept-Language", language) //язык
                 .post(body)
                 .build();
 

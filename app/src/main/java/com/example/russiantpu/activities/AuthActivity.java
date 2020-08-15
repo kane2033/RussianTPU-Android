@@ -6,7 +6,6 @@ import android.os.Bundle;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.russiantpu.MainActivity;
 import com.example.russiantpu.R;
 import com.example.russiantpu.dto.CheckTokenDTO;
 import com.example.russiantpu.fragments.LoginFragment;
@@ -16,6 +15,8 @@ import com.example.russiantpu.utility.GsonService;
 import com.example.russiantpu.utility.RequestService;
 import com.example.russiantpu.utility.SharedPreferencesService;
 import com.example.russiantpu.utility.VKAuthService;
+
+import java.util.Locale;
 
 public class AuthActivity extends FragmentActivity {
 
@@ -35,26 +36,21 @@ public class AuthActivity extends FragmentActivity {
         String token = sharedPreferencesService.getToken();
         String email = sharedPreferencesService.getEmail();
         String json = gsonService.fromObjectToJson(new CheckTokenDTO(token, email));
-
-        final Intent intent = new Intent(this, MainActivity.class);
-
-        /*
-        * возможно, стоит перенести проверку токена в фрагмент логина,
-        * потому что переход в фрагмент логина после проверки может все равно произойти (?)
-        * */
+        String language = sharedPreferencesService.getLanguage() == null ? Locale.getDefault().getLanguage() : sharedPreferencesService.getLanguage();
 
         //если запрос успешен (код 200), вызовется коллбэк с переходом в главную активити
         //(запрос успешен, если токен валиден)
         GenericCallback<String> callback = new GenericCallback<String>() {
             @Override
             public void onResponse(String value) {
-                startActivity(intent);
+                startActivity(new Intent(AuthActivity.this, MainActivity.class));
             }
 
             //иначе запускаем фрагмент логина
             @Override
             public void onError(String message) {
                 goToLogin();
+                //ErrorDialogService.showDialog(getResources().getString(R.string.auth_error), "Test message\nanother one\nand another one", fragmentManager);
             }
 
             @Override
@@ -63,9 +59,8 @@ public class AuthActivity extends FragmentActivity {
                 goToLogin();
             }
         };
-        requestService.doPostRequest("auth/check", callback, json);
 
-
+        requestService.doPostRequest("auth/check", callback, language, json);
     }
 
     //метод запуска фрагмета логина

@@ -15,7 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.russiantpu.MainActivity;
+import com.example.russiantpu.activities.MainActivity;
 import com.example.russiantpu.R;
 import com.example.russiantpu.dto.LoginByProviderDTO;
 import com.example.russiantpu.dto.LoginDTO;
@@ -31,6 +31,8 @@ import com.example.russiantpu.utility.SharedPreferencesService;
 import com.example.russiantpu.utility.ToastService;
 import com.example.russiantpu.utility.VKAuthService;
 import com.example.russiantpu.utility.VKTokenCallback;
+
+import java.util.Locale;
 
 public class LoginFragment extends Fragment implements View.OnClickListener {
 
@@ -52,6 +54,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
     private GenericCallback<String> toMainActivityCallback;
     private GenericCallback<String> providerAuthCallback;
+
+    String language;
 
     @Nullable
     @Override
@@ -76,6 +80,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         requestService = new RequestService();
         gsonService = new GsonService();
         final ToastService toastService = new ToastService(activity.getApplicationContext());
+
+        //получаем язык устройства
+        language = Locale.getDefault().getLanguage();
 
         //инициализация коллбэка
         // при нажатии кнопки логина через сервис
@@ -180,14 +187,14 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private void sendIdTokenToService(String idToken, String provider) {
         //отправляет токен google на сервис для авторизации
         String json = gsonService.fromObjectToJson(new LoginByProviderDTO(provider, idToken));
-        requestService.doPostRequest("auth/login/provider", providerAuthCallback, json);
+        requestService.doPostRequest("auth/login/provider", providerAuthCallback, language, json);
     }
 
     //метод для ВК - с токеном необходимо отправить userId и email
     private void sendIdTokenToService(String idToken, String userId, String email, String provider) {
         //отправляет токен google на сервис для авторизации
         String json = gsonService.fromObjectToJson(new LoginByProviderDTO(provider, idToken, userId,email));
-        requestService.doPostRequest("auth/login/provider", providerAuthCallback, json);
+        requestService.doPostRequest("auth/login/provider", providerAuthCallback, language, json);
     }
 
     @Override
@@ -196,7 +203,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.button_login:
                 json = gsonService.fromObjectToJson(new LoginDTO(emailInput.getText().toString(), passwordInput.getText().toString(), true));
-                requestService.doPostRequest("auth/login", toMainActivityCallback, json);
+                requestService.doPostRequest("auth/login", toMainActivityCallback, language, json);
                 break;
             case R.id.goto_register:
                 getFragmentManager().beginTransaction().replace(R.id.fragment_container,

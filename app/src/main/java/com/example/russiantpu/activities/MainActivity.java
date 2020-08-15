@@ -1,4 +1,4 @@
-package com.example.russiantpu;
+package com.example.russiantpu.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,7 +16,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.russiantpu.activities.AuthActivity;
+import com.example.russiantpu.R;
 import com.example.russiantpu.dto.UserDTO;
 import com.example.russiantpu.items.LinkItem;
 import com.example.russiantpu.utility.ErrorDialogService;
@@ -117,8 +117,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 ErrorDialogService.showDialog(getResources().getString(R.string.drawer_error), message, fragmentManager);
             }
         };
-        //делаем запрос на получение пунктов меню на русском языке
-        requestService.doRequest("menu", callback, token, "language", "rus");
+        //делаем запрос на получение пунктов меню на языке пользователя
+        requestService.doRequest("menu", callback, token, "language", user.getLanguage());
 
         //передаем ссылку fragmentManager в класс,
         // осуществляющий переход между фрагментами
