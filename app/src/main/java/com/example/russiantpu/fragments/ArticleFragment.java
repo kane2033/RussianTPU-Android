@@ -83,7 +83,7 @@ public class ArticleFragment extends Fragment {
 
             @Override
             public void onError(String message) {
-                ErrorDialogService.showDialog(getResources().getString(R.string.article_error), message, getFragmentManager());
+                ErrorDialogService.showDialog(getResources().getString(R.string.article_error), gsonService.getFieldFromJson("message", message), getFragmentManager());
             }
 
             @Override

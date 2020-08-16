@@ -90,10 +90,9 @@ public class RequestService {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                responseCode = response.code();
+                responseCode = response.code(); //заносим код в переменную для случаев, когда требуется знать код
                 final String jsonBody = response.body().string(); //тело ответа
                 if (response.isSuccessful()) { //code [200;300]
-                    //при успешном запросе заносим код в переменную для случаев, когда требуется знать код
                     Log.d("JSON_RESPONSE", "onResponse: " + jsonBody);
                     callback.onResponse(jsonBody);
                 }

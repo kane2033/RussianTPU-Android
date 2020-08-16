@@ -100,7 +100,7 @@ public class FeedFragment extends Fragment {
 
             @Override
             public void onError(String message) {
-                ErrorDialogService.showDialog(getResources().getString(R.string.feed_error), message, getFragmentManager());
+                ErrorDialogService.showDialog(getResources().getString(R.string.feed_error), gsonService.getFieldFromJson("message", message), getFragmentManager());
             }
 
             @Override

@@ -31,15 +31,24 @@ import com.example.russiantpu.utility.SharedPreferencesService;
 import com.example.russiantpu.utility.ToastService;
 import com.example.russiantpu.utility.VKAuthService;
 import com.example.russiantpu.utility.VKTokenCallback;
+import com.google.android.material.textfield.TextInputEditText;
+import com.mobsandgeeks.saripaar.ValidationError;
+import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.annotation.Email;
+import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 
+import java.util.List;
 import java.util.Locale;
 
-public class LoginFragment extends Fragment implements View.OnClickListener {
+public class LoginFragment extends Fragment implements View.OnClickListener, Validator.ValidationListener {
 
     private final String fragmentTag = String.valueOf(R.string.prev_auth_frag_tag);
 
+    @Email(messageResId = R.string.email_error)
     private EditText emailInput;
+    @NotEmpty(messageResId = R.string.empty_field_error)
     private EditText passwordInput;
+
     private Button loginButton;
     private Button gotoRegisterButton;
     private ImageView loginGoogle;
@@ -54,8 +63,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
     private GenericCallback<String> toMainActivityCallback;
     private GenericCallback<String> providerAuthCallback;
+    private Validator validator;
 
-    String language;
+    private String language;
 
     @Nullable
     @Override
@@ -79,7 +89,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
         requestService = new RequestService();
         gsonService = new GsonService();
-        final ToastService toastService = new ToastService(activity.getApplicationContext());
+
+        //валидируем содержимое фрагмента, поэтому передаем фрагмент в классы валидаторов
+        validator = new Validator(this);
+        validator.setValidationListener(this);
 
         //получаем язык устройства
         language = Locale.getDefault().getLanguage();
@@ -136,7 +149,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
             @Override
             public void onError(String message) {
-                ErrorDialogService.showDialog(getResources().getString(R.string.login_error), message, getFragmentManager());
+                ErrorDialogService.showDialog(getResources().getString(R.string.login_error), gsonService.getFieldFromJson("message", message), getFragmentManager());
             }
 
             @Override
@@ -199,11 +212,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        String json;
         switch (v.getId()) {
             case R.id.button_login:
-                json = gsonService.fromObjectToJson(new LoginDTO(emailInput.getText().toString(), passwordInput.getText().toString(), true));
-                requestService.doPostRequest("auth/login", toMainActivityCallback, language, json);
+                //валидируем поля email и пароль,
+                //результат в onValidationSucceeded, onValidationFailed
+                validator.validate();
                 break;
             case R.id.goto_register:
                 getFragmentManager().beginTransaction().replace(R.id.fragment_container,
@@ -244,5 +257,24 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
         //!!! vkAuth.onActivityResult() используется в AuthActivity, потому что SDK VK
         //не поддерживает фрагменты
+    }
+
+    @Override
+    public void onValidationSucceeded() {
+        String json = gsonService.fromObjectToJson(new LoginDTO(emailInput.getText().toString(), passwordInput.getText().toString(), true));
+        requestService.doPostRequest("auth/login", toMainActivityCallback, language, json);
+    }
+
+    @Override
+    public void onValidationFailed(List<ValidationError> errors) {
+        for (ValidationError error : errors) {
+            View view = error.getView();
+            String message = error.getCollatedErrorMessage(getContext());
+
+            //отображение ошибки
+            if (view instanceof TextInputEditText) {
+                ((TextInputEditText) view).setError(message);
+            }
+        }
     }
 }

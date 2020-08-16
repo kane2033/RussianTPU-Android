@@ -169,7 +169,7 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
 
             @Override
             public void onError(String message) {
-                ErrorDialogService.showDialog(getResources().getString(R.string.register_error), message, getFragmentManager());
+                ErrorDialogService.showDialog(getResources().getString(R.string.register_error), gsonService.getFieldFromJson("message", message), getFragmentManager());
             }
 
             @Override
