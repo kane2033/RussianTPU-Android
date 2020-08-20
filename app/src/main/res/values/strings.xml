@@ -25,6 +25,7 @@
     <string name="login">Войти</string>
     <string name="goto_register">Нет аккаунта? Зарегистрируйтесь!</string>
     <string name="login_via_service">Войдите через социальные сети</string>
+    <string name="login_success"></string>
 
     <!--Поля ввода для регистрации-->
     <string name="email_reg">E-mail*</string>
@@ -44,6 +45,19 @@
     <!--Текст ошибок и статусов выполнения-->
     <string name="validation_success">Все поля корректны, регистрируем вашу учетную запись…</string>
     <string name="reg_success">Регистрация успешна</string>
+
+    <!--Строки для профиля пользователя-->
+    <string name="profile_greeting">Добро пожаловать!</string>
+    <string name="profile_title">Личный кабинет</string>
+    <string name="profile_edit_button">Редактировать профиль</string>
+    <string name="profile_exit">Выйти из учетной записи</string>
+    <!--Поля данных о пользователе-->
+    <string name="profile_old_password">Текущий пароль*</string>
+    <string name="profile_new_password">Новый пароль</string>
+    <string name="profile_firstname">Имя</string>
+    <string name="profile_language">Текущий язык</string>
+    <string name="profile_save">Сохранить изменения</string>
+    <string name="profile_save_success">Изменения успешно сохранены</string>
 
     <string name="missing_content">Пустовато тут… Контент отсутствует!</string>
 

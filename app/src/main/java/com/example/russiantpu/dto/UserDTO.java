@@ -13,14 +13,18 @@ public class UserDTO implements Parcelable {
     private String language;
     private String phoneNumber;
     private String provider;
+    //поле для активити профиля
+    private String newPassword;
 
     public UserDTO() {}
 
-    public UserDTO(String email, String password, String firstName,
+    //конструктор для обновления информации о пользователе в активити профиля
+    public UserDTO(String email, String password, String newPassword, String firstName,
                    String lastName, String middleName, String gender,
                    String language, String phoneNumber) {
         this.email = email;
         this.password = password;
+        this.newPassword = newPassword;
         this.firstName = firstName;
         this.lastName = lastName;
         this.middleName = middleName;
@@ -120,6 +124,14 @@ public class UserDTO implements Parcelable {
 
     public void setProvider(String provider) {
         this.provider = provider;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
     }
 
     /*

@@ -200,14 +200,14 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
     private void sendIdTokenToService(String idToken, String provider) {
         //отправляет токен google на сервис для авторизации
         String json = gsonService.fromObjectToJson(new LoginByProviderDTO(provider, idToken));
-        requestService.doPostRequest("auth/login/provider", providerAuthCallback, language, json);
+        requestService.doPostRequest("auth/provider/login", providerAuthCallback, language, json);
     }
 
     //метод для ВК - с токеном необходимо отправить userId и email
     private void sendIdTokenToService(String idToken, String userId, String email, String provider) {
         //отправляет токен google на сервис для авторизации
         String json = gsonService.fromObjectToJson(new LoginByProviderDTO(provider, idToken, userId,email));
-        requestService.doPostRequest("auth/login/provider", providerAuthCallback, language, json);
+        requestService.doPostRequest("auth/provider/login", providerAuthCallback, language, json);
     }
 
     @Override
@@ -262,7 +262,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
     @Override
     public void onValidationSucceeded() {
         String json = gsonService.fromObjectToJson(new LoginDTO(emailInput.getText().toString(), passwordInput.getText().toString(), true));
-        requestService.doPostRequest("auth/login", toMainActivityCallback, language, json);
+        requestService.doPostRequest("auth/local/login", toMainActivityCallback, language, json);
     }
 
     @Override

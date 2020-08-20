@@ -18,6 +18,8 @@
     <string name="drawer_error">Ошибка при получении предметов выдвижной шторки</string>
     <string name="article_error">Ошибка при получении статьи</string>
     <string name="feed_error">Ошибка при получении списка статей</string>
+    <string name="profile_get_error">Ошибка при получении информации о пользователе</string>
+    <string name="profile_save_error">Ошибка при сохранении информации о пользователе</string>
 
 
     <string name="token_invalid_error">Вам необходимо авторизоваться</string>

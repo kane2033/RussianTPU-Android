@@ -60,7 +60,7 @@ public class AuthActivity extends FragmentActivity {
             }
         };
 
-        requestService.doPostRequest("auth/check", callback, language, json);
+        requestService.doRequest("token/status", language, callback, "token", token, "email", email);
     }
 
     //метод запуска фрагмета логина

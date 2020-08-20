@@ -40,12 +40,7 @@ public class RequestService {
     //GET запрос на url с произвольным количеством параметров:
     //параметры вводятся форматом - название параметра, значение параметра, ...
     public void doRequest(String url, final GenericCallback<String> callback, String token, String language, String... params) {
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(API_URL + url).newBuilder();
-        for (int i = 0; i < params.length; i++) {
-            urlBuilder.addQueryParameter(params[i], params[++i]);
-        }
-        String builtUrl = urlBuilder.build().toString();
-
+        String builtUrl = buildUrlWithParams(url, params);
         Request request = new Request.Builder()
                 .url(builtUrl)
                 .addHeader("Authorization", "Bearer " + token) //JWT
@@ -55,15 +50,23 @@ public class RequestService {
         enqueue(request, callback);
     }
 
-    //GET запрос на url без параметров
-    public void doRequest(String url, final GenericCallback<String> callback, String token, String language) {
+    //GET запрос на url без токена
+    public void doRequest(String url, String language, final GenericCallback<String> callback, String... params) {
+        String builtUrl = buildUrlWithParams(url, params);
         Request request = new Request.Builder()
-                .url(API_URL + url)
-                .addHeader("Authorization", "Bearer " + token)
+                .url(builtUrl)
                 .addHeader("Accept-Language", language) //язык
                 .build();
 
         enqueue(request, callback);
+    }
+
+    private String buildUrlWithParams(String url, String... params) {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(API_URL + url).newBuilder();
+        for (int i = 0; i < params.length; i++) {
+            urlBuilder.addQueryParameter(params[i], params[++i]);
+        }
+        return urlBuilder.build().toString();
     }
 
     //post запрос - в параметрах получаем строку формата json, которая отправляется в теле запроса
@@ -73,6 +76,19 @@ public class RequestService {
                 .url(API_URL + url)
                 .addHeader("Accept-Language", language) //язык
                 .post(body)
+                .build();
+
+        enqueue(request, callback);
+    }
+
+    //put запрос - в параметрах получаем строку формата json, которая отправляется в теле запроса
+    public void doPutRequest(String url, final GenericCallback<String> callback, String token, String language, String json) {
+        RequestBody body = RequestBody.create(json, JSON);
+        Request request = new Request.Builder()
+                .url(API_URL + url)
+                .addHeader("Accept-Language", language) //язык
+                .addHeader("Authorization", "Bearer " + token)
+                .put(body)
                 .build();
 
         enqueue(request, callback);

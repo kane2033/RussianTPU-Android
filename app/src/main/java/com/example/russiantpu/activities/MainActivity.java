@@ -64,11 +64,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         header.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sharedPreferencesService.clearCredentials(); //удаляем токен из памяти
+                //переходим в активити профиля
+                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+/*                sharedPreferencesService.clearCredentials(); //удаляем токен из памяти
                 startActivity(new Intent(MainActivity.this, AuthActivity.class)); //переходим обратно в активити логина
                 //очистка фрагментов из стека при переходе в основную активити - в противном случае, при нажатии кнопки "назад"
                 //происходит непредвиденный переход в логин
-                fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);*/
             }
         });
 
@@ -109,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onError(String message) {
-                ErrorDialogService.showDialog(getResources().getString(R.string.drawer_error), message, fragmentManager);
+                ErrorDialogService.showDialog(getResources().getString(R.string.drawer_error), gsonService.getFieldFromJson("message", message), fragmentManager);
             }
 
             @Override
@@ -118,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         };
         //делаем запрос на получение пунктов меню на языке пользователя
-        requestService.doRequest("menu", callback, token, "language", user.getLanguage());
+        requestService.doRequest("menu", callback, token, user.getLanguage(), "language", user.getLanguage());
 
         //передаем ссылку fragmentManager в класс,
         // осуществляющий переход между фрагментами
