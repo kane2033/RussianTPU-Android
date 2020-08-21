@@ -7,11 +7,9 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.russiantpu.R;
-import com.example.russiantpu.dto.CheckTokenDTO;
 import com.example.russiantpu.fragments.LoginFragment;
 import com.example.russiantpu.utility.ErrorDialogService;
 import com.example.russiantpu.utility.GenericCallback;
-import com.example.russiantpu.utility.GsonService;
 import com.example.russiantpu.utility.RequestService;
 import com.example.russiantpu.utility.SharedPreferencesService;
 import com.example.russiantpu.utility.VKAuthService;
@@ -30,12 +28,10 @@ public class AuthActivity extends FragmentActivity {
 
         SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(this);
         RequestService requestService = new RequestService();
-        GsonService gsonService = new GsonService();
 
         //получение JWT токена
         String token = sharedPreferencesService.getToken();
         String email = sharedPreferencesService.getEmail();
-        String json = gsonService.fromObjectToJson(new CheckTokenDTO(token, email));
         String language = sharedPreferencesService.getLanguage() == null ? Locale.getDefault().getLanguage() : sharedPreferencesService.getLanguage();
 
         //если запрос успешен (код 200), вызовется коллбэк с переходом в главную активити
@@ -50,7 +46,6 @@ public class AuthActivity extends FragmentActivity {
             @Override
             public void onError(String message) {
                 goToLogin();
-                //ErrorDialogService.showDialog(getResources().getString(R.string.auth_error), "Test message\nanother one\nand another one", fragmentManager);
             }
 
             @Override
@@ -72,17 +67,11 @@ public class AuthActivity extends FragmentActivity {
 
     @Override
     public void onBackPressed() {
-        int fragments = getSupportFragmentManager().getBackStackEntryCount();
-        if (fragments > 1) {
-            getSupportFragmentManager().popBackStack();
+        if (fragmentManager.getBackStackEntryCount() > 1) {
+            fragmentManager.popBackStack(); //возврат на предыдущий фрагмент
         }
         else {
-            if (fragments == 1) {
-                finishAffinity();
-            }
-            else {
-                super.onBackPressed();
-            }
+            finish();
         }
     }
 

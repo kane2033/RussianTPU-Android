@@ -179,7 +179,7 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
         };
 
         //если регистрация происходит через сторонние сервисы (поле != null), выбираем соответствующий юрл
-        final String url = dto.getProvider() != null ? "auth/provider/registration" : "local/registration";
+        final String url = dto.getProvider() != null ? "auth/provider/registration" : "auth/local/registration";
 
 /*        final String json = gsonService.fromObjectToJson(dto);
         requestService.doPostRequest(url, callback, json);*/

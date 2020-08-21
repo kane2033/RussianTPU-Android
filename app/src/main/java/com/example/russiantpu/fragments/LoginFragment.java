@@ -144,7 +144,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
                 //происходит непредвиденный переход в логин
                 getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
-                activity.startActivity(new Intent(getContext(), MainActivity.class));
+                Intent intent = new Intent(getContext(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY); //убираем из истории активити логина
+                activity.startActivity(intent);
             }
 
             @Override
