@@ -12,7 +12,7 @@ import com.google.android.material.textfield.TextInputEditText;
 public class FormService {
 
     public String getSelectedGender(RadioGroup genderInput) {
-        String gender = "";
+        String gender = null;
         switch (genderInput.getCheckedRadioButtonId()) {
             case R.id.gender_male:
                 gender = "Male";

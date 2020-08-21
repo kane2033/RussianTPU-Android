@@ -18,6 +18,7 @@ import com.example.russiantpu.utility.ErrorDialogService;
 import com.example.russiantpu.utility.FormService;
 import com.example.russiantpu.utility.GenericCallback;
 import com.example.russiantpu.utility.GsonService;
+import com.example.russiantpu.utility.LocaleService;
 import com.example.russiantpu.utility.RequestService;
 import com.example.russiantpu.utility.SharedPreferencesService;
 import com.example.russiantpu.utility.SpinnerValidatorAdapter;
@@ -76,6 +77,16 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //вспомогательные классы (сервисы)
+        sharedPreferencesService = new SharedPreferencesService(this);
+        gsonService = new GsonService();
+        formService = new FormService();
+        toastService = new ToastService(this);
+
+        //установка языка интерфейса приложения
+        LocaleService.setLocale(this, sharedPreferencesService.getLanguage());
+
         setContentView(R.layout.activity_profile);
 
         //все элементы формы в LinearLayout
@@ -107,7 +118,8 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
+                //onBackPressed();
+                startActivity(new Intent(ProfileActivity.this, MainActivity.class));
             }
         });
 
@@ -136,11 +148,6 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
                 startActivity(new Intent(ProfileActivity.this, AuthActivity.class)); //переходим на авторизацию
             }
         });
-
-        sharedPreferencesService = new SharedPreferencesService(this);
-        gsonService = new GsonService();
-        formService = new FormService();
-        toastService = new ToastService(getApplicationContext());
 
         final GenericCallback<String> callback = new GenericCallback<String>() {
             @Override
@@ -217,17 +224,25 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
         String middleName = formService.getTextFromInput(middleNameInput);
         String gender = formService.getSelectedGender(genderInput);
         final String language = formService.getSelectedLanguage(languageInput, getResources().getStringArray(R.array.languages_array_keys));
+        final String oldLanguage = sharedPreferencesService.getLanguage();
         String phoneNumber = formService.getTextFromInput(phoneNumberInput);
         final UserDTO dto = new UserDTO(email, currentPassword, newPassword, firstName, lastName, middleName, gender, language, phoneNumber);
 
         final GenericCallback<String> callback = new GenericCallback<String>() {
             @Override
             public void onResponse(String message) {
-                toastService.showToast(R.string.profile_save_success);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        toastService.showToast(R.string.profile_save_success);
                         switchFieldsEditable(); //отключаем редактирование полей
+                        sharedPreferencesService.setUser(dto); //запись в память новой информации о пользователе
+
+                        //если поменялся язык
+                        if (!language.equals(oldLanguage)) {
+                            LocaleService.setLocale(ProfileActivity.this, language); //установка нового языка приложения
+                            recreate();// пересоздаем активити профиля с новым языком
+                        }
                     }
                 });
             }

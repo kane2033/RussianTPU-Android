@@ -10,6 +10,7 @@ import com.example.russiantpu.R;
 import com.example.russiantpu.fragments.LoginFragment;
 import com.example.russiantpu.utility.ErrorDialogService;
 import com.example.russiantpu.utility.GenericCallback;
+import com.example.russiantpu.utility.LocaleService;
 import com.example.russiantpu.utility.RequestService;
 import com.example.russiantpu.utility.SharedPreferencesService;
 import com.example.russiantpu.utility.VKAuthService;
@@ -24,22 +25,28 @@ public class AuthActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_auth);
 
         SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(this);
         RequestService requestService = new RequestService();
 
+        String language = sharedPreferencesService.getLanguage().equals("") ? Locale.getDefault().getLanguage() : sharedPreferencesService.getLanguage();
+        //установка языка приложения
+        LocaleService.setLocale(this, language);
+
+        setContentView(R.layout.activity_auth);
+
         //получение JWT токена
         String token = sharedPreferencesService.getToken();
         String email = sharedPreferencesService.getEmail();
-        String language = sharedPreferencesService.getLanguage() == null ? Locale.getDefault().getLanguage() : sharedPreferencesService.getLanguage();
 
         //если запрос успешен (код 200), вызовется коллбэк с переходом в главную активити
         //(запрос успешен, если токен валиден)
         GenericCallback<String> callback = new GenericCallback<String>() {
             @Override
             public void onResponse(String value) {
-                startActivity(new Intent(AuthActivity.this, MainActivity.class));
+                Intent intent = new Intent(AuthActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY); //убираем из истории активити логина
+                startActivity(intent);
             }
 
             //иначе запускаем фрагмент логина
@@ -67,12 +74,13 @@ public class AuthActivity extends FragmentActivity {
 
     @Override
     public void onBackPressed() {
-        if (fragmentManager.getBackStackEntryCount() > 1) {
+        super.onBackPressed();
+/*        if (fragmentManager.getBackStackEntryCount() > 1) {
             fragmentManager.popBackStack(); //возврат на предыдущий фрагмент
         }
         else {
             finish();
-        }
+        }*/
     }
 
     @Override

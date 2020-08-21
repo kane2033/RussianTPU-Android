@@ -23,6 +23,7 @@ import com.example.russiantpu.utility.ErrorDialogService;
 import com.example.russiantpu.utility.FragmentReplacer;
 import com.example.russiantpu.utility.GenericCallback;
 import com.example.russiantpu.utility.GsonService;
+import com.example.russiantpu.utility.LocaleService;
 import com.example.russiantpu.utility.RequestService;
 import com.example.russiantpu.utility.SharedPreferencesService;
 import com.google.android.material.navigation.NavigationView;
@@ -41,6 +42,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        final SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(this);
+        //получение JWT токена и пользователя из памяти
+        String token = sharedPreferencesService.getToken();
+        UserDTO user = sharedPreferencesService.getUser();
+        //установка языка приложения (интерфейса)
+        LocaleService.setLocale(this, user.getLanguage());
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -54,11 +63,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
-        //получение JWT токена и пользователя из памяти
-        final SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(this);
-        String token = sharedPreferencesService.getToken();
-        UserDTO user = sharedPreferencesService.getUser();
 
         //установка действия при клике на хэдер выдвижного меню
         header.setOnClickListener(new View.OnClickListener() {

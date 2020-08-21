@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--Список поддерживаемых языков: значения первого массива
+    будут отсылаться (всегда на английском),
+    второй массив служит для отображения в интерфейсе-->
+    <string-array name="languages_array_keys">
+        <item>ru</item>
+        <item>en</item>
+        <item>zh</item>
+    </string-array>
+    <string-array name="languages_array">
+        <item>@string/language_rus</item>
+        <item>@string/language_en</item>
+        <item>@string/language_zh</item>
+    </string-array>
+</resources>

@@ -1,13 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">RussianTPU</string>
 
     <string name="navigation_drawer_open">Открыть шторку</string>
     <string name="navigation_drawer_close">Закрыть шторку</string>
-
-    <!--Языки-->
-    <string name="language_rus">Русский</string>
-    <string name="language_en">Английский</string>
-    <string name="language_zh">Китайский</string>
 
     <!--Поля ввода для логина-->
     <string name="email">E-mail</string>
@@ -50,24 +46,25 @@
     <string name="profile_save_success">Изменения успешно сохранены</string>
 
     <string name="missing_content">Пустовато тут… Контент отсутствует!</string>
-
-    <!--Тэг, необходимый для перехода на предыдущий фрагмент-->
-    <string name="prev_frag_tag" translatable="false">PREV_FRAGMENT</string>
-    <string name="prev_auth_frag_tag" translatable="false">PREV_AUTH_FRAGMENT</string>
-    <string name="dialog_frag_tag" translatable="false">DIALOG_FRAGMENT</string>
-
-    <!--Имя выбранного для авторизации сервиса-->
-    <string name="provider_google" translatable="false">google</string>
-    <string name="provider_facebook" translatable="false">facebook</string>
-    <string name="provider_vk" translatable="false">vk</string>
-
-    <!--OAuth ID Android клиента для google-->
-    <string name="server_client_id_google" translatable="false">827029366413-ckl58bbhvkl57qq2f4vnejpoijig0r2s.apps.googleusercontent.com</string>
-
-    <!--Facebook-->
-    <string name="facebook_app_id" translatable="false">347824149711941</string>
-    <string name="fb_login_protocol_scheme" translatable="false">fb347824149711941</string>
-
-    <!--VK app id for SDK-->
-    <integer name="com_vk_sdk_AppId">7556989</integer>
+    <string name="email_error">Адрес почты некорректен</string>
+    <string name="password_error">Пароль должен содержать минимум 8 символов, одну прописную букву, одну цифру</string>
+    <string name="lastname_error">Превышен лимит символов</string>
+    <string name="firstname_error">Превышен лимит символов</string>
+    <string name="middlename_error">Превышен лимит символов</string>
+    <string name="language_error">Язык не выбран</string>
+    <string name="phone_error">Превышен лимит символов</string>
+    <string name="empty_field_error">Поле должно быть заполнено</string>
+    <string name="checkbox_error">Вы должны согласиться на обработку персональных данных</string>
+    <string name="auth_error">Ошибка при попытке авторизоваться</string>
+    <string name="login_error">Ошибка при попытке войти</string>
+    <string name="register_error">Ошибка при попытке зарегистрироваться</string>
+    <string name="drawer_error">Ошибка при получении предметов выдвижной шторки</string>
+    <string name="article_error">Ошибка при получении статьи</string>
+    <string name="feed_error">Ошибка при получении списка статей</string>
+    <string name="profile_get_error">Ошибка при получении информации о пользователе</string>
+    <string name="profile_save_error">Ошибка при сохранении информации о пользователе</string>
+    <string name="token_invalid_error">Вам необходимо авторизоваться</string>
+    <string name="language_rus">Русский</string>
+    <string name="language_en">Английский</string>
+    <string name="language_zh">Китайский</string>
 </resources>
