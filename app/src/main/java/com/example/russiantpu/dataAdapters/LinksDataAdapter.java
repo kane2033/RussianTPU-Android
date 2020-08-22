@@ -2,6 +2,7 @@ package com.example.russiantpu.dataAdapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.russiantpu.R;
 import com.example.russiantpu.items.LinkItem;
 import com.example.russiantpu.utility.ImageConverter;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.List;
 
@@ -37,15 +40,35 @@ public class LinksDataAdapter extends RecyclerView.Adapter<LinksDataAdapter.View
 
     //привязка объекта ViewHolder к объекту пункта LinkItem
     @Override
-    public void onBindViewHolder(LinksDataAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final LinksDataAdapter.ViewHolder holder, int position) {
         LinkItem item = items.get(position);
         String text = item.getName();
         holder.nameText.setText(text);
 
-        //конвертация строки base64 в картинку
+        Target target = new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                holder.image.setImageBitmap(bitmap);
+            }
+
+            @Override
+            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+                holder.image.setImageDrawable(errorDrawable);
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+                holder.image.setImageDrawable(placeHolderDrawable);
+            }
+        };
+
+        //устанавливаем картинку из url в imageView форматом Bitmap
+        Picasso.get().load(item.getImage()).into(target);
+
+/*        //конвертация строки base64 в картинку
         ImageConverter imageConverter = new ImageConverter();
         Bitmap imgBitmap = imageConverter.stringToBitmap(item.getImage());
-        holder.image.setImageBitmap(imgBitmap);
+        holder.image.setImageBitmap(imgBitmap);*/
     }
 
     @Override
