@@ -75,6 +75,13 @@ public class SharedPreferencesService {
         editor.commit();
     }
 
+    public void setTokens(String token, String refreshToken) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(tokenKey, token);
+        editor.putString(refreshTokenKey, refreshToken);
+        editor.commit();
+    }
+
     public void setUser(UserDTO user) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(emailTokenKey, user.getEmail());

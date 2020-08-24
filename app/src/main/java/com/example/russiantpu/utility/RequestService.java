@@ -28,12 +28,26 @@ public class RequestService {
         return responseCode;
     }
 
+    //конструктор без необходимости использования токенов
     public RequestService() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         //временное увеличение таймаута с целью успешной регистрации
         builder.connectTimeout(30, TimeUnit.SECONDS);
         builder.readTimeout(30, TimeUnit.SECONDS);
         builder.writeTimeout(30, TimeUnit.SECONDS);
+        client = builder.build();
+    }
+
+    //конструктор для случаев, когда необхоим токен
+    //передаем ссылку на sharedPreferences для получения токена
+    public RequestService(SharedPreferencesService sharedPreferencesService) {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        //временное увеличение таймаута с целью успешной регистрации
+        builder.connectTimeout(30, TimeUnit.SECONDS);
+        builder.readTimeout(30, TimeUnit.SECONDS);
+        builder.writeTimeout(30, TimeUnit.SECONDS);
+        //класс аунтефикатор автоматически обновит токен при истечении
+        builder.authenticator(new TokenAuthenticator(sharedPreferencesService));
         client = builder.build();
     }
 
@@ -94,6 +108,43 @@ public class RequestService {
         enqueue(request, callback);
     }
 
+    //put запрос без тела
+    public void doPutRequest(String url, final GenericCallback<String> callback, String token, String language) {
+        Request request = new Request.Builder()
+                .url(API_URL + url)
+                .addHeader("Accept-Language", language) //язык
+                .addHeader("Authorization", "Bearer " + token)
+                .build();
+
+        enqueue(request, callback);
+    }
+
+    public String doPutRequestSync(String url, String token, String language) {
+        RequestBody body = RequestBody.create("", null);
+        Request request = new Request.Builder()
+                .url(API_URL + url)
+                .addHeader("Accept-Language", language) //язык
+                .addHeader("Authorization", "Bearer " + token)
+                .put(body)
+                .build();
+
+        try {
+            Response response = client.newCall(request).execute();
+            String jsonBody = response.body().string();
+            if (response.isSuccessful()) {
+                Log.d("JSON_RESPONSE", "onResponse: " + jsonBody);
+                return jsonBody; //тело ответа
+            }
+            else {
+                Log.d("RESPONSE_ERR", "Response code: " + response.code() + "; text: " + jsonBody);
+                return null;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     //делает запрос на url
     //возвращает тело ответа в json, доступное в реализации callback
     private void enqueue(final Request request, final GenericCallback<String> callback) {
@@ -112,7 +163,7 @@ public class RequestService {
                     Log.d("JSON_RESPONSE", "onResponse: " + jsonBody);
                     callback.onResponse(jsonBody);
                 }
-                else {
+                else { //(300; 500)
                     callback.onError(jsonBody);
                     Log.d("RESPONSE_ERR", "Response code: " + response.code() + "; text: " + jsonBody);
                 }

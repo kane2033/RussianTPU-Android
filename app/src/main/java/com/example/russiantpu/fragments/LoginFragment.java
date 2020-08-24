@@ -31,6 +31,7 @@ import com.example.russiantpu.utility.SharedPreferencesService;
 import com.example.russiantpu.utility.ToastService;
 import com.example.russiantpu.utility.VKAuthService;
 import com.example.russiantpu.utility.VKTokenCallback;
+import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.textfield.TextInputEditText;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
@@ -49,6 +50,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
     @NotEmpty(messageResId = R.string.empty_field_error)
     private EditText passwordInput;
 
+    private MaterialCheckBox rememberMeCheckBox;
     private Button loginButton;
     private Button gotoRegisterButton;
     private ImageView loginGoogle;
@@ -75,6 +77,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
 
         emailInput = layoutInflater.findViewById(R.id.input_email);
         passwordInput = layoutInflater.findViewById(R.id.input_password);
+        rememberMeCheckBox = layoutInflater.findViewById(R.id.remember_me_checkbox);
         loginButton = layoutInflater.findViewById(R.id.button_login);
         gotoRegisterButton = layoutInflater.findViewById(R.id.goto_register);
         loginGoogle = layoutInflater.findViewById(R.id.button_login_google);
@@ -263,7 +266,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
 
     @Override
     public void onValidationSucceeded() {
-        String json = gsonService.fromObjectToJson(new LoginDTO(emailInput.getText().toString(), passwordInput.getText().toString(), true));
+        String json = gsonService.fromObjectToJson(new LoginDTO(emailInput.getText().toString(), passwordInput.getText().toString(), rememberMeCheckBox.isChecked()));
         requestService.doPostRequest("auth/local/login", toMainActivityCallback, language, json);
     }
 

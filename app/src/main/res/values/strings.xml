@@ -12,7 +12,7 @@
     <!--Поля ввода для логина-->
     <string name="email">E-mail</string>
     <string name="password">Пароль</string>
-    <string name="remember_me">Запомнить меня?</string>
+    <string name="remember_me">Запомнить меня</string>
     <string name="login">Войти</string>
     <string name="goto_register">Нет аккаунта? Зарегистрируйтесь!</string>
     <string name="login_via_service">Войдите через социальные сети</string>

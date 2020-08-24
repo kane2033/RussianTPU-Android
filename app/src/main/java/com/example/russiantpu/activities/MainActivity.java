@@ -44,8 +44,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
 
         final SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(this);
+
         //получение JWT токена и пользователя из памяти
-        String token = sharedPreferencesService.getToken();
+        final String token = sharedPreferencesService.getToken();
         UserDTO user = sharedPreferencesService.getUser();
         //установка языка приложения (интерфейса)
         LocaleService.setLocale(this, user.getLanguage());
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         emailTextView.setText(user.getEmail());
 
         //запрос на сервис для получения пунктов выдвижного меню
-        RequestService requestService = new RequestService();
+        final RequestService requestService = new RequestService(sharedPreferencesService);
         //реализация коллбека - что произойдет при получении данных с сервиса
         GenericCallback<String> callback = new GenericCallback<String>() {
             @Override

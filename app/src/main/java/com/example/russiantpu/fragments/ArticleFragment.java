@@ -47,9 +47,10 @@ public class ArticleFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         //вспомогательные классы
-        final RequestService requestService = new RequestService();
-        final GsonService gsonService = new GsonService();
         final Activity activity = getActivity();
+        final SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(activity);
+        final RequestService requestService = new RequestService(sharedPreferencesService);
+        final GsonService gsonService = new GsonService();
 
         String selectedArticleId = getArguments().getString("id");
 
@@ -91,8 +92,8 @@ public class ArticleFragment extends Fragment {
                 ErrorDialogService.showDialog(getResources().getString(R.string.article_error), message, getFragmentManager());
             }
         };
+
         //получение JWT токена
-        SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(activity);
         String token = sharedPreferencesService.getToken();
         String language = sharedPreferencesService.getLanguage();
         //запрос за получение списка статей по айди пункта меню

@@ -40,7 +40,7 @@
     <string name="profile_firstname">First name</string>
     <string name="profile_save_success">The changes have been successfully saved</string>
     <string name="register">Register</string>
-    <string name="remember_me">Remember me?</string>
+    <string name="remember_me">Remember me</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="gender_female">Female</string>
     <string name="profile_greeting">Welcome!</string>
@@ -57,4 +57,5 @@
     <string name="language_rus">Russian</string>
     <string name="language_en">English</string>
     <string name="language_zh">Chinese</string>
+    <string name="refresh_token_error">Error while trying to update token</string>
 </resources>

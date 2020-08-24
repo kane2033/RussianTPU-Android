@@ -183,7 +183,7 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
         final String token = sharedPreferencesService.getToken();
         final String language = sharedPreferencesService.getLanguage();
         final String email = sharedPreferencesService.getEmail();
-        requestService = new RequestService();
+        requestService = new RequestService(sharedPreferencesService);
         requestService.doRequest("user/profile/", callback, token, language, "email", email);
 /*        runOnUiThread(new Runnable() {
             @Override

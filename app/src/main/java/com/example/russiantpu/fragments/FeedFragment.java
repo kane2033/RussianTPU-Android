@@ -53,8 +53,9 @@ public class FeedFragment extends Fragment {
 
         //вспомогательные классы
         final Activity activity = getActivity();
+        final SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(activity);
         final FragmentReplacer fragmentReplacer = new FragmentReplacer((AppCompatActivity) activity);
-        final RequestService requestService = new RequestService();
+        final RequestService requestService = new RequestService(sharedPreferencesService);
         final GsonService gsonService = new GsonService();
 
         String selectedItemId = getArguments().getString("id"); //айди родительского пункта
@@ -108,8 +109,8 @@ public class FeedFragment extends Fragment {
                 ErrorDialogService.showDialog(getResources().getString(R.string.feed_error), message, getFragmentManager());
             }
         };
+
         //получение JWT токена
-        SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(activity);
         String token = sharedPreferencesService.getToken();
         String language = sharedPreferencesService.getLanguage();
 
