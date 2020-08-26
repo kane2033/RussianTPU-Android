@@ -13,6 +13,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
+import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 
@@ -24,6 +25,7 @@ import com.example.russiantpu.utility.FragmentReplacer;
 import com.example.russiantpu.utility.GenericCallback;
 import com.example.russiantpu.utility.GsonService;
 import com.example.russiantpu.utility.LocaleService;
+import com.example.russiantpu.utility.ProgressBarSwitcher;
 import com.example.russiantpu.utility.RequestService;
 import com.example.russiantpu.utility.SharedPreferencesService;
 import com.google.android.material.navigation.NavigationView;
@@ -71,11 +73,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(View v) {
                 //переходим в активити профиля
                 startActivity(new Intent(MainActivity.this, ProfileActivity.class));
-/*                sharedPreferencesService.clearCredentials(); //удаляем токен из памяти
-                startActivity(new Intent(MainActivity.this, AuthActivity.class)); //переходим обратно в активити логина
-                //очистка фрагментов из стека при переходе в основную активити - в противном случае, при нажатии кнопки "назад"
-                //происходит непредвиденный переход в логин
-                fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);*/
             }
         });
 
@@ -85,12 +82,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         firstNameTextView.setText(user.getFirstName());
         emailTextView.setText(user.getEmail());
 
+        final ContentLoadingProgressBar progressBar = findViewById(R.id.progress_bar);
+        ProgressBarSwitcher.switchPB(this, progressBar); //включаем прогресс бар
+
         //запрос на сервис для получения пунктов выдвижного меню
         final RequestService requestService = new RequestService(sharedPreferencesService);
         //реализация коллбека - что произойдет при получении данных с сервиса
         GenericCallback<String> callback = new GenericCallback<String>() {
             @Override
             public void onResponse(String jsonBody) {
+                ProgressBarSwitcher.switchPB(MainActivity.this, progressBar); //выключаем прогресс бар
                 //получение списка пунктов бокового меню (1 уровень)
                 drawerItems = gsonService.fromJsonToArrayList(jsonBody, LinkItem.class);
                 Log.d("GET_REQUEST", "Получены предметы шторки");
@@ -116,11 +117,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onError(String message) {
+                ProgressBarSwitcher.switchPB(MainActivity.this, progressBar); //выключаем прогресс бар
                 ErrorDialogService.showDialog(getResources().getString(R.string.drawer_error), gsonService.getFieldFromJson("message", message), fragmentManager);
             }
 
             @Override
             public void onFailure(String message) {
+                ProgressBarSwitcher.switchPB(MainActivity.this, progressBar); //выключаем прогресс бар
                 ErrorDialogService.showDialog(getResources().getString(R.string.drawer_error), message, fragmentManager);
             }
         };

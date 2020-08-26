@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,6 +25,7 @@ import com.example.russiantpu.utility.ErrorDialogService;
 import com.example.russiantpu.utility.FragmentReplacer;
 import com.example.russiantpu.utility.GenericCallback;
 import com.example.russiantpu.utility.GsonService;
+import com.example.russiantpu.utility.ProgressBarSwitcher;
 import com.example.russiantpu.utility.RequestService;
 import com.example.russiantpu.utility.SharedPreferencesService;
 
@@ -35,6 +37,7 @@ public class FeedFragment extends Fragment {
     private FeedDataAdapter adapter;
     private RecyclerView recyclerView;
     private TextView missingContentText;
+    private ContentLoadingProgressBar progressBar;
 
     private ArrayList<FeedItem> items = new ArrayList<>();
 
@@ -44,6 +47,7 @@ public class FeedFragment extends Fragment {
         final RelativeLayout layoutInflater = (RelativeLayout)inflater.inflate(R.layout.fragment_feed, container, false);
         recyclerView = layoutInflater.findViewById(R.id.list); //список
         missingContentText = layoutInflater.findViewById(R.id.missingContentText); //уведомление об отутствии контента
+        progressBar = getActivity().findViewById(R.id.progress_bar);
         return layoutInflater;
     }
 
@@ -58,6 +62,8 @@ public class FeedFragment extends Fragment {
         final RequestService requestService = new RequestService(sharedPreferencesService);
         final GsonService gsonService = new GsonService();
 
+        ProgressBarSwitcher.switchPB(activity, progressBar); //включаем прогресс бар
+
         String selectedItemId = getArguments().getString("id"); //айди родительского пункта
         String header = getArguments().getString("header"); //название выбранного пункта будет отображаться в тулбаре
         activity.setTitle(header); //установка названия пункта в тулбар
@@ -65,6 +71,7 @@ public class FeedFragment extends Fragment {
         GenericCallback<String> callback = new GenericCallback<String>() {
             @Override
             public void onResponse(String jsonBody) {
+                ProgressBarSwitcher.switchPB(activity, progressBar); //выключаем прогресс бар
                 items = gsonService.fromJsonToArrayList(jsonBody, FeedItem.class);
 
                 //иначе заполняем recycleview
@@ -101,11 +108,13 @@ public class FeedFragment extends Fragment {
 
             @Override
             public void onError(String message) {
+                ProgressBarSwitcher.switchPB(activity, progressBar); //выключаем прогресс бар
                 ErrorDialogService.showDialog(getResources().getString(R.string.feed_error), gsonService.getFieldFromJson("message", message), getFragmentManager());
             }
 
             @Override
             public void onFailure(String message) {
+                ProgressBarSwitcher.switchPB(activity, progressBar); //выключаем прогресс бар
                 ErrorDialogService.showDialog(getResources().getString(R.string.feed_error), message, getFragmentManager());
             }
         };

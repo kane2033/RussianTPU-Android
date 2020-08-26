@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 
 import androidx.annotation.Nullable;
+import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -26,6 +27,7 @@ import com.example.russiantpu.utility.FacebookAuthService;
 import com.example.russiantpu.utility.GenericCallback;
 import com.example.russiantpu.utility.GoogleAuthService;
 import com.example.russiantpu.utility.GsonService;
+import com.example.russiantpu.utility.ProgressBarSwitcher;
 import com.example.russiantpu.utility.RequestService;
 import com.example.russiantpu.utility.SharedPreferencesService;
 import com.example.russiantpu.utility.ToastService;
@@ -56,6 +58,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
     private ImageView loginGoogle;
     private ImageView loginFacebook;
     private ImageView loginVK;
+    private ContentLoadingProgressBar progressBar;
 
     private RequestService requestService;
     private GsonService gsonService;
@@ -83,6 +86,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
         loginGoogle = layoutInflater.findViewById(R.id.button_login_google);
         loginFacebook = layoutInflater.findViewById(R.id.button_login_facebook);
         loginVK = layoutInflater.findViewById(R.id.button_login_vk);
+        progressBar = layoutInflater.findViewById(R.id.progress_bar);
 
         loginButton.setOnClickListener(this);
         gotoRegisterButton.setOnClickListener(this);
@@ -137,6 +141,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
         toMainActivityCallback = new GenericCallback<String>() {
             @Override
             public void onResponse(String jsonBody) {
+                ProgressBarSwitcher.switchPB(activity, progressBar); //убираем прогресс бар
                 //получение токенов с сервиса
                 TokensDTO tokens = gsonService.fromJsonToObject(jsonBody, TokensDTO.class);
 
@@ -154,11 +159,13 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
 
             @Override
             public void onError(String message) {
+                ProgressBarSwitcher.switchPB(activity, progressBar);
                 ErrorDialogService.showDialog(getResources().getString(R.string.login_error), gsonService.getFieldFromJson("message", message), getFragmentManager());
             }
 
             @Override
             public void onFailure(String message) {
+                ProgressBarSwitcher.switchPB(activity, progressBar);
                 ErrorDialogService.showDialog(getResources().getString(R.string.login_error), message, getFragmentManager());
             }
         };
@@ -266,6 +273,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
 
     @Override
     public void onValidationSucceeded() {
+        final Activity activity = getActivity();
+        ProgressBarSwitcher.switchPB(activity, progressBar);
         String json = gsonService.fromObjectToJson(new LoginDTO(emailInput.getText().toString(), passwordInput.getText().toString(), rememberMeCheckBox.isChecked()));
         requestService.doPostRequest("auth/local/login", toMainActivityCallback, language, json);
     }

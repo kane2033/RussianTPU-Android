@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
 
 import com.example.russiantpu.R;
@@ -19,6 +20,7 @@ import com.example.russiantpu.utility.ChromeClient;
 import com.example.russiantpu.utility.ErrorDialogService;
 import com.example.russiantpu.utility.GenericCallback;
 import com.example.russiantpu.utility.GsonService;
+import com.example.russiantpu.utility.ProgressBarSwitcher;
 import com.example.russiantpu.utility.RequestService;
 import com.example.russiantpu.utility.SharedPreferencesService;
 
@@ -28,6 +30,7 @@ public class ArticleFragment extends Fragment {
     private WebView webView;
     private TextView missingContentText;
     private FrameLayout frameLayout;
+    private ContentLoadingProgressBar progressBar;
 
     private Article article;
 
@@ -39,6 +42,7 @@ public class ArticleFragment extends Fragment {
         webView = layoutInflater.findViewById(R.id.fullArticle); //статья
         missingContentText = layoutInflater.findViewById(R.id.missingContentText);
         frameLayout = layoutInflater.findViewById(R.id.fullscreen_container); //контейнер для полноэкранного режима
+        progressBar = getActivity().findViewById(R.id.progress_bar);
         return layoutInflater;
     }
 
@@ -53,6 +57,8 @@ public class ArticleFragment extends Fragment {
         final GsonService gsonService = new GsonService();
 
         String selectedArticleId = getArguments().getString("id");
+
+        ProgressBarSwitcher.switchPB(activity, progressBar); //включаем прогресс бар
 
         //реализация коллбека - что произойдет при получении данных с сервера
         GenericCallback<String> callback = new GenericCallback<String>() {
@@ -76,6 +82,7 @@ public class ArticleFragment extends Fragment {
 
                             //отображение в формате html
                             webView.loadData(article.getText(), "text/html; charset=utf-8", "UTF-8");
+                            ProgressBarSwitcher.switchPB(activity, progressBar); //отключаем прогресс бар
                         }
                     });
                 }
@@ -84,11 +91,13 @@ public class ArticleFragment extends Fragment {
 
             @Override
             public void onError(String message) {
+                ProgressBarSwitcher.switchPB(activity, progressBar); //включаем прогресс бар
                 ErrorDialogService.showDialog(getResources().getString(R.string.article_error), gsonService.getFieldFromJson("message", message), getFragmentManager());
             }
 
             @Override
             public void onFailure(String message) {
+                ProgressBarSwitcher.switchPB(activity, progressBar); //включаем прогресс бар
                 ErrorDialogService.showDialog(getResources().getString(R.string.article_error), message, getFragmentManager());
             }
         };

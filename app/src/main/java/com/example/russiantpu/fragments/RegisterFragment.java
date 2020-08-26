@@ -11,6 +11,7 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 
 import androidx.annotation.Nullable;
+import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
 
 import com.example.russiantpu.R;
@@ -18,6 +19,7 @@ import com.example.russiantpu.dto.UserDTO;
 import com.example.russiantpu.utility.ErrorDialogService;
 import com.example.russiantpu.utility.GenericCallback;
 import com.example.russiantpu.utility.GsonService;
+import com.example.russiantpu.utility.ProgressBarSwitcher;
 import com.example.russiantpu.utility.RequestService;
 import com.example.russiantpu.utility.SpinnerValidatorAdapter;
 import com.example.russiantpu.utility.ToastService;
@@ -66,6 +68,7 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
     private MaterialCheckBox checkBox; //согласие на обработку персональных данных
 
     private Button registerButton;
+    private ContentLoadingProgressBar progressBar;
 
     private UserDTO dto = new UserDTO();
     private Context applicationContext;
@@ -91,6 +94,7 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
         phoneNumberInput = layoutInflater.findViewById(R.id.input_phone_number);
         checkBox = layoutInflater.findViewById(R.id.checkbox);
         registerButton = layoutInflater.findViewById(R.id.button_register);
+        progressBar = layoutInflater.findViewById(R.id.progress_bar);
 
         //валидируем содержимое фрагмента, поэтому передаем фрагмент в классы валидаторов
         final Validator validator = new Validator(this);
@@ -130,6 +134,7 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
     //если все поля пройдут валидацию
     @Override
     public void onValidationSucceeded() {
+        ProgressBarSwitcher.switchPB(getActivity(), progressBar); //включаем прогресс бар
         toastService.showToast(R.string.validation_success);
         //берем выбраный пол, отсылаем всегда на английском
         String gender = null; //пол не обязательное поле, поэтому может быть null
@@ -157,9 +162,7 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
         final GenericCallback<String> callback = new GenericCallback<String>() {
             @Override
             public void onResponse(String jsonBody) {
-                //нужно уведомить об успешной регистрации
-                //нужно уведомить об процессе отправки запроса
-
+                ProgressBarSwitcher.switchPB(getActivity(), progressBar); //скрываем прогресс бар
                 toastService.showToast(R.string.reg_success);
 
                 // переход обратно на фрагмент логина при успешной регистрации
@@ -169,20 +172,19 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
 
             @Override
             public void onError(String message) {
+                ProgressBarSwitcher.switchPB(getActivity(), progressBar); //скрываем прогресс бар
                 ErrorDialogService.showDialog(getResources().getString(R.string.register_error), gsonService.getFieldFromJson("message", message), getFragmentManager());
             }
 
             @Override
             public void onFailure(String message) {
+                ProgressBarSwitcher.switchPB(getActivity(), progressBar);
                 ErrorDialogService.showDialog(getResources().getString(R.string.register_error), message, getFragmentManager());
             }
         };
 
         //если регистрация происходит через сторонние сервисы (поле != null), выбираем соответствующий юрл
         final String url = dto.getProvider() != null ? "auth/provider/registration" : "auth/local/registration";
-
-/*        final String json = gsonService.fromObjectToJson(dto);
-        requestService.doPostRequest(url, callback, json);*/
 
         getActivity().runOnUiThread(new Runnable() {
             @Override

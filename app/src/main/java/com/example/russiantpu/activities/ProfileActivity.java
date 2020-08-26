@@ -11,6 +11,7 @@ import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.widget.ContentLoadingProgressBar;
 
 import com.example.russiantpu.R;
 import com.example.russiantpu.dto.UserDTO;
@@ -19,6 +20,7 @@ import com.example.russiantpu.utility.FormService;
 import com.example.russiantpu.utility.GenericCallback;
 import com.example.russiantpu.utility.GsonService;
 import com.example.russiantpu.utility.LocaleService;
+import com.example.russiantpu.utility.ProgressBarSwitcher;
 import com.example.russiantpu.utility.RequestService;
 import com.example.russiantpu.utility.SharedPreferencesService;
 import com.example.russiantpu.utility.SpinnerValidatorAdapter;
@@ -62,6 +64,7 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
     //    private TextInputEditText newPasswordInput;
 
     private Button saveButton;
+    private ContentLoadingProgressBar progressBar;
 
     private LinearLayout formContainer;
     private LinearLayout formContainerEditElements;
@@ -104,6 +107,7 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
         saveButton = formContainer.findViewById(R.id.button_save);
         ImageButton editButton = findViewById(R.id.button_edit);
         ImageButton logoutButton = findViewById(R.id.button_logout);
+        progressBar = findViewById(R.id.progress_bar);
 
         //устанавливаем все поля нередактируемыми
         switchFieldsEditable();
@@ -149,9 +153,12 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
             }
         });
 
+        ProgressBarSwitcher.switchPB(this, progressBar); //включаем прогресс бар
+
         final GenericCallback<String> callback = new GenericCallback<String>() {
             @Override
             public void onResponse(String jsonBody) {
+                ProgressBarSwitcher.switchPB(ProfileActivity.this, progressBar); //выключаем прогресс бар
                 //получаем всю информацию о юзере с сервиса
                 final UserDTO user = gsonService.fromJsonToObject(jsonBody, UserDTO.class);
                 runOnUiThread(new Runnable() {
@@ -171,11 +178,13 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
 
             @Override
             public void onError(String message) {
+                ProgressBarSwitcher.switchPB(ProfileActivity.this, progressBar); //выключаем прогресс бар
                 ErrorDialogService.showDialog(getResources().getString(R.string.profile_get_error), gsonService.getFieldFromJson("message", message), getSupportFragmentManager());
             }
 
             @Override
             public void onFailure(String message) {
+                ProgressBarSwitcher.switchPB(ProfileActivity.this, progressBar); //выключаем прогресс бар
                 ErrorDialogService.showDialog(getResources().getString(R.string.profile_get_error), message, getSupportFragmentManager());
             }
         };
@@ -185,13 +194,6 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
         final String email = sharedPreferencesService.getEmail();
         requestService = new RequestService(sharedPreferencesService);
         requestService.doRequest("user/profile/", callback, token, language, "email", email);
-/*        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                requestService.doRequest("user/profile/", callback, token, language, "email", email);
-            }
-        });*/
-
     }
 
     //метод активации и деактивации полей формы
@@ -214,6 +216,7 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
     //при успешной валидации
     @Override
     public void onValidationSucceeded() {
+        ProgressBarSwitcher.switchPB(this, progressBar); //включаем прогресс бар
         //отсылаем на сервис новую информацию о юзере
         final String token = sharedPreferencesService.getToken();
         String email = sharedPreferencesService.getEmail();
@@ -234,6 +237,7 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        ProgressBarSwitcher.switchPB(ProfileActivity.this, progressBar); //выключаем прогресс бар
                         toastService.showToast(R.string.profile_save_success);
                         switchFieldsEditable(); //отключаем редактирование полей
                         sharedPreferencesService.setUser(dto); //запись в память новой информации о пользователе
@@ -249,11 +253,13 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
 
             @Override
             public void onError(String message) {
+                ProgressBarSwitcher.switchPB(ProfileActivity.this, progressBar); //выключаем прогресс бар
                 ErrorDialogService.showDialog(getResources().getString(R.string.profile_save_error), gsonService.getFieldFromJson("message", message), getSupportFragmentManager());
             }
 
             @Override
             public void onFailure(String message) {
+                ProgressBarSwitcher.switchPB(ProfileActivity.this, progressBar); //выключаем прогресс бар
                 ErrorDialogService.showDialog(getResources().getString(R.string.profile_save_error), message, getSupportFragmentManager());
             }
         };
