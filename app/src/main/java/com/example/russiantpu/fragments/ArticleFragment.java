@@ -88,13 +88,25 @@ public class ArticleFragment extends Fragment {
 
             @Override
             public void onError(String message) {
-                ProgressBarSwitcher.switchPB(activity, progressBar); //включаем прогресс бар
-                ErrorDialogService.showDialog(getResources().getString(R.string.article_error), gsonService.getFieldFromJson("message", message), getFragmentManager());
+                //выключаем прогресс бар
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.hide();
+                    }
+                });
+                ErrorDialogService.showDialog(getResources().getString(R.string.article_error), message, getFragmentManager());
             }
 
             @Override
             public void onFailure(String message) {
-                ProgressBarSwitcher.switchPB(activity, progressBar); //включаем прогресс бар
+                //выключаем прогресс бар
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.hide();
+                    }
+                });
                 ErrorDialogService.showDialog(getResources().getString(R.string.article_error), message, getFragmentManager());
             }
         };

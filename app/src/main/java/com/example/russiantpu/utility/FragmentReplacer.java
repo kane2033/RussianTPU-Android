@@ -38,7 +38,10 @@ public class FragmentReplacer {
         LinkItem castedItem;
         switch (item.getType()) {
             case LINK: //ссылка на сайт
-                activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(((LinkItem) item).getUrl())));
+                castedItem = (LinkItem) item;
+                if (castedItem.getUrl() != null && !castedItem.getUrl().isEmpty()) { //открываем браузер только при наличии ссылки
+                    activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(((LinkItem) item).getUrl())));
+                }
                 break;
             case LINKS_LIST: //список ссылок на следующие пункты
                 fragment = new LinksFragment();

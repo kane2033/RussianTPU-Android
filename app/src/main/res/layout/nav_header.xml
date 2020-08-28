@@ -5,6 +5,7 @@
     android:background="@color/colorPrimary"
     android:orientation="vertical"
     android:padding="16dp"
+    android:paddingStart="22dp"
     android:clickable="true"
     android:focusable="true"
     android:fitsSystemWindows="false">
@@ -19,17 +20,20 @@
         android:layout_height="match_parent"
         android:paddingTop="8dp"
         android:text="@string/profile_title"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+        android:textColor="@android:color/white"/>
     <TextView
         android:id="@+id/firstName"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="FirstName LastName"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        android:textColor="@android:color/white"/>
     <TextView
         android:id="@+id/email"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="somebigassemailfortesting@mail.com"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"/>
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        android:textColor="@android:color/white"/>
 </LinearLayout>

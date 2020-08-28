@@ -51,6 +51,16 @@ public class RequestService {
         client = builder.build();
     }
 
+    //метод отменяет все запросы в очереди и работающие
+    public void cancelAllRequests() {
+        for (Call call : client.dispatcher().queuedCalls()) {
+            call.cancel();
+        }
+        for (Call call : client.dispatcher().runningCalls()) {
+            call.cancel();
+        }
+    }
+
     //GET запрос на url с произвольным количеством параметров:
     //параметры вводятся форматом - название параметра, значение параметра, ...
     public void doRequest(String url, final GenericCallback<String> callback, String token, String language, String... params) {

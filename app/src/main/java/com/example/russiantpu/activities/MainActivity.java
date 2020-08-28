@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         emailTextView.setText(user.getEmail());
 
         final ContentLoadingProgressBar progressBar = findViewById(R.id.progress_bar);
-        ProgressBarSwitcher.switchPB(this, progressBar); //включаем прогресс бар
+        progressBar.show(); //включаем прогресс бар
 
         //запрос на сервис для получения пунктов выдвижного меню
         final RequestService requestService = new RequestService(sharedPreferencesService);
@@ -90,7 +90,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         GenericCallback<String> callback = new GenericCallback<String>() {
             @Override
             public void onResponse(String jsonBody) {
-                ProgressBarSwitcher.switchPB(MainActivity.this, progressBar); //выключаем прогресс бар
                 //получение списка пунктов бокового меню (1 уровень)
                 drawerItems = gsonService.fromJsonToArrayList(jsonBody, LinkItem.class);
                 Log.d("GET_REQUEST", "Получены предметы шторки");
@@ -117,13 +116,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onError(String message) {
-                ProgressBarSwitcher.switchPB(MainActivity.this, progressBar); //выключаем прогресс бар
-                ErrorDialogService.showDialog(getResources().getString(R.string.drawer_error), gsonService.getFieldFromJson("message", message), fragmentManager);
+                //выключаем прогресс бар
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.hide();
+                    }
+                });
+                ErrorDialogService.showDialog(getResources().getString(R.string.drawer_error), message, fragmentManager);
             }
 
             @Override
             public void onFailure(String message) {
-                ProgressBarSwitcher.switchPB(MainActivity.this, progressBar); //выключаем прогресс бар
+                //выключаем прогресс бар
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.hide();
+                    }
+                });
                 ErrorDialogService.showDialog(getResources().getString(R.string.drawer_error), message, fragmentManager);
             }
         };

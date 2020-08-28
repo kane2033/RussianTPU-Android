@@ -33,26 +33,13 @@ import java.util.ArrayList;
 //фрагмент, отображающий список статей (новостей)
 public class FeedFragment extends Fragment {
 
-    private FeedDataAdapter adapter;
-    private RecyclerView recyclerView;
-    private TextView missingContentText;
-    private ContentLoadingProgressBar progressBar;
-
-    private ArrayList<FeedItem> items = new ArrayList<>();
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final RelativeLayout layoutInflater = (RelativeLayout)inflater.inflate(R.layout.fragment_feed, container, false);
-        recyclerView = layoutInflater.findViewById(R.id.list); //список
-        missingContentText = layoutInflater.findViewById(R.id.missingContentText); //уведомление об отутствии контента
-        progressBar = getActivity().findViewById(R.id.progress_bar);
-        return layoutInflater;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+        final RecyclerView recyclerView = layoutInflater.findViewById(R.id.list); //список
+        final TextView missingContentText = layoutInflater.findViewById(R.id.missingContentText); //уведомление об отутствии контента
+        final ContentLoadingProgressBar progressBar = getActivity().findViewById(R.id.progress_bar);
 
         //вспомогательные классы
         final Activity activity = getActivity();
@@ -61,44 +48,45 @@ public class FeedFragment extends Fragment {
         final RequestService requestService = new RequestService(sharedPreferencesService);
         final GsonService gsonService = new GsonService();
 
-        ProgressBarSwitcher.switchPB(activity, progressBar); //включаем прогресс бар
+        final ArrayList<FeedItem> items = new ArrayList<>();
+        final FeedDataAdapter adapter = new FeedDataAdapter(getContext(), items);
+
+        adapter.setOnItemClickListener(new ClickListener() {
+            @Override
+            public void onItemClick(int position, View v) {
+                Item selectedItem = items.get(position);
+                selectedItem.setType(ContentType.ARTICLE);
+                fragmentReplacer.goToFragment(selectedItem);
+            }
+            //пока не используется, оставлен на будущее
+            @Override
+            public void onItemLongClick(int position, View v) {
+            }
+        });
+        recyclerView.setAdapter(adapter);
 
         String selectedItemId = getArguments().getString("id"); //айди родительского пункта
         String header = getArguments().getString("header"); //название выбранного пункта будет отображаться в тулбаре
         activity.setTitle(header); //установка названия пункта в тулбар
+
+        progressBar.show(); //включаем прогресс бар
+
         //реализация коллбека - что произойдет при получении данных с сервера
         GenericCallback<String> callback = new GenericCallback<String>() {
             @Override
             public void onResponse(String jsonBody) {
-                ProgressBarSwitcher.switchPB(activity, progressBar); //выключаем прогресс бар
-                items = gsonService.fromJsonToArrayList(jsonBody, FeedItem.class);
+                items.addAll(gsonService.fromJsonToArrayList(jsonBody, FeedItem.class));
 
-                //иначе заполняем recycleview
                 //отрисовываем список статей в потоке интерфейса
-                //возможно, это стоит перенести в onCreateView
-                //и при успешном запросе вызывать обновление recycleview
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (items.size() == 0) { //если нет контента, уведомляем
-                            missingContentText.setText(R.string.missing_content);
+                        if (items.size() != 0) { //если нет контента, уведомляем
+                            Log.d("FEED_FRAGMENT", "Сколько статей получено: " + items.size());
+                            adapter.notifyDataSetChanged();
                         }
                         else {
-                            Log.d("FEED_FRAGMENT", "Сколько статей получено: " + items.size());
-                            adapter = new FeedDataAdapter(getContext(), items);
-                            adapter.setOnItemClickListener(new ClickListener() {
-                                @Override
-                                public void onItemClick(int position, View v) {
-                                    Item selectedItem = items.get(position);
-                                    selectedItem.setType(ContentType.ARTICLE);
-                                    fragmentReplacer.goToFragment(selectedItem);
-                                }
-                                //пока не используется, оставлен на будущее
-                                @Override
-                                public void onItemLongClick(int position, View v) {
-                                }
-                            });
-                            recyclerView.setAdapter(adapter);
+                            missingContentText.setText(R.string.missing_content);
                         }
                         progressBar.hide(); //выключаем прогресс бар
                     }
@@ -137,6 +125,13 @@ public class FeedFragment extends Fragment {
 
         //запрос за получение списка статей по айди пункта меню
         requestService.doRequest("article/list/" + selectedItemId, callback, token, language, "fromMenu", "true");
+
+        return layoutInflater;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 
 }

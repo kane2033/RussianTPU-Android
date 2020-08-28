@@ -44,31 +44,8 @@ public class LinksDataAdapter extends RecyclerView.Adapter<LinksDataAdapter.View
         LinkItem item = items.get(position);
         String text = item.getName();
         holder.nameText.setText(text);
-
-        Target target = new Target() {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                holder.image.setImageBitmap(bitmap);
-            }
-
-            @Override
-            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-                holder.image.setImageDrawable(errorDrawable);
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
-                holder.image.setImageDrawable(placeHolderDrawable);
-            }
-        };
-
         //устанавливаем картинку из url в imageView форматом Bitmap
-        Picasso.get().load(item.getImage()).into(target);
-
-/*        //конвертация строки base64 в картинку
-        ImageConverter imageConverter = new ImageConverter();
-        Bitmap imgBitmap = imageConverter.stringToBitmap(item.getImage());
-        holder.image.setImageBitmap(imgBitmap);*/
+        Picasso.get().load(item.getImage()).into(holder.image);
     }
 
     @Override
