@@ -25,7 +25,6 @@ import com.example.russiantpu.utility.ErrorDialogService;
 import com.example.russiantpu.utility.FragmentReplacer;
 import com.example.russiantpu.utility.GenericCallback;
 import com.example.russiantpu.utility.GsonService;
-import com.example.russiantpu.utility.ProgressBarSwitcher;
 import com.example.russiantpu.utility.RequestService;
 import com.example.russiantpu.utility.SharedPreferencesService;
 
@@ -101,6 +100,7 @@ public class FeedFragment extends Fragment {
                             });
                             recyclerView.setAdapter(adapter);
                         }
+                        progressBar.hide(); //выключаем прогресс бар
                     }
 
                 });
@@ -108,13 +108,25 @@ public class FeedFragment extends Fragment {
 
             @Override
             public void onError(String message) {
-                ProgressBarSwitcher.switchPB(activity, progressBar); //выключаем прогресс бар
-                ErrorDialogService.showDialog(getResources().getString(R.string.feed_error), gsonService.getFieldFromJson("message", message), getFragmentManager());
+                //выключаем прогресс бар
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.hide();
+                    }
+                });
+                ErrorDialogService.showDialog(getResources().getString(R.string.feed_error), message, getFragmentManager());
             }
 
             @Override
             public void onFailure(String message) {
-                ProgressBarSwitcher.switchPB(activity, progressBar); //выключаем прогресс бар
+                //выключаем прогресс бар
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.hide();
+                    }
+                });
                 ErrorDialogService.showDialog(getResources().getString(R.string.feed_error), message, getFragmentManager());
             }
         };

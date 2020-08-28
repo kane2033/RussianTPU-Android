@@ -20,7 +20,6 @@ import com.example.russiantpu.utility.ChromeClient;
 import com.example.russiantpu.utility.ErrorDialogService;
 import com.example.russiantpu.utility.GenericCallback;
 import com.example.russiantpu.utility.GsonService;
-import com.example.russiantpu.utility.ProgressBarSwitcher;
 import com.example.russiantpu.utility.RequestService;
 import com.example.russiantpu.utility.SharedPreferencesService;
 
@@ -58,21 +57,20 @@ public class ArticleFragment extends Fragment {
 
         String selectedArticleId = getArguments().getString("id");
 
-        ProgressBarSwitcher.switchPB(activity, progressBar); //включаем прогресс бар
+        progressBar.show(); //включаем прогресс бар
 
         //реализация коллбека - что произойдет при получении данных с сервера
         GenericCallback<String> callback = new GenericCallback<String>() {
             @Override
             public void onResponse(String jsonBody) {
                 article = gsonService.fromJsonToObject(jsonBody, Article.class);
-
-                if (article.getSubject() == null) { //если нет контента, уведомляем
-                    missingContentText.setText(R.string.missing_content);
-                }
-                else { //иначе заполняем фрагмент содержимым статьи
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (article.getSubject() == null) { //если нет контента, уведомляем
+                            missingContentText.setText(R.string.missing_content);
+                        }
+                        else { //иначе заполняем фрагмент содержимым статьи
                             //установка заголовка в тулбаре
                             activity.setTitle(article.getTopic());
 
@@ -82,11 +80,10 @@ public class ArticleFragment extends Fragment {
 
                             //отображение в формате html
                             webView.loadData(article.getText(), "text/html; charset=utf-8", "UTF-8");
-                            ProgressBarSwitcher.switchPB(activity, progressBar); //отключаем прогресс бар
                         }
-                    });
-                }
-
+                        progressBar.hide();
+                    }
+                });
             }
 
             @Override
@@ -107,8 +104,6 @@ public class ArticleFragment extends Fragment {
         String language = sharedPreferencesService.getLanguage();
         //запрос за получение списка статей по айди пункта меню
         requestService.doRequest("article/" + selectedArticleId, callback, token, language, "fromMenu", "true");
-
-
     }
 
 }

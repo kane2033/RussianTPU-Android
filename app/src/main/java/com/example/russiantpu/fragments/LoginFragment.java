@@ -27,10 +27,8 @@ import com.example.russiantpu.utility.FacebookAuthService;
 import com.example.russiantpu.utility.GenericCallback;
 import com.example.russiantpu.utility.GoogleAuthService;
 import com.example.russiantpu.utility.GsonService;
-import com.example.russiantpu.utility.ProgressBarSwitcher;
 import com.example.russiantpu.utility.RequestService;
 import com.example.russiantpu.utility.SharedPreferencesService;
-import com.example.russiantpu.utility.ToastService;
 import com.example.russiantpu.utility.VKAuthService;
 import com.example.russiantpu.utility.VKTokenCallback;
 import com.google.android.material.checkbox.MaterialCheckBox;
@@ -141,7 +139,14 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
         toMainActivityCallback = new GenericCallback<String>() {
             @Override
             public void onResponse(String jsonBody) {
-                ProgressBarSwitcher.switchPB(activity, progressBar); //убираем прогресс бар
+                //выключаем прогресс бар, включаем кнопки
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.hide();
+                        enableButtons(true);
+                    }
+                });
                 //получение токенов с сервиса
                 TokensDTO tokens = gsonService.fromJsonToObject(jsonBody, TokensDTO.class);
 
@@ -159,13 +164,27 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
 
             @Override
             public void onError(String message) {
-                ProgressBarSwitcher.switchPB(activity, progressBar);
-                ErrorDialogService.showDialog(getResources().getString(R.string.login_error), gsonService.getFieldFromJson("message", message), getFragmentManager());
+                //выключаем прогресс бар, включаем кнопки
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.hide();
+                        enableButtons(true);
+                    }
+                });
+                ErrorDialogService.showDialog(getResources().getString(R.string.login_error), message, getFragmentManager());
             }
 
             @Override
             public void onFailure(String message) {
-                ProgressBarSwitcher.switchPB(activity, progressBar);
+                //выключаем прогресс бар, включаем кнопки
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.hide();
+                        enableButtons(true);
+                    }
+                });
                 ErrorDialogService.showDialog(getResources().getString(R.string.login_error), message, getFragmentManager());
             }
         };
@@ -222,6 +241,16 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
         requestService.doPostRequest("auth/provider/login", providerAuthCallback, language, json);
     }
 
+    //метод включает/отключает кнопки формы при отправке данных на сервис
+    //для избежания повторных запросов
+    private void enableButtons(boolean enable) {
+        loginButton.setEnabled(enable);
+        gotoRegisterButton.setEnabled(enable);
+        loginGoogle.setEnabled(enable);
+        loginFacebook.setEnabled(enable);
+        loginVK.setEnabled(enable);
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -273,8 +302,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
 
     @Override
     public void onValidationSucceeded() {
-        final Activity activity = getActivity();
-        ProgressBarSwitcher.switchPB(activity, progressBar);
+        progressBar.show(); //включаем прогресс бар
+        enableButtons(false); //выключаем все кнопки
         String json = gsonService.fromObjectToJson(new LoginDTO(emailInput.getText().toString(), passwordInput.getText().toString(), rememberMeCheckBox.isChecked()));
         requestService.doPostRequest("auth/local/login", toMainActivityCallback, language, json);
     }

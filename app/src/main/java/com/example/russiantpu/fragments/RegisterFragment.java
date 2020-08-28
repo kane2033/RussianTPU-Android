@@ -1,5 +1,6 @@
 package com.example.russiantpu.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,7 +20,6 @@ import com.example.russiantpu.dto.UserDTO;
 import com.example.russiantpu.utility.ErrorDialogService;
 import com.example.russiantpu.utility.GenericCallback;
 import com.example.russiantpu.utility.GsonService;
-import com.example.russiantpu.utility.ProgressBarSwitcher;
 import com.example.russiantpu.utility.RequestService;
 import com.example.russiantpu.utility.SpinnerValidatorAdapter;
 import com.example.russiantpu.utility.ToastService;
@@ -71,6 +71,7 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
     private ContentLoadingProgressBar progressBar;
 
     private UserDTO dto = new UserDTO();
+    private Activity activity;
     private Context applicationContext;
     private RequestService requestService;
     private GsonService gsonService;
@@ -82,7 +83,8 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final ScrollView layoutInflater = (ScrollView)inflater.inflate(R.layout.fragment_register, container, false);
-        applicationContext = getActivity().getApplicationContext();
+        activity = getActivity();
+        applicationContext = activity.getApplicationContext();
 
         emailInput = layoutInflater.findViewById(R.id.input_email);
         passwordInput = layoutInflater.findViewById(R.id.input_password);
@@ -134,7 +136,8 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
     //если все поля пройдут валидацию
     @Override
     public void onValidationSucceeded() {
-        ProgressBarSwitcher.switchPB(getActivity(), progressBar); //включаем прогресс бар
+        progressBar.show(); //включаем прогресс бар
+        registerButton.setEnabled(false); //отключаем кнопку регистрации для избежания повторных запросов
         toastService.showToast(R.string.validation_success);
         //берем выбраный пол, отсылаем всегда на английском
         String gender = null; //пол не обязательное поле, поэтому может быть null
@@ -162,7 +165,14 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
         final GenericCallback<String> callback = new GenericCallback<String>() {
             @Override
             public void onResponse(String jsonBody) {
-                ProgressBarSwitcher.switchPB(getActivity(), progressBar); //скрываем прогресс бар
+                //выключаем прогресс бар и включаем кнопку регистрации
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.hide();
+                        registerButton.setEnabled(true);
+                    }
+                });
                 toastService.showToast(R.string.reg_success);
 
                 // переход обратно на фрагмент логина при успешной регистрации
@@ -172,13 +182,27 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
 
             @Override
             public void onError(String message) {
-                ProgressBarSwitcher.switchPB(getActivity(), progressBar); //скрываем прогресс бар
-                ErrorDialogService.showDialog(getResources().getString(R.string.register_error), gsonService.getFieldFromJson("message", message), getFragmentManager());
+                //выключаем прогресс бар и включаем кнопку регистрации
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.hide();
+                        registerButton.setEnabled(true);
+                    }
+                });
+                ErrorDialogService.showDialog(getResources().getString(R.string.register_error), message, getFragmentManager());
             }
 
             @Override
             public void onFailure(String message) {
-                ProgressBarSwitcher.switchPB(getActivity(), progressBar);
+                //выключаем прогресс бар и включаем кнопку регистрации
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.hide();
+                        registerButton.setEnabled(true);
+                    }
+                });
                 ErrorDialogService.showDialog(getResources().getString(R.string.register_error), message, getFragmentManager());
             }
         };
@@ -186,7 +210,7 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
         //если регистрация происходит через сторонние сервисы (поле != null), выбираем соответствующий юрл
         final String url = dto.getProvider() != null ? "auth/provider/registration" : "auth/local/registration";
 
-        getActivity().runOnUiThread(new Runnable() {
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 final String json = gsonService.fromObjectToJson(dto);

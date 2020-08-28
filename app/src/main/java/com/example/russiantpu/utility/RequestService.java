@@ -108,17 +108,6 @@ public class RequestService {
         enqueue(request, callback);
     }
 
-    //put запрос без тела
-    public void doPutRequest(String url, final GenericCallback<String> callback, String token, String language) {
-        Request request = new Request.Builder()
-                .url(API_URL + url)
-                .addHeader("Accept-Language", language) //язык
-                .addHeader("Authorization", "Bearer " + token)
-                .build();
-
-        enqueue(request, callback);
-    }
-
     public String doPutRequestSync(String url, String token, String language) {
         RequestBody body = RequestBody.create("", null);
         Request request = new Request.Builder()
@@ -164,7 +153,9 @@ public class RequestService {
                     callback.onResponse(jsonBody);
                 }
                 else { //(300; 500)
-                    callback.onError(jsonBody);
+                    //возвращаем только сообщение из полученного json с временем, кодом, и сообщением ошибки
+                    GsonService gsonService = new GsonService();
+                    callback.onError(gsonService.getFieldFromJson("message", jsonBody));
                     Log.d("RESPONSE_ERR", "Response code: " + response.code() + "; text: " + jsonBody);
                 }
             }

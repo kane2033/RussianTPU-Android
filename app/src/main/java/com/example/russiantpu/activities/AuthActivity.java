@@ -3,6 +3,7 @@ package com.example.russiantpu.activities;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
@@ -25,6 +26,13 @@ public class AuthActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /*
+        *
+        * Отключение темной темы во всем приложении
+        *
+        * */
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(this);
         RequestService requestService = new RequestService();

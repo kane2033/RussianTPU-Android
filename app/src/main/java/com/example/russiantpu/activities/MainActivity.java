@@ -25,7 +25,6 @@ import com.example.russiantpu.utility.FragmentReplacer;
 import com.example.russiantpu.utility.GenericCallback;
 import com.example.russiantpu.utility.GsonService;
 import com.example.russiantpu.utility.LocaleService;
-import com.example.russiantpu.utility.ProgressBarSwitcher;
 import com.example.russiantpu.utility.RequestService;
 import com.example.russiantpu.utility.SharedPreferencesService;
 import com.google.android.material.navigation.NavigationView;
@@ -100,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        progressBar.hide(); //выключаем прогресс бар
                         Menu menu = navigationView.getMenu();
                         //заполняем боковое меню пунктами 1 уровня
                         for (int i = 0; i < drawerItems.size(); i++) {

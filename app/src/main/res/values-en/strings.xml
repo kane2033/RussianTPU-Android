@@ -7,7 +7,7 @@
     <string name="profile_language">Current language</string>
     <string name="profile_old_password">Current password*</string>
     <string name="profile_save">Save changes</string>
-    <string name="checkbox">Data use agreement</string>
+    <string name="checkbox">Data use agreement*</string>
     <string name="profile_edit_button">Edit profile</string>
     <string name="reg_success">Registration successful</string>
     <string name="missing_content">Content is missing</string>
@@ -49,7 +49,7 @@
     <string name="choose_language">Choose language*</string>
     <string name="validation_success">All fields validated successfully, your account is being registered…</string>
     <string name="login">Login</string>
-    <string name="login_via_service">Login vis service</string>
+    <string name="login_via_service">Login via service</string>
     <string name="token_invalid_error">You need to be logged in</string>
     <string name="email_error">Email is invalid</string>
     <string name="email_reg">E-mail*</string>
