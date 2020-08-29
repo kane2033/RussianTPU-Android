@@ -150,24 +150,33 @@ public class RequestService {
         client.newCall(request).enqueue(new Callback() { //enqueue - асинхр., execute - синхр.
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                e.printStackTrace();
-                callback.onFailure(e.getMessage());
+                if (!call.isCanceled()) { //отображаем ошибку только если произошла ошибка
+                    e.printStackTrace();
+                    callback.onFailure(e.getMessage());
+                }
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 responseCode = response.code(); //заносим код в переменную для случаев, когда требуется знать код
-                final String jsonBody = response.body().string(); //тело ответа
-                if (response.isSuccessful()) { //code [200;300]
-                    Log.d("JSON_RESPONSE", "onResponse: " + jsonBody);
-                    callback.onResponse(jsonBody);
+                try {
+                    final String jsonBody = response.body().string(); //тело ответа
+                    if (response.isSuccessful()) { //code [200;300]
+                        Log.d("JSON_RESPONSE", "onResponse: " + jsonBody);
+                        callback.onResponse(jsonBody);
+                    }
+                    else { //(300; 500)
+                        //возвращаем только сообщение из полученного json с временем, кодом, и сообщением ошибки
+                        GsonService gsonService = new GsonService();
+                        callback.onError(gsonService.getFieldFromJson("message", jsonBody));
+                        Log.d("RESPONSE_ERR", "Response code: " + response.code() + "; text: " + jsonBody);
+                    }
                 }
-                else { //(300; 500)
-                    //возвращаем только сообщение из полученного json с временем, кодом, и сообщением ошибки
-                    GsonService gsonService = new GsonService();
-                    callback.onError(gsonService.getFieldFromJson("message", jsonBody));
-                    Log.d("RESPONSE_ERR", "Response code: " + response.code() + "; text: " + jsonBody);
+                catch (IOException e) {
+                    //callback.onFailure(e.getMessage());
+                    e.printStackTrace();
                 }
+
             }
         });
     }

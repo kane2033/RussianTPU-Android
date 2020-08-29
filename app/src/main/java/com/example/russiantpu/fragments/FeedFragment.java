@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.russiantpu.R;
@@ -33,20 +34,25 @@ import java.util.ArrayList;
 //фрагмент, отображающий список статей (новостей)
 public class FeedFragment extends Fragment {
 
+    private RequestService requestService;
+    private ContentLoadingProgressBar progressBar;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        final Activity activity = getActivity();
+        final FragmentManager fragmentManager = getFragmentManager();
+
         final RelativeLayout layoutInflater = (RelativeLayout)inflater.inflate(R.layout.fragment_feed, container, false);
         final RecyclerView recyclerView = layoutInflater.findViewById(R.id.list); //список
         final TextView missingContentText = layoutInflater.findViewById(R.id.missingContentText); //уведомление об отутствии контента
-        final ContentLoadingProgressBar progressBar = getActivity().findViewById(R.id.progress_bar);
+        progressBar = activity.findViewById(R.id.progress_bar);
 
         //вспомогательные классы
-        final Activity activity = getActivity();
         final SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(activity);
         final FragmentReplacer fragmentReplacer = new FragmentReplacer((AppCompatActivity) activity);
-        final RequestService requestService = new RequestService(sharedPreferencesService);
         final GsonService gsonService = new GsonService();
+        requestService = new RequestService(sharedPreferencesService);
 
         final ArrayList<FeedItem> items = new ArrayList<>();
         final FeedDataAdapter adapter = new FeedDataAdapter(getContext(), items);
@@ -65,9 +71,13 @@ public class FeedFragment extends Fragment {
         });
         recyclerView.setAdapter(adapter);
 
-        String selectedItemId = getArguments().getString("id"); //айди родительского пункта
-        String header = getArguments().getString("header"); //название выбранного пункта будет отображаться в тулбаре
-        activity.setTitle(header); //установка названия пункта в тулбар
+        String selectedItemId = null; //айди родительского пункта
+        if (getArguments() != null) {
+            selectedItemId = getArguments().getString("id");
+            String header = getArguments().getString("header"); //название выбранного пункта будет отображаться в тулбаре
+            activity.setTitle(header); //установка названия пункта в тулбар
+        }
+
 
         progressBar.show(); //включаем прогресс бар
 
@@ -103,7 +113,7 @@ public class FeedFragment extends Fragment {
                         progressBar.hide();
                     }
                 });
-                ErrorDialogService.showDialog(getResources().getString(R.string.feed_error), message, getFragmentManager());
+                ErrorDialogService.showDialog(getResources().getString(R.string.feed_error), message, fragmentManager);
             }
 
             @Override
@@ -115,7 +125,7 @@ public class FeedFragment extends Fragment {
                         progressBar.hide();
                     }
                 });
-                ErrorDialogService.showDialog(getResources().getString(R.string.feed_error), message, getFragmentManager());
+                ErrorDialogService.showDialog(getResources().getString(R.string.feed_error), message, fragmentManager);
             }
         };
 
@@ -132,6 +142,15 @@ public class FeedFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        //при закрытии фрагмента отменяем все запросы
+        requestService.cancelAllRequests();
+        //выключаем прогрессбар
+        progressBar.hide();
     }
 
 }

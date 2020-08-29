@@ -158,8 +158,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
                 getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
                 Intent intent = new Intent(getContext(), MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY); //убираем из истории активити логина
                 activity.startActivity(intent);
+                activity.finish();
             }
 
             @Override
@@ -319,5 +319,12 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
                 ((TextInputEditText) view).setError(message);
             }
         }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        //при закрытии фрагмента отменяем все запросы
+        requestService.cancelAllRequests();
     }
 }

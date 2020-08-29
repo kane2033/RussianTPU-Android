@@ -37,8 +37,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawer;
     private ArrayList<LinkItem> drawerItems;
     private FragmentReplacer fragmentReplacer;
-    private FragmentManager fragmentManager;
-    private GsonService gsonService = new GsonService();
+    private RequestService requestService;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -84,8 +83,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final ContentLoadingProgressBar progressBar = findViewById(R.id.progress_bar);
         progressBar.show(); //включаем прогресс бар
 
+        final FragmentManager fragmentManager = getSupportFragmentManager();
+        final GsonService gsonService = new GsonService();
+
         //запрос на сервис для получения пунктов выдвижного меню
-        final RequestService requestService = new RequestService(sharedPreferencesService);
+        requestService = new RequestService(sharedPreferencesService);
         //реализация коллбека - что произойдет при получении данных с сервиса
         GenericCallback<String> callback = new GenericCallback<String>() {
             @Override
@@ -108,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         toggle.syncState();
                         if (!drawerItems.isEmpty()) {
                             LinkItem initialItem = drawerItems.get(0);
-                            fragmentReplacer.goToFragment(initialItem);
+                            fragmentReplacer.setInitialFragment(initialItem);
                         }
                     }
                 });
@@ -143,7 +145,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //передаем ссылку fragmentManager в класс,
         // осуществляющий переход между фрагментами
-        fragmentManager = getSupportFragmentManager();
         fragmentReplacer = new FragmentReplacer(this);
     }
 
@@ -162,19 +163,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             drawer.closeDrawer(GravityCompat.START); //закрытие шторки
         }
         else {
-            int fragments = getSupportFragmentManager().getBackStackEntryCount();
-            if (fragments > 1) {
-                getSupportFragmentManager().popBackStack();
-            }
-            else {
-                if (fragments == 1) {
-                    finishAffinity();
-                }
-                else {
-                    super.onBackPressed();
-                }
-            }
+            super.onBackPressed();
         }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        //при приостановке активити останавливаем все запросы
+        requestService.cancelAllRequests();
     }
 
 }

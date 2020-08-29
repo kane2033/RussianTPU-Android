@@ -246,4 +246,11 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
             return editText.getText().toString();
         }
     }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        //при закрытии фрагмента отменяем все запросы
+        requestService.cancelAllRequests();
+    }
 }

@@ -117,11 +117,11 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
 
         //нажатие кнопки назад
         Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //onBackPressed();
-                startActivity(new Intent(ProfileActivity.this, MainActivity.class));
+                onBackPressed();
             }
         });
 
@@ -139,7 +139,6 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
             public void onClick(View v) {
                 //включаем/выключаем поля для редактирования
                 switchFieldsEditable();
-                //отображаем кнопку "старый пароль" и "сохранить изменения"
             }
         });
         //выход из учетной записи юзера
@@ -147,7 +146,10 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
             @Override
             public void onClick(View v) {
                 sharedPreferencesService.clearCredentials(); //удаляем из памяти инфу о юзере
-                startActivity(new Intent(ProfileActivity.this, AuthActivity.class)); //переходим на авторизацию
+                //переходим на авторизацию
+                Intent intent = new Intent(ProfileActivity.this, AuthActivity.class);
+                startActivity(intent);
+                finishAffinity(); //закрываем активити профиля и главную
             }
         });
 
@@ -314,5 +316,17 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
                 ((TextInputEditText) view).setError(message);
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        //при приостановке активити останавливаем все запросы
+        requestService.cancelAllRequests();
     }
 }

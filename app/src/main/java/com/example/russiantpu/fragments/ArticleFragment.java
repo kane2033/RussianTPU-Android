@@ -30,6 +30,7 @@ public class ArticleFragment extends Fragment {
     private TextView missingContentText;
     private FrameLayout frameLayout;
     private ContentLoadingProgressBar progressBar;
+    private RequestService requestService;
 
     private Article article;
 
@@ -52,8 +53,8 @@ public class ArticleFragment extends Fragment {
         //вспомогательные классы
         final Activity activity = getActivity();
         final SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(activity);
-        final RequestService requestService = new RequestService(sharedPreferencesService);
         final GsonService gsonService = new GsonService();
+        requestService = new RequestService(sharedPreferencesService);
 
         String selectedArticleId = getArguments().getString("id");
 
@@ -118,4 +119,12 @@ public class ArticleFragment extends Fragment {
         requestService.doRequest("article/" + selectedArticleId, callback, token, language, "fromMenu", "true");
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        //при закрытии фрагмента отменяем все запросы
+        requestService.cancelAllRequests();
+        //выключаем прогрессбар
+        progressBar.hide();
+    }
 }

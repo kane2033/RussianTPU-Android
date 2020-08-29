@@ -1,5 +1,6 @@
 package com.example.russiantpu.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,29 +24,25 @@ import java.util.ArrayList;
 //фрагмент, отображающий список статей (новостей)
 public class LinksFragment extends Fragment {
 
-    private TextView contentMissingText;
-    private LinksDataAdapter adapter;
-    private FragmentReplacer fragmentReplacer;
-    private ArrayList<LinkItem> items = new ArrayList<>();
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        final AppCompatActivity activity = (AppCompatActivity) getActivity();
         RelativeLayout layoutInflater = (RelativeLayout)inflater.inflate(R.layout.fragment_links, container, false);
-        contentMissingText = layoutInflater.findViewById(R.id.missingContentText);
+        TextView contentMissingText = layoutInflater.findViewById(R.id.missingContentText);
         RecyclerView recyclerView = layoutInflater.findViewById(R.id.list); //список
-        fragmentReplacer = new FragmentReplacer((AppCompatActivity) getActivity());
+        final FragmentReplacer fragmentReplacer = new FragmentReplacer(activity);
 
-        items = getArguments().getParcelableArrayList("children"); //получение пунктов из родительского фрагмента
+        final ArrayList<LinkItem> items = getArguments().getParcelableArrayList("children"); //получение пунктов из родительского фрагмента
         String header = getArguments().getString("header"); //название выбранного пункта будет отображаться в тулбаре
-        getActivity().setTitle(header); //установка названия пункта в тулбар
+        activity.setTitle(header); //установка названия пункта в тулбар
 
         if (items == null) { //если нет контента, уведомляем
             contentMissingText.setText(R.string.missing_content);
         }
         else { //иначе заполняем recycleview
             //создаем адаптер
-            adapter = new LinksDataAdapter(this.getContext(), items);
+            LinksDataAdapter adapter = new LinksDataAdapter(this.getContext(), items);
             //установка действия при клике
             adapter.setOnItemClickListener(new ClickListener() {
                 @Override
@@ -63,7 +60,4 @@ public class LinksFragment extends Fragment {
         }
         return layoutInflater;
     }
-
-
-
 }

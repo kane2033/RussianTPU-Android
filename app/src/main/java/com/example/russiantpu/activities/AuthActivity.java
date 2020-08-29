@@ -53,8 +53,8 @@ public class AuthActivity extends FragmentActivity {
             @Override
             public void onResponse(String value) {
                 Intent intent = new Intent(AuthActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY); //убираем из истории активити логина
                 startActivity(intent);
+                finish(); //закрываем активити логина
             }
 
             //иначе запускаем фрагмент логина
@@ -77,18 +77,12 @@ public class AuthActivity extends FragmentActivity {
     private void goToLogin() {
         fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fragment_container,
-                new LoginFragment()).addToBackStack(fragmentTag).commit();
+                new LoginFragment()).commit();
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-/*        if (fragmentManager.getBackStackEntryCount() > 1) {
-            fragmentManager.popBackStack(); //возврат на предыдущий фрагмент
-        }
-        else {
-            finish();
-        }*/
     }
 
     @Override
