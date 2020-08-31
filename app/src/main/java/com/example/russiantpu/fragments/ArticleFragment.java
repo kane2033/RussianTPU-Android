@@ -22,6 +22,7 @@ import com.example.russiantpu.utility.GenericCallback;
 import com.example.russiantpu.utility.GsonService;
 import com.example.russiantpu.utility.RequestService;
 import com.example.russiantpu.utility.SharedPreferencesService;
+import com.example.russiantpu.utility.StartActivityService;
 
 //фрагмент, отображающий список статей (новостей)
 public class ArticleFragment extends Fragment {
@@ -54,7 +55,7 @@ public class ArticleFragment extends Fragment {
         final Activity activity = getActivity();
         final SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(activity);
         final GsonService gsonService = new GsonService();
-        requestService = new RequestService(sharedPreferencesService);
+        requestService = new RequestService(sharedPreferencesService, new StartActivityService(activity));
 
         String selectedArticleId = getArguments().getString("id");
 

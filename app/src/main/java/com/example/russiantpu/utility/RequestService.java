@@ -40,14 +40,14 @@ public class RequestService {
 
     //конструктор для случаев, когда необхоим токен
     //передаем ссылку на sharedPreferences для получения токена
-    public RequestService(SharedPreferencesService sharedPreferencesService) {
+    public RequestService(SharedPreferencesService sharedPreferencesService, StartActivityService startActivityService) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         //временное увеличение таймаута с целью успешной регистрации
         builder.connectTimeout(30, TimeUnit.SECONDS);
         builder.readTimeout(30, TimeUnit.SECONDS);
         builder.writeTimeout(30, TimeUnit.SECONDS);
         //класс аунтефикатор автоматически обновит токен при истечении
-        builder.authenticator(new TokenAuthenticator(sharedPreferencesService));
+        builder.authenticator(new TokenAuthenticator(sharedPreferencesService, startActivityService));
         client = builder.build();
     }
 
@@ -157,7 +157,7 @@ public class RequestService {
             }
 
             @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull Response response) {
                 responseCode = response.code(); //заносим код в переменную для случаев, когда требуется знать код
                 try {
                     final String jsonBody = response.body().string(); //тело ответа

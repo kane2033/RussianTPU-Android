@@ -12,10 +12,12 @@ import okhttp3.Route;
 
 //класс обновляет токен при 401 unauthorized
 public class TokenAuthenticator implements Authenticator {
-    private final SharedPreferencesService sharedPreferencesService;
+    private final SharedPreferencesService sharedPreferencesService; //репозиторий токенов
+    private final StartActivityService startActivityService; //сервис перехода между активити (нужно для перехода на логин при отсутствии рефреш)
 
-    public TokenAuthenticator(SharedPreferencesService sharedPreferencesService) {
+    public TokenAuthenticator(SharedPreferencesService sharedPreferencesService, StartActivityService startActivityService) {
         this.sharedPreferencesService = sharedPreferencesService;
+        this.startActivityService = startActivityService;
     }
 
     @Nullable
@@ -27,26 +29,30 @@ public class TokenAuthenticator implements Authenticator {
         }
         synchronized (this) {
             final String newToken = sharedPreferencesService.getToken();
-            //токен обновлен в другом потоке
-            if (!token.equals(newToken)) {
+            if (!token.equals(newToken)) { //если токен обновлен в другом потоке
                 return newRequestWithToken(response.request(), newToken);
             }
 
-            //обновление токена с помощью рефреш токена
-            RequestService requestService = new RequestService();
             String refreshToken = sharedPreferencesService.getRefreshToken();
-            String language = sharedPreferencesService.getLanguage();
-            String jsonBody = requestService.doPutRequestSync("token", refreshToken, language);
-            if (jsonBody != null) { //если запрос успешен
-                //сохраняем обновленные токены
-                GsonService gsonService = new GsonService();
-                TokensDTO dto = gsonService.fromJsonToObject(jsonBody, TokensDTO.class);
-                sharedPreferencesService.setTokens(dto.getToken(), dto.getRefreshToken());
-                return newRequestWithToken(response.request(), dto.getToken());
-            }
-            else { //если запрос не успешен (jsonBody == null)
+            if (refreshToken.isEmpty()) { //если юзер не выбрал "запомнить меня"
+                startActivityService.startAuthActivityTokenExpired(); //возвращаемся на активити логина
                 return null;
             }
+
+            //обновляем токен с помощью рефреш токена
+            RequestService requestService = new RequestService();
+            String language = sharedPreferencesService.getLanguage();
+            String jsonBody = requestService.doPutRequestSync("token", refreshToken, language);
+            if (jsonBody == null) { //если запрос не успешен
+                startActivityService.startAuthActivityTokenExpired(); //возвращаемся на активити логина
+                return null;
+            }
+
+            //сохраняем обновленные токены
+            GsonService gsonService = new GsonService();
+            TokensDTO dto = gsonService.fromJsonToObject(jsonBody, TokensDTO.class);
+            sharedPreferencesService.setTokens(dto.getToken(), dto.getRefreshToken());
+            return newRequestWithToken(response.request(), dto.getToken());
         }
     }
 

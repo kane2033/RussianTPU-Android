@@ -27,6 +27,7 @@ import com.example.russiantpu.utility.GsonService;
 import com.example.russiantpu.utility.LocaleService;
 import com.example.russiantpu.utility.RequestService;
 import com.example.russiantpu.utility.SharedPreferencesService;
+import com.example.russiantpu.utility.StartActivityService;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -87,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final GsonService gsonService = new GsonService();
 
         //запрос на сервис для получения пунктов выдвижного меню
-        requestService = new RequestService(sharedPreferencesService);
+        requestService = new RequestService(sharedPreferencesService, new StartActivityService(this));
         //реализация коллбека - что произойдет при получении данных с сервиса
         GenericCallback<String> callback = new GenericCallback<String>() {
             @Override

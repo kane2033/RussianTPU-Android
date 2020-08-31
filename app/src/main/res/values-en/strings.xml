@@ -58,4 +58,5 @@
     <string name="language_en">English</string>
     <string name="language_zh">Chinese</string>
     <string name="refresh_token_error">Error while trying to update token</string>
+    <string name="token_expired_error">Your session is expired, please login again</string>
 </resources>

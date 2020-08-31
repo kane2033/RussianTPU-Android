@@ -65,7 +65,7 @@ public class AuthActivity extends FragmentActivity {
 
             @Override
             public void onFailure(String message) {
-                ErrorDialogService.showDialog(getResources().getString(R.string.auth_error), message, fragmentManager);
+                //ErrorDialogService.showDialog(getResources().getString(R.string.auth_error), message, fragmentManager);
                 goToLogin();
             }
         };

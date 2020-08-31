@@ -28,6 +28,7 @@ import com.example.russiantpu.utility.GenericCallback;
 import com.example.russiantpu.utility.GsonService;
 import com.example.russiantpu.utility.RequestService;
 import com.example.russiantpu.utility.SharedPreferencesService;
+import com.example.russiantpu.utility.StartActivityService;
 
 import java.util.ArrayList;
 
@@ -52,7 +53,7 @@ public class FeedFragment extends Fragment {
         final SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(activity);
         final FragmentReplacer fragmentReplacer = new FragmentReplacer((AppCompatActivity) activity);
         final GsonService gsonService = new GsonService();
-        requestService = new RequestService(sharedPreferencesService);
+        requestService = new RequestService(sharedPreferencesService, new StartActivityService(activity));
 
         final ArrayList<FeedItem> items = new ArrayList<>();
         final FeedDataAdapter adapter = new FeedDataAdapter(getContext(), items);

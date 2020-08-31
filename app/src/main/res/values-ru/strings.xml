@@ -68,4 +68,5 @@
     <string name="language_en">Английский</string>
     <string name="language_zh">Китайский</string>
     <string name="refresh_token_error">Ошибка при обновлении токена</string>
+    <string name="token_expired_error">Ваш сеанс истек, необходимо повторно авторизоваться</string>
 </resources>

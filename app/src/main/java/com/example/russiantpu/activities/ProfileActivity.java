@@ -23,6 +23,7 @@ import com.example.russiantpu.utility.LocaleService;
 import com.example.russiantpu.utility.RequestService;
 import com.example.russiantpu.utility.SharedPreferencesService;
 import com.example.russiantpu.utility.SpinnerValidatorAdapter;
+import com.example.russiantpu.utility.StartActivityService;
 import com.example.russiantpu.utility.ToastService;
 import com.google.android.material.textfield.TextInputEditText;
 import com.mobsandgeeks.saripaar.ValidationError;
@@ -204,7 +205,7 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
         final String token = sharedPreferencesService.getToken();
         final String language = sharedPreferencesService.getLanguage();
         final String email = sharedPreferencesService.getEmail();
-        requestService = new RequestService(sharedPreferencesService);
+        requestService = new RequestService(sharedPreferencesService, new StartActivityService(this));
         requestService.doRequest("user/profile/", callback, token, language, "email", email);
     }
 
