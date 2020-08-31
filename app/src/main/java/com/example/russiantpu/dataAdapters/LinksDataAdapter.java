@@ -44,8 +44,11 @@ public class LinksDataAdapter extends RecyclerView.Adapter<LinksDataAdapter.View
         LinkItem item = items.get(position);
         String text = item.getName();
         holder.nameText.setText(text);
-        //устанавливаем картинку из url в imageView форматом Bitmap
-        Picasso.get().load(item.getImage()).into(holder.image);
+        if (item.getImage() != null) { //если есть картинка
+            holder.image.setVisibility(View.VISIBLE); //делаем view видимым
+            //устанавливаем картинку из url в imageView форматом Bitmap
+            Picasso.get().load(item.getImage()).into(holder.image);
+        }
     }
 
     @Override
