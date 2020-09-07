@@ -1,6 +1,7 @@
 package com.example.russiantpu.activities;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -9,13 +10,17 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.ContentLoadingProgressBar;
 
 import com.example.russiantpu.R;
 import com.example.russiantpu.dto.UserDTO;
+import com.example.russiantpu.utility.DialogCallback;
+import com.example.russiantpu.utility.DialogService;
 import com.example.russiantpu.utility.ErrorDialogService;
+import com.example.russiantpu.utility.FirebaseNotificationService;
 import com.example.russiantpu.utility.FormService;
 import com.example.russiantpu.utility.GenericCallback;
 import com.example.russiantpu.utility.GsonService;
@@ -146,11 +151,24 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sharedPreferencesService.clearCredentials(); //удаляем из памяти инфу о юзере
-                //переходим на авторизацию
-                Intent intent = new Intent(ProfileActivity.this, AuthActivity.class);
-                startActivity(intent);
-                finishAffinity(); //закрываем активити профиля и главную
+                //действия при нажатии кнопок диалогового окна
+                DialogCallback dialogCallback = new DialogCallback() {
+                    @Override
+                    public void onPositiveButton() { //выходим из учетной записи
+                        FirebaseNotificationService.unsubscribeFromNotifications(sharedPreferencesService.getLanguage()); //отписываемся от рассылки уведомлений
+                        sharedPreferencesService.clearCredentials(); //удаляем из памяти инфу о юзере
+                        //переходим на авторизацию
+                        Intent intent = new Intent(ProfileActivity.this, AuthActivity.class);
+                        startActivity(intent);
+                        finishAffinity(); //закрываем активити профиля и главную
+                    }
+
+                    @Override
+                    public void onNegativeButton() {
+                        //ничего не делаем
+                    }
+                };
+                DialogService.showDialog(getResources().getString(R.string.profile_logout), getResources().getString(R.string.profile_logout_confirm), getSupportFragmentManager(), dialogCallback);
             }
         });
 
@@ -159,12 +177,13 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
         final GenericCallback<String> callback = new GenericCallback<String>() {
             @Override
             public void onResponse(String jsonBody) {
-                progressBar.hide(); //выключаем прогресс бар
                 //получаем всю информацию о юзере с сервиса
                 final UserDTO user = gsonService.fromJsonToObject(jsonBody, UserDTO.class);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        //выключаем прогресс бар
+                        progressBar.hide();
                         //заполняем поля
                         lastNameInput.setText(user.getLastName());
                         firstNameInput.setText(user.getFirstName());
@@ -259,8 +278,13 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
 
                         //если поменялся язык
                         if (!language.equals(oldLanguage)) {
+                            FirebaseNotificationService.unsubscribeFromNotifications(oldLanguage); //отписываемся от рассылки уведомлений на текущий язык
+                            FirebaseNotificationService.subscribeToNotifications(language); //подписываемся на новый язык
                             LocaleService.setLocale(ProfileActivity.this, language); //установка нового языка приложения
-                            recreate();// пересоздаем активити профиля с новым языком
+                            Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                            //recreate(); //пересоздание активити с новым языком
                         }
                     }
                 });

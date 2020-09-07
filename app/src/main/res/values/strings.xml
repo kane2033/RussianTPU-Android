@@ -40,7 +40,8 @@
     <string name="profile_greeting">Добро пожаловать!</string>
     <string name="profile_title">Личный кабинет</string>
     <string name="profile_edit_button">Редактировать профиль</string>
-    <string name="profile_exit">Выйти из учетной записи</string>
+    <string name="profile_logout">Выход из учетной записи</string>
+    <string name="profile_logout_confirm">Вы действительно хотите выйти из учетной записи?</string>
     <!--Поля данных о пользователе-->
     <string name="profile_old_password">Текущий пароль*</string>
     <string name="profile_new_password">Новый пароль</string>
@@ -48,6 +49,16 @@
     <string name="profile_language">Текущий язык</string>
     <string name="profile_save">Сохранить изменения</string>
     <string name="profile_save_success">Изменения успешно сохранены</string>
+
+    <!--DialogFragments-->
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Отменить</string>
+    <string name="dialog_yes">Да</string>
+    <string name="dialog_no">Нет</string>
+
+    <!--Notifications-->
+    <string name="notification_channel_name">Новости</string>
+    <string name="notification_channel_description">Новости ТПУ</string>
 
     <string name="missing_content">Пустовато тут… Контент отсутствует!</string>
 

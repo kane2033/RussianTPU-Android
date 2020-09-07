@@ -24,6 +24,7 @@ import com.example.russiantpu.dto.TokensDTO;
 import com.example.russiantpu.dto.UserDTO;
 import com.example.russiantpu.utility.ErrorDialogService;
 import com.example.russiantpu.utility.FacebookAuthService;
+import com.example.russiantpu.utility.FirebaseNotificationService;
 import com.example.russiantpu.utility.GenericCallback;
 import com.example.russiantpu.utility.GoogleAuthService;
 import com.example.russiantpu.utility.GsonService;
@@ -139,6 +140,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
         toMainActivityCallback = new GenericCallback<String>() {
             @Override
             public void onResponse(String jsonBody) {
+                //подписываемся на группу уведомлений по языку
+                FirebaseNotificationService.subscribeToNotifications(language);
                 //выключаем прогресс бар, включаем кнопки
                 activity.runOnUiThread(new Runnable() {
                     @Override

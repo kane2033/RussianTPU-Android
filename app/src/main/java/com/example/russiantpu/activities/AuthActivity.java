@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentManager;
 import com.example.russiantpu.R;
 import com.example.russiantpu.fragments.LoginFragment;
 import com.example.russiantpu.utility.ErrorDialogService;
+import com.example.russiantpu.utility.FirebaseNotificationService;
 import com.example.russiantpu.utility.GenericCallback;
 import com.example.russiantpu.utility.LocaleService;
 import com.example.russiantpu.utility.RequestService;
@@ -37,7 +38,7 @@ public class AuthActivity extends FragmentActivity {
         SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(this);
         RequestService requestService = new RequestService();
 
-        String language = sharedPreferencesService.getLanguage().equals("") ? Locale.getDefault().getLanguage() : sharedPreferencesService.getLanguage();
+        final String language = sharedPreferencesService.getLanguage().equals("") ? Locale.getDefault().getLanguage() : sharedPreferencesService.getLanguage();
         //установка языка приложения
         LocaleService.setLocale(this, language);
 
@@ -52,6 +53,7 @@ public class AuthActivity extends FragmentActivity {
         GenericCallback<String> callback = new GenericCallback<String>() {
             @Override
             public void onResponse(String value) {
+                FirebaseNotificationService.subscribeToNotifications(language); //подписываем пользователя на уведомления по языку
                 Intent intent = new Intent(AuthActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish(); //закрываем активити логина

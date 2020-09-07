@@ -15,11 +15,9 @@ public class SharedPreferencesService {
     private final String firstNameKey = "firstName";
     private final String languageKey = "language";
 
-    private final Activity activity;
     private final SharedPreferences sharedPreferences;
 
     public SharedPreferencesService(Activity activity) {
-        this.activity = activity;
         sharedPreferences = activity.getSharedPreferences(preferencesFileKey, Context.MODE_PRIVATE);
     }
 

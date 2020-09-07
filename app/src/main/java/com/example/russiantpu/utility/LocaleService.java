@@ -2,6 +2,7 @@ package com.example.russiantpu.utility;
 
 import android.app.Activity;
 import android.content.res.Configuration;
+import android.os.Build;
 
 import java.util.Locale;
 
@@ -17,4 +18,11 @@ public class LocaleService {
         context.getBaseContext().getResources().updateConfiguration(config,
                 context.getBaseContext().getResources().getDisplayMetrics());
     }
+
+/*    public static void setLocale(Activity context, String langCode) {
+        Configuration configuration = context.getResources().getConfiguration();
+        configuration.setLocale(new Locale(langCode));
+        context.getApplicationContext().createConfigurationContext(configuration);
+
+    }*/
 }

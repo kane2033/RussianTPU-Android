@@ -112,21 +112,24 @@
 
                 <com.google.android.material.radiobutton.MaterialRadioButton
                     android:id="@+id/gender_male"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="match_parent"
                     android:text="@string/gender_male"
                     android:textSize="18sp" />
 
                 <com.google.android.material.radiobutton.MaterialRadioButton
                     android:id="@+id/gender_female"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="match_parent"
                     android:text="@string/gender_female"
                     android:textSize="18sp" />
 
                 <com.google.android.material.radiobutton.MaterialRadioButton
                     android:id="@+id/gender_none"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="match_parent"
                     android:text="@string/gender_none"
                     android:textSize="18sp" />

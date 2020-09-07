@@ -44,7 +44,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="gender_female">Female</string>
     <string name="profile_greeting">Welcome!</string>
-    <string name="profile_exit">Logout</string>
+    <string name="profile_logout">Logout</string>
     <string name="checkbox_error">You must agree for user data usage</string>
     <string name="choose_language">Choose language*</string>
     <string name="validation_success">All fields validated successfully, your account is being registered…</string>
@@ -59,4 +59,11 @@
     <string name="language_zh">Chinese</string>
     <string name="refresh_token_error">Error while trying to update token</string>
     <string name="token_expired_error">Your session is expired, please login again</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_yes">Yes</string>
+    <string name="dialog_no">No</string>
+    <string name="profile_logout_confirm">Are you sure you want to log out?</string>
+    <string name="notification_channel_name">News</string>
+    <string name="notification_channel_description">TPU news</string>
 </resources>
