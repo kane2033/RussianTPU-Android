@@ -26,7 +26,7 @@ public class FirebaseNotificationService {
     }
 
     public static void unsubscribeFromNotifications(String language) {
-        FirebaseMessaging.getInstance().unsubscribeFromTopic("news" + language)
+        FirebaseMessaging.getInstance().unsubscribeFromTopic("news_" + language)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -34,7 +34,7 @@ public class FirebaseNotificationService {
                             Log.d("FIREBASE_UNSUB", "successfully unsubscribed");
                         }
                         else {
-                            Log.d("FIREBASE_SUB", "failed while trying to unsubscribe");
+                            Log.d("FIREBASE_UNSUB", "failed while trying to unsubscribe");
                         }
                     }
                 });
