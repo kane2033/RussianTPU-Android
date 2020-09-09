@@ -1,28 +1,26 @@
 package com.example.russiantpu.utility;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Configuration;
-import android.os.Build;
+import android.util.DisplayMetrics;
 
 import java.util.Locale;
 
 public class LocaleService {
 
     //метод меняет язык приложения
-    public static void setLocale(Activity context, String langCode) {
+    public static void setLocale(Activity activity, String langCode) {
         Locale locale = new Locale(langCode);
-        Configuration config = new Configuration(context.getResources().getConfiguration());
+        Configuration config = new Configuration(activity.getResources().getConfiguration());
         Locale.setDefault(locale);
         config.setLocale(locale);
+        DisplayMetrics displayMetrics = activity.getResources().getDisplayMetrics();
 
-        context.getBaseContext().getResources().updateConfiguration(config,
-                context.getBaseContext().getResources().getDisplayMetrics());
+        activity.getBaseContext().getResources().updateConfiguration(config,
+                displayMetrics);
+        //без обновления конфига application context не все строки будут переведены (пр.: ошибки в полях ввода)
+        activity.getApplicationContext().getResources().updateConfiguration(config,
+                displayMetrics);
     }
-
-/*    public static void setLocale(Activity context, String langCode) {
-        Configuration configuration = context.getResources().getConfiguration();
-        configuration.setLocale(new Locale(langCode));
-        context.getApplicationContext().createConfigurationContext(configuration);
-
-    }*/
 }

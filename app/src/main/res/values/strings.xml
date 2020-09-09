@@ -60,7 +60,7 @@
     <string name="notification_channel_name">Новости</string>
     <string name="notification_channel_description">Новости ТПУ</string>
 
-    <string name="missing_content">Пустовато тут… Контент отсутствует!</string>
+    <string name="missing_content">Контент отсутствует</string>
 
     <!--Тэг, необходимый для перехода на предыдущий фрагмент-->
     <string name="prev_frag_tag" translatable="false">PREV_FRAGMENT</string>

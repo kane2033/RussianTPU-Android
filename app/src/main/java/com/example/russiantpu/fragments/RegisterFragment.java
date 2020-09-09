@@ -44,7 +44,7 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
     private TextInputEditText emailInput;
 
     @NotEmpty(messageResId = R.string.empty_field_error)
-    @Pattern(regex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$", messageResId = R.string.password_error)
+    @Pattern(regex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d!&^%$#@_|\\/\\\\]{8,}$", messageResId = R.string.password_error)
     private TextInputEditText passwordInput;
 
     @Pattern(regex = "^(?=.{0,50}$).*", messageResId = R.string.lastname_error) //optional, max 50

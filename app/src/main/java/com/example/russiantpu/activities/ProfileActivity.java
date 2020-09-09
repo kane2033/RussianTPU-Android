@@ -59,11 +59,11 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
     private TextInputEditText phoneNumberInput;
 
     @NotEmpty(messageResId = R.string.empty_field_error)
-    @Pattern(regex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$", messageResId = R.string.password_error)
+    @Pattern(regex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d!&^%$#@_|\\/\\\\]{8,}$", messageResId = R.string.password_error)
     private TextInputEditText currentPasswordInput;
     //    private TextInputEditText currentPasswordInput;
 
-    @Pattern(regex = "(^$)|(^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$)", messageResId = R.string.password_error) //пустая строка или regex пароля
+    @Pattern(regex = "(^$)|(^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d!&^%$#@_|\\/\\\\]{8,}$)", messageResId = R.string.password_error) //пустая строка или regex пароля
     private TextInputEditText newPasswordInput;
     //    private TextInputEditText newPasswordInput;
 
@@ -253,7 +253,7 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
         //отсылаем на сервис новую информацию о юзере
         final String token = sharedPreferencesService.getToken();
         String email = sharedPreferencesService.getEmail();
-        String currentPassword = formService.getTextFromInput(currentPasswordInput);
+        final String currentPassword = formService.getTextFromInput(currentPasswordInput);
         String newPassword = formService.getTextFromInput(newPasswordInput);
         String firstName = formService.getTextFromInput(firstNameInput);
         String lastName = formService.getTextFromInput(lastNameInput);
@@ -270,6 +270,10 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        //очищаем поля с паролями
+                        currentPasswordInput.setText("");
+                        newPasswordInput.setText("");
+
                         progressBar.hide(); //выключаем прогресс бар
                         saveButton.setEnabled(true); //включаем кнопку сохранения
                         toastService.showToast(R.string.profile_save_success);
@@ -284,7 +288,6 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
                             Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
-                            //recreate(); //пересоздание активити с новым языком
                         }
                     }
                 });
@@ -296,6 +299,9 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        //очищаем поля с паролями
+                        currentPasswordInput.setText("");
+                        newPasswordInput.setText("");
                         progressBar.hide();
                         saveButton.setEnabled(true);
                     }
@@ -309,6 +315,9 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        //очищаем поля с паролями
+                        currentPasswordInput.setText("");
+                        newPasswordInput.setText("");
                         progressBar.hide();
                         saveButton.setEnabled(true);
                     }

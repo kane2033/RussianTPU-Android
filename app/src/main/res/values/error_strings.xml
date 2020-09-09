@@ -1,8 +1,7 @@
 <resources>
     <!--Ошбики при валидации-->
     <string name="email_error">Адрес почты некорректен</string>
-    <string name="password_error">Пароль должен содержать минимум 8 символов, 
-        одну прописную букву, одну цифру</string>
+    <string name="password_error">"Пароль должен содержать минимум 8 символов,  одну прописную букву, одну цифру. Разрешенные символы:  ! &amp; ^ % $ # @ _ | \\ / "</string>
     <string name="lastname_error">Превышен лимит символов</string>
     <string name="firstname_error">Превышен лимит символов</string>
     <string name="middlename_error">Превышен лимит символов</string>

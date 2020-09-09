@@ -17,7 +17,7 @@
     <string name="phone_error">Character limit exceeded</string>
     <string name="empty_field_error">Field cannot be empty</string>
     <string name="gender">Gender</string>
-    <string name="password_error">Password must be a minimum of 8 characters in length, contain at least one uppercase letter and one digit</string>
+    <string name="password_error">"Password must be a minimum of 8 characters in length, contain at least one uppercase letter and one digit. Allowed characters:  ! &amp; ^ % $ # @ _ | \\ / "</string>
     <string name="password_reg">Password*</string>
     <string name="password">Password</string>
     <string name="profile_save_error">Error while trying to save user info</string>
