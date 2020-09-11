@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@android:color/background_light"
     android:fitsSystemWindows="true"
-    tools:context=".activities.ProfileActivity">
+    tools:context="ru.tpu.russiantpu.activities.ProfileActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"

@@ -73,7 +73,7 @@
     <string name="provider_vk" translatable="false">vk</string>
 
     <!--OAuth ID Android клиента для google-->
-    <string name="server_client_id_google" translatable="false">827029366413-ckl58bbhvkl57qq2f4vnejpoijig0r2s.apps.googleusercontent.com</string>
+    <string name="server_client_id_google" translatable="false">1039916265675-14qckgl5k1bdvl0bi3eae0sj2u08rilv.apps.googleusercontent.com</string>
 
     <!--Facebook-->
     <string name="facebook_app_id" translatable="false">347824149711941</string>
