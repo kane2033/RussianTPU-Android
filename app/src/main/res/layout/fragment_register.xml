@@ -12,17 +12,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingLeft="24dp"
-            android:paddingTop="24dp"
-            android:paddingRight="24dp"
+            android:paddingLeft="@dimen/register_layout_margin"
+            android:paddingTop="@dimen/register_layout_margin"
+            android:paddingRight="@dimen/register_layout_margin"
             android:focusableInTouchMode="true">
 
             <!-- Email Label -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="@dimen/text_input_margin"
+                android:layout_marginBottom="@dimen/text_input_margin"
                 android:hint="@string/email_reg">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -37,8 +37,8 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="@dimen/text_input_margin"
+                android:layout_marginBottom="@dimen/text_input_margin"
                 android:hint="@string/password_reg">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -52,8 +52,8 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="@dimen/text_input_margin"
+                android:layout_marginBottom="@dimen/text_input_margin"
                 android:hint="@string/last_name">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -68,8 +68,8 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="@dimen/text_input_margin"
+                android:layout_marginBottom="@dimen/text_input_margin"
                 android:hint="@string/first_name">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -84,8 +84,8 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="@dimen/text_input_margin"
+                android:layout_marginBottom="@dimen/text_input_margin"
                 android:hint="@string/middle_name">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -98,11 +98,10 @@
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="@dimen/text_input_margin"
+                android:layout_marginBottom="@dimen/text_input_margin"
                 android:text="@string/gender"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textSize="18sp" />
+                style="@style/text_view_18" />
 
             <RadioGroup
                 android:id="@+id/input_gender"
@@ -116,7 +115,7 @@
                     android:layout_weight="1"
                     android:layout_height="match_parent"
                     android:text="@string/gender_male"
-                    android:textSize="18sp" />
+                    style="@style/text_view_18" />
 
                 <com.google.android.material.radiobutton.MaterialRadioButton
                     android:id="@+id/gender_female"
@@ -124,7 +123,7 @@
                     android:layout_weight="1"
                     android:layout_height="match_parent"
                     android:text="@string/gender_female"
-                    android:textSize="18sp" />
+                    style="@style/text_view_18" />
 
                 <com.google.android.material.radiobutton.MaterialRadioButton
                     android:id="@+id/gender_none"
@@ -132,34 +131,33 @@
                     android:layout_weight="1"
                     android:layout_height="match_parent"
                     android:text="@string/gender_none"
-                    android:textSize="18sp" />
+                    style="@style/text_view_18" />
 
             </RadioGroup>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="@dimen/text_input_margin"
+                android:layout_marginBottom="@dimen/text_input_margin"
                 android:text="@string/choose_language"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textSize="18sp"/>
+                style="@style/text_view_18"/>
 
             <Spinner
                 android:id="@+id/input_language_spinner"
-                style="@android:style/Widget.Material.Spinner.Underlined"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="@dimen/text_input_margin"
+                android:layout_marginBottom="@dimen/text_input_margin"
                 android:entries="@array/languages_array"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                style="@android:style/Widget.Material.Spinner.Underlined"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="@dimen/text_input_margin"
+                android:layout_marginBottom="@dimen/text_input_margin"
                 android:hint="@string/phone_number">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -175,17 +173,17 @@
                 android:id="@+id/checkbox"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:textSize="18sp"
+                android:layout_marginTop="@dimen/text_input_margin"
+                android:layout_marginBottom="@dimen/text_input_margin"
                 android:text="@string/checkbox"
+                style="@style/text_view_18"
                 />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_register"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="@dimen/text_input_margin"
                 android:layout_marginBottom="16dp"
                 android:text="@string/register" />
 

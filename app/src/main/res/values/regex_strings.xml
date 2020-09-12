@@ -1,5 +1,0 @@
-<resources>
-    <string name="password_regex" translatable="false">^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$</string>
-    <string name="max_length20_regex" translatable="false">^(?=.{0,20}$).*</string>
-    <string name="max_length50_regex" translatable="false">^(?=.{0,50}$).*</string>
-</resources>

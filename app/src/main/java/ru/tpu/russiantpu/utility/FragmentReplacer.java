@@ -8,15 +8,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import ru.tpu.russiantpu.R;
-import ru.tpu.russiantpu.fragments.ArticleFragment;
-import ru.tpu.russiantpu.fragments.FeedFragment;
-import ru.tpu.russiantpu.fragments.LinksFragment;
-import ru.tpu.russiantpu.items.FeedItem;
-import ru.tpu.russiantpu.items.Item;
-import ru.tpu.russiantpu.items.LinkItem;
-
 import java.util.ArrayList;
+
+import ru.tpu.russiantpu.R;
+import ru.tpu.russiantpu.main.fragments.ArticleFragment;
+import ru.tpu.russiantpu.main.fragments.FeedFragment;
+import ru.tpu.russiantpu.main.fragments.LinksFragment;
+import ru.tpu.russiantpu.main.items.FeedItem;
+import ru.tpu.russiantpu.main.items.Item;
+import ru.tpu.russiantpu.main.items.LinkItem;
 
 //класс осуществляет переход в новый фрагмент
 public class FragmentReplacer {

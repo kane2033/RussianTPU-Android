@@ -2,13 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimary"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:paddingStart="22dp"
     android:clickable="true"
     android:focusable="true"
-    android:fitsSystemWindows="false">
+    android:fitsSystemWindows="false"
+    style="@style/nav_header_layout">
 
     <ImageView
         android:layout_width="60dp"
@@ -18,22 +16,18 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="8dp"
         android:text="@string/profile_title"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-        android:textColor="@android:color/white"/>
+        style="@style/nav_header_text_profile"/>
     <TextView
         android:id="@+id/firstName"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="FirstName LastName"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-        android:textColor="@android:color/white"/>
+        style="@style/nav_header_text"/>
     <TextView
         android:id="@+id/email"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="somebigassemailfortesting@mail.com"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-        android:textColor="@android:color/white"/>
+        style="@style/nav_header_text"/>
 </LinearLayout>

@@ -1,8 +1,7 @@
 <resources>
 
-    <!-- Base application theme. -->
+    <!--Тема приложения-->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -11,6 +10,66 @@
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <!--Элементы item_feed и item_list-->
+    <style name="item_header_text">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="item_text">
+        <item name="android:padding">8dp</item>
+        <item name="android:textAlignment">textStart</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body2</item>
+    </style>
+
+    <style name="item_date">
+        <item name="android:paddingStart">8dp</item>
+        <item name="android:textAlignment">textStart</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body2</item>
+    </style>
+
+    <style name="item_layout">
+        <item name="android:layout_margin">4dp</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:background">#FFFFFF</item>
+    </style>
+
+    <!--Элементы заголовка выдвижной шторки-->
+    <style name="nav_header_layout">
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:padding">16dp</item>
+        <item name="paddingStart">22dp</item>
+    </style>
+
+    <style name="nav_header_text_profile">
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body1</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="nav_header_text">
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body2</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <!--RegisterFragment-->
+    <style name="text_input">
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+    </style>
+
+    <style name="text_view_18">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="missing_content_text">
+        <item name="android:gravity">center_vertical|center_horizontal</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Display1</item>
     </style>
 
 </resources>

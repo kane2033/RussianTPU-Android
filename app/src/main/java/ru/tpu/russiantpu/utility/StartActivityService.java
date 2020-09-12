@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import ru.tpu.russiantpu.R;
-import ru.tpu.russiantpu.activities.AuthActivity;
+import ru.tpu.russiantpu.auth.activities.AuthActivity;
 
 //класс осуществляет переходы между активити
 public class StartActivityService {

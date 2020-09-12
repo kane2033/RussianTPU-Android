@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ru.tpu.russiantpu.activities.AuthActivity">
+    tools:context="ru.tpu.russiantpu.auth.activities.AuthActivity">
 
     <FrameLayout
         android:id="@+id/fragment_container"
