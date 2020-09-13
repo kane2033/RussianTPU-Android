@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.core.widget.ContentLoadingProgressBar;
@@ -39,6 +40,7 @@ import ru.tpu.russiantpu.utility.auth.VKAuthService;
 import ru.tpu.russiantpu.utility.callbacks.GenericCallback;
 import ru.tpu.russiantpu.utility.callbacks.VKTokenCallback;
 import ru.tpu.russiantpu.utility.dialogFragmentServices.ErrorDialogService;
+import ru.tpu.russiantpu.utility.dialogFragmentServices.ResetPasswordDialogService;
 import ru.tpu.russiantpu.utility.notifications.FirebaseNotificationService;
 import ru.tpu.russiantpu.utility.requests.GsonService;
 import ru.tpu.russiantpu.utility.requests.RequestService;
@@ -52,6 +54,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
     @NotEmpty(messageResId = R.string.empty_field_error)
     private EditText passwordInput;
 
+    private TextView resetPassword;
     private MaterialCheckBox rememberMeCheckBox;
     private Button loginButton;
     private Button gotoRegisterButton;
@@ -81,6 +84,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
         emailInput = layoutInflater.findViewById(R.id.input_email);
         passwordInput = layoutInflater.findViewById(R.id.input_password);
         rememberMeCheckBox = layoutInflater.findViewById(R.id.remember_me_checkbox);
+        resetPassword = layoutInflater.findViewById(R.id.reset_password);
         loginButton = layoutInflater.findViewById(R.id.button_login);
         gotoRegisterButton = layoutInflater.findViewById(R.id.goto_register);
         loginGoogle = layoutInflater.findViewById(R.id.button_login_google);
@@ -227,6 +231,14 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
                 ErrorDialogService.showDialog(getResources().getString(R.string.login_error), message, getFragmentManager());
             }
         };
+
+        //восстановление пароля
+        resetPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ResetPasswordDialogService.showDialog(emailInput.getText().toString(), language, requestService, getFragmentManager());
+            }
+        });
 
         return layoutInflater;
     }

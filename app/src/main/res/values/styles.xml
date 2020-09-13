@@ -14,7 +14,7 @@
 
     <!--Элементы item_feed и item_list-->
     <style name="item_header_text">
-        <item name="android:textSize">30sp</item>
+        <item name="android:textSize">28sp</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
         <item name="android:textAlignment">center</item>
     </style>
@@ -61,9 +61,20 @@
         <item name="android:layout_marginBottom">8dp</item>
     </style>
 
+    <style name="reg_header_text">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
     <style name="text_view_18">
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
         <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="text_view_16">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="missing_content_text">

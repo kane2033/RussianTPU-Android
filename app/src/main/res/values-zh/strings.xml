@@ -41,7 +41,7 @@
     <string name="gender_male">男</string>
     <string name="gender_female">女</string>
     <string name="gender_none">没有</string>
-    <string name="choose_language">选择语言*</string>
+    <string name="choose_language">语言*</string>
     <string name="language">语言</string>
     <string name="phone_number">电话号码</string>
     <string name="checkbox">数据使用协议*</string>
@@ -56,7 +56,7 @@
     <string name="profile_old_password">当前密码*</string>
     <string name="profile_new_password">新密码</string>
     <string name="profile_firstname">名字</string>
-    <string name="profile_language">当前语言</string>
+    <string name="profile_language">语言</string>
     <string name="profile_save">保存更改</string>
     <string name="profile_save_success">更改已成功保存</string>
     <string name="dialog_ok">好</string>
@@ -66,4 +66,15 @@
     <string name="notification_channel_name">新闻</string>
     <string name="notification_channel_description">TPU 新闻</string>
     <string name="missing_content">内容丢失</string>
+    <string name="forgot_password">忘记密码？</string>
+    <string name="reset_password_header">重设密码</string>
+    <string name="reset_password_text">忘记密码了吗？ 输入您的电子邮件地址，我们将向您发送一个链接以重置密码。</string>
+    <string name="reset_password_send">重置我的密码</string>
+    <string name="reset_password_error">尝试重设密码时出错</string>
+    <string name="reset_password_success">密码重置链接已发送至您的电子邮件</string>
+    <string name="reg_header">注册</string>
+    <string name="reg_text">填写所有必填字段以成功注册</string>
+    <string name="reg_text_provider">填写左侧必填字段，以便能够一键通过所选服务登录！</string>
+    <string name="reg_text_required">必填字段标有 - *</string>
+    <string name="profile_text_required">您必须输入当前密码才能更改个人资料信息</string>
 </resources>

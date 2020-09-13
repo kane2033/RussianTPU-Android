@@ -7,9 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.core.widget.ContentLoadingProgressBar;
@@ -29,6 +29,7 @@ import java.util.Locale;
 
 import ru.tpu.russiantpu.R;
 import ru.tpu.russiantpu.dto.UserDTO;
+import ru.tpu.russiantpu.utility.FormService;
 import ru.tpu.russiantpu.utility.SpinnerValidatorAdapter;
 import ru.tpu.russiantpu.utility.ToastService;
 import ru.tpu.russiantpu.utility.callbacks.GenericCallback;
@@ -57,7 +58,7 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
     @Pattern(regex = "^(?=.{0,50}$).*", messageResId = R.string.middlename_error) //optional, max 50
     private TextInputEditText middleNameInput;
 
-    private RadioGroup genderInput;
+    private Spinner genderInput;
 
     @NotEmpty(messageResId = R.string.empty_field_error)
     private Spinner languageInput; //список выбора языка
@@ -92,7 +93,7 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
         firstNameInput = layoutInflater.findViewById(R.id.input_firstname);
         lastNameInput = layoutInflater.findViewById(R.id.input_lastname);
         middleNameInput = layoutInflater.findViewById(R.id.input_middlename);
-        genderInput = layoutInflater.findViewById(R.id.input_gender);
+        genderInput = layoutInflater.findViewById(R.id.input_gender_spinner);
         languageInput = layoutInflater.findViewById(R.id.input_language_spinner);
         phoneNumberInput = layoutInflater.findViewById(R.id.input_phone_number);
         checkBox = layoutInflater.findViewById(R.id.checkbox);
@@ -122,6 +123,10 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
 
             //запрещаем редактировать уже заполненные поля
             emailInput.setEnabled(false);
+
+            //уведомляем юзера, что нужно дозаполнить поля
+            TextView textView = layoutInflater.findViewById(R.id.reg_text);
+            textView.setText(R.string.reg_text_provider);
         }
 
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -137,31 +142,24 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
     //если все поля пройдут валидацию
     @Override
     public void onValidationSucceeded() {
+        FormService formService = new FormService(); //класс берет значения из полей формы
         progressBar.show(); //включаем прогресс бар
         registerButton.setEnabled(false); //отключаем кнопку регистрации для избежания повторных запросов
         toastService.showToast(R.string.validation_success);
-        //берем выбраный пол, отсылаем всегда на английском
-        String gender = null; //пол не обязательное поле, поэтому может быть null
-        switch (genderInput.getCheckedRadioButtonId()) {
-            case R.id.gender_male:
-                gender = "Male";
-                break;
-            case R.id.gender_female:
-                gender = "Female";
-                break;
-            default:
-                break;
-        }
 
-        //берем выбранный язык
-        String[] languagesKeys = getResources().getStringArray(R.array.languages_array_keys);
-        String selectedLanguage = languagesKeys[languageInput.getSelectedItemPosition()];
+        //все поля формы
+        String email = formService.getTextFromInput(emailInput);
+        String password = formService.getTextFromInput(passwordInput);
+        String firstName = formService.getTextFromInput(firstNameInput);
+        String lastName = formService.getTextFromInput(lastNameInput);
+        String middleName = formService.getTextFromInput(middleNameInput);
+        String gender = formService.getSelectedGender(genderInput); //пол не обязательное поле, поэтому может быть null
+        String selectedLanguage = formService.getSelectedLanguage(languageInput, getResources().getStringArray(R.array.languages_array_keys));
+        String phoneNumber = formService.getTextFromInput(phoneNumberInput);
 
         //заполняем дто регистрации, которое будем отправлять на сервис
         //если поля не заполнены, они равны null
-        dto.updateFields(getTextFromInput(emailInput), getTextFromInput(passwordInput), getTextFromInput(firstNameInput),
-                getTextFromInput(lastNameInput), getTextFromInput(middleNameInput), gender, selectedLanguage,
-                getTextFromInput(phoneNumberInput));
+        dto.updateFields(email, password, firstName, lastName, middleName, gender, selectedLanguage, phoneNumber);
 
         final GenericCallback<String> callback = new GenericCallback<String>() {
             @Override
@@ -234,17 +232,6 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
             else {
                 toastService.showToast(message);
             }
-        }
-    }
-
-    //метод возвращает текст из EditText, если таковой имеется,
-    //иначе возвращается null
-    private String getTextFromInput(TextInputEditText editText) {
-        if (editText.getText() == null || editText.getText().toString().equals("")){
-            return null;
-        }
-        else {
-            return editText.getText().toString();
         }
     }
 

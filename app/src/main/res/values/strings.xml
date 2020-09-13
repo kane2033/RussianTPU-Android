@@ -12,12 +12,23 @@
     <!--Поля ввода для логина-->
     <string name="email">E-mail</string>
     <string name="password">Пароль</string>
+    <string name="forgot_password">Забыли пароль?</string>
     <string name="remember_me">Запомнить меня</string>
     <string name="login">Войти</string>
     <string name="goto_register">Нет аккаунта? Зарегистрируйтесь!</string>
     <string name="login_via_service">Войдите через социальные сети</string>
 
+    <!--Восстановление пароля-->
+    <string name="reset_password_header">Сброс пароля</string>
+    <string name="reset_password_text">Забыли свой пароль? Напишите ваш адрес электронной почты и мы пришлем вам ссылку на сброс пароля.</string>
+    <string name="reset_password_send">Восстановить мой пароль</string>
+    <string name="reset_password_success">Ссылка на восстановление пароля отправлена на вашу почту</string>
+
     <!--Поля ввода для регистрации-->
+    <string name="reg_header">Регистрация</string>
+    <string name="reg_text">Заполните все необходимые поля для успешной регистрации</string>
+    <string name="reg_text_provider">Дозаполните поля, чтобы иметь возможность авторизоваться через выбранный сервис за один клик!</string>
+    <string name="reg_text_required">Обязательные поля отмечены - *</string>
     <string name="email_reg">E-mail*</string>
     <string name="password_reg">Пароль*</string>
     <string name="first_name">Имя*</string>
@@ -27,7 +38,7 @@
     <string name="gender_male">Мужской</string>
     <string name="gender_female">Женский</string>
     <string name="gender_none">Не указ.</string>
-    <string name="choose_language">Выберите язык*</string>
+    <string name="choose_language">Язык*</string>
     <string name="language">Язык</string>
     <string name="phone_number">Номер телефона</string>
     <string name="checkbox">Согласие на обработку персональных данных*</string>
@@ -46,7 +57,8 @@
     <string name="profile_old_password">Текущий пароль*</string>
     <string name="profile_new_password">Новый пароль</string>
     <string name="profile_firstname">Имя</string>
-    <string name="profile_language">Текущий язык</string>
+    <string name="profile_language">Язык</string>
+    <string name="profile_text_required">Для изменения данных о пользователе необходимо корректно написать текущий пароль</string>
     <string name="profile_save">Сохранить изменения</string>
     <string name="profile_save_success">Изменения успешно сохранены</string>
 

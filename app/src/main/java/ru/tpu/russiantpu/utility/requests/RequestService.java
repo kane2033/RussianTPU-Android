@@ -108,6 +108,19 @@ public class RequestService {
         enqueue(request, callback);
     }
 
+    //post запрос с параметрами
+    public void doPostRequest(String url, final GenericCallback<String> callback, String language, String... params) {
+        RequestBody body = RequestBody.create("", null); //пустое тело
+        String builtUrl = buildUrlWithParams(url, params);
+        Request request = new Request.Builder()
+                .url(builtUrl)
+                .addHeader("Accept-Language", language) //язык
+                .post(body)
+                .build();
+
+        enqueue(request, callback);
+    }
+
     //put запрос - в параметрах получаем строку формата json, которая отправляется в теле запроса
     public void doPutRequest(String url, final GenericCallback<String> callback, String token, String language, String json) {
         RequestBody body = RequestBody.create(json, JSON);

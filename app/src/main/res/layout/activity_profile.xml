@@ -92,8 +92,8 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="@dimen/text_input_margin"
+                    android:layout_marginBottom="@dimen/text_input_margin"
                     android:hint="@string/last_name">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -107,8 +107,8 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="@dimen/text_input_margin"
+                    android:layout_marginBottom="@dimen/text_input_margin"
                     android:hint="@string/profile_firstname">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -121,8 +121,8 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="@dimen/text_input_margin"
+                    android:layout_marginBottom="@dimen/text_input_margin"
                     android:hint="@string/middle_name">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -135,65 +135,37 @@
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:text="@string/gender"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textSize="18sp" />
+                    android:layout_marginTop="@dimen/text_input_margin"
+                    android:text="@string/gender" 
+                    style="@style/text_view_16"/>
 
-                <RadioGroup
-                    android:id="@+id/input_gender"
+                <Spinner
+                    android:id="@+id/input_gender_spinner"
+                    style="@android:style/Widget.Material.Spinner.Underlined"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.radiobutton.MaterialRadioButton
-                        android:id="@+id/gender_male"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:text="@string/gender_male"
-                        android:textSize="18sp" />
-
-                    <com.google.android.material.radiobutton.MaterialRadioButton
-                        android:id="@+id/gender_female"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:text="@string/gender_female"
-                        android:textSize="18sp" />
-
-                    <com.google.android.material.radiobutton.MaterialRadioButton
-                        android:id="@+id/gender_none"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:text="@string/gender_none"
-                        android:textSize="18sp" />
-
-                </RadioGroup>
+                    android:layout_marginBottom="@dimen/text_input_margin"
+                    android:entries="@array/gender_array" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="@dimen/text_input_margin"
                     android:text="@string/profile_language"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textSize="18sp"/>
+                    style="@style/text_view_16"/>
 
                 <Spinner
                     android:id="@+id/input_language_spinner"
                     style="@android:style/Widget.Material.Spinner.Underlined"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:entries="@array/languages_array"
-                    android:textSize="18sp" />
+                    android:layout_marginBottom="@dimen/text_input_margin"
+                    android:entries="@array/languages_array" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginBottom="@dimen/text_input_margin"
                     android:hint="@string/phone_number">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -214,8 +186,8 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="@dimen/text_input_margin"
+                    android:layout_marginBottom="@dimen/text_input_margin"
                         android:hint="@string/profile_new_password">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -229,8 +201,8 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="@dimen/text_input_margin"
+                    android:layout_marginBottom="@dimen/text_input_margin"
                         android:hint="@string/profile_old_password">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -240,6 +212,12 @@
                             android:inputType="textPassword"
                             app:errorEnabled="true"/>
                     </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/text_input_margin"
+                        android:text="@string/profile_text_required" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/button_save"

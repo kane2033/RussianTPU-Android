@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -50,7 +49,7 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
     private TextInputEditText middleNameInput;
 
     //ввод пола не валидируется
-    private RadioGroup genderInput;
+    private Spinner genderInput;
 
     @NotEmpty(messageResId = R.string.empty_field_error)
     private Spinner languageInput; //список выбора языка
@@ -61,11 +60,9 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
     @NotEmpty(messageResId = R.string.empty_field_error)
     @Pattern(regex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d!&^%$#@_|\\/\\\\]{8,}$", messageResId = R.string.password_error)
     private TextInputEditText currentPasswordInput;
-    //    private TextInputEditText currentPasswordInput;
 
     @Pattern(regex = "(^$)|(^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d!&^%$#@_|\\/\\\\]{8,}$)", messageResId = R.string.password_error) //пустая строка или regex пароля
     private TextInputEditText newPasswordInput;
-    //    private TextInputEditText newPasswordInput;
 
     private Button saveButton;
     private ContentLoadingProgressBar progressBar;
@@ -103,7 +100,7 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
         lastNameInput = formContainer.findViewById(R.id.input_lastname);
         firstNameInput = formContainer.findViewById(R.id.input_firstname);
         middleNameInput = formContainer.findViewById(R.id.input_middlename);
-        genderInput = formContainer.findViewById(R.id.input_gender);
+        genderInput = formContainer.findViewById(R.id.input_gender_spinner);
         languageInput = formContainer.findViewById(R.id.input_language_spinner);
         phoneNumberInput = formContainer.findViewById(R.id.input_phone_number);
         newPasswordInput = formContainer.findViewById(R.id.input_new_password);
@@ -188,7 +185,7 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
                         lastNameInput.setText(user.getLastName());
                         firstNameInput.setText(user.getFirstName());
                         middleNameInput.setText(user.getMiddleName());
-                        formService.setSelectedGender(user.getGender(), genderInput); //устанавливаем пол radiobutton
+                        formService.setSelectedGender(genderInput, user.getGender()); //устанавливаем пол radiobutton
                         formService.setSelectedLanguage(languageInput, getResources().getStringArray(R.array.languages_array_keys), user.getLanguage());
                         phoneNumberInput.setText(user.getPhoneNumber());
                     }
@@ -235,10 +232,6 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
         for (int i = 0; i < formContainer.getChildCount(); i++) {
             View child = formContainer.getChildAt(i);
             child.setEnabled(areFieldsEditable);
-        }
-        RadioGroup radioGroup = formContainer.findViewById(R.id.input_gender);
-        for (int i = 0; i < radioGroup.getChildCount(); i++) {
-            radioGroup.getChildAt(i).setEnabled(areFieldsEditable);
         }
         //отображаем/скрываем элементы редактирования информации юзера
         int visibility = areFieldsEditable ? View.VISIBLE : View.GONE;
@@ -328,14 +321,6 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
 
         final String json = gsonService.fromObjectToJson(dto);
         requestService.doPutRequest("user/edit", callback, token, language, json);
-
-/*        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                final String json = gsonService.fromObjectToJson(dto);
-                requestService.doPutRequest("user/edit", callback, token, language, json);
-            }
-        });*/
     }
 
     //если валидация не успешна

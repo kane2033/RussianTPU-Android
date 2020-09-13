@@ -1,22 +1,20 @@
 package ru.tpu.russiantpu.utility;
 
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 
-import ru.tpu.russiantpu.R;
 
 //класс для получения строк из формы
 public class FormService {
 
-    public String getSelectedGender(RadioGroup genderInput) {
+    //метод получения выбранного пола из спиннера
+    public String getSelectedGender(Spinner genderInput) {
         String gender = null;
-        switch (genderInput.getCheckedRadioButtonId()) {
-            case R.id.gender_male:
+        switch (genderInput.getSelectedItemPosition()) {
+            case 1:
                 gender = "Male";
                 break;
-            case R.id.gender_female:
+            case 2:
                 gender = "Female";
                 break;
             default:
@@ -25,17 +23,21 @@ public class FormService {
         return gender;
     }
 
-    public void setSelectedGender(String gender, RadioGroup genderInput) {
-        gender = gender == null ? "" : gender; //если gender == null, gender = пустой строке
-        switch (gender) {
+    //метод, задающий значение выбранного пола (параметра в методе)
+    public void setSelectedGender(Spinner genderInput, String selectedGender) {
+        selectedGender = selectedGender == null ? "" : selectedGender; //если gender == null, gender = пустой строке
+        switch (selectedGender) {
+            case "": //если пол не указан
+                genderInput.setSelection(0);
+                break;
             case "Male":
-                ((RadioButton)genderInput.findViewById(R.id.gender_male)).setChecked(true);
+                genderInput.setSelection(1);
                 break;
             case "Female":
-                ((RadioButton)genderInput.findViewById(R.id.gender_female)).setChecked(true);
+                genderInput.setSelection(2);
                 break;
             default:
-                ((RadioButton)genderInput.findViewById(R.id.gender_none)).setChecked(true);
+                break;
         }
     }
 

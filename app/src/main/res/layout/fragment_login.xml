@@ -52,13 +52,28 @@
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.checkbox.MaterialCheckBox
-                android:id="@+id/remember_me_checkbox"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:textSize="18sp"
-                android:text="@string/remember_me"
-                />
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/reset_password"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold"
+                    android:text="@string/forgot_password" />
+
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/remember_me_checkbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textSize="@dimen/text_size"
+                    android:text="@string/remember_me"
+                    />
+            </RelativeLayout>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_login"

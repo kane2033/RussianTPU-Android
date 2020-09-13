@@ -4,7 +4,7 @@
     <string name="language_error">Language not selected</string>
     <string name="language">Language</string>
     <string name="last_name">Last name</string>
-    <string name="profile_language">Current language</string>
+    <string name="profile_language">Language</string>
     <string name="profile_old_password">Current password*</string>
     <string name="profile_save">Save changes</string>
     <string name="checkbox">Data use agreement*</string>
@@ -46,7 +46,7 @@
     <string name="profile_greeting">Welcome!</string>
     <string name="profile_logout">Logout</string>
     <string name="checkbox_error">You must agree for user data usage</string>
-    <string name="choose_language">Choose language*</string>
+    <string name="choose_language">Language*</string>
     <string name="validation_success">All fields validated successfully, your account is being registered…</string>
     <string name="login">Login</string>
     <string name="login_via_service">Login via service</string>
@@ -66,4 +66,15 @@
     <string name="profile_logout_confirm">Are you sure you want to log out?</string>
     <string name="notification_channel_name">News</string>
     <string name="notification_channel_description">TPU news</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="reset_password_header">Password reset</string>
+    <string name="reset_password_text">Forgot your password? Enter your email address and we will send you a link to reset your password.</string>
+    <string name="reset_password_send">Reset my password</string>
+    <string name="reset_password_error">Error while trying to reset password</string>
+    <string name="reset_password_success">Link for resetting password has been sent to your email</string>
+    <string name="reg_header">Registration</string>
+    <string name="reg_text">Fill all the required fields to successfully register</string>
+    <string name="reg_text_provider">Fill the left required fields to be able to login via chosen service in one click!</string>
+    <string name="reg_text_required">Required fields are marked with - *</string>
+    <string name="profile_text_required">You must enter current password to change your profile info</string>
 </resources>
