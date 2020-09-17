@@ -38,6 +38,7 @@ public class FragmentReplacer {
         LinkItem castedItem;
         switch (item.getType()) {
             case LINK: //ссылка на сайт
+            case SCHEDULE: //ссылка на расписание
                 castedItem = (LinkItem) item;
                 if (castedItem.getUrl() != null && !castedItem.getUrl().isEmpty()) { //открываем браузер только при наличии ссылки
                     activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(((LinkItem) item).getUrl())));

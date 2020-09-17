@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         };
         //делаем запрос на получение пунктов меню на языке пользователя
-        requestService.doRequest("menu", callback, token, user.getLanguage(), "language", user.getLanguage());
+        requestService.doRequest("menu", callback, token, user.getLanguage(), "language", user.getLanguage(), "email", user.getEmail());
 
         //передаем ссылку fragmentManager в класс,
         // осуществляющий переход между фрагментами

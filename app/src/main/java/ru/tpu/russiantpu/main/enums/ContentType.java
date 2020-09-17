@@ -4,5 +4,6 @@ public enum ContentType {
     LINK,
     FEED_LIST,
     LINKS_LIST,
-    ARTICLE
+    ARTICLE,
+    SCHEDULE
 }
