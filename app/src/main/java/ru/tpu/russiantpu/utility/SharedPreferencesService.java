@@ -14,6 +14,7 @@ public class SharedPreferencesService {
     private final String emailTokenKey = "email";
     private final String firstNameKey = "firstName";
     private final String languageKey = "language";
+    private final String groupKey = "group";
 
     private final SharedPreferences sharedPreferences;
 
@@ -39,6 +40,8 @@ public class SharedPreferencesService {
 
     public String getLanguage() {return sharedPreferences.getString(languageKey, "");}
 
+    public String getGroupName() {return sharedPreferences.getString(groupKey, "");}
+
     public UserDTO getUser() {
         return new UserDTO(getEmail(), getFirstName(), getLanguage());
     }
@@ -52,6 +55,7 @@ public class SharedPreferencesService {
         editor.putString(emailTokenKey, user.getEmail());
         editor.putString(firstNameKey, user.getFirstName());
         editor.putString(languageKey, user.getLanguage());
+        editor.putString(groupKey, user.getGroupName());
         editor.commit();
     }
 
@@ -85,6 +89,7 @@ public class SharedPreferencesService {
         editor.putString(emailTokenKey, user.getEmail());
         editor.putString(firstNameKey, user.getFirstName());
         editor.putString(languageKey, user.getLanguage());
+        editor.putString(groupKey, user.getGroupName());
         editor.commit();
     }
 
@@ -103,6 +108,12 @@ public class SharedPreferencesService {
     public void setLanguage(String language) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(languageKey, language);
+        editor.commit();
+    }
+
+    public void setGroupName(String groupName) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(groupKey, groupName);
         editor.commit();
     }
 

@@ -36,8 +36,6 @@ public class ResetPasswordFragment extends DialogFragment implements Validator.V
     private TextInputEditText emailInput;
     private ContentLoadingProgressBar progressBar;
 
-    private Validator validator;
-
     private final RequestService requestService;
     private final String language;
 
@@ -49,11 +47,11 @@ public class ResetPasswordFragment extends DialogFragment implements Validator.V
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Activity activity = getActivity();
+        final Activity activity = getActivity();
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         LayoutInflater inflater = activity.getLayoutInflater();
-        builder.setView((inflater.inflate(R.layout.fragment_password_reset, null)));
         View view = inflater.inflate(R.layout.fragment_password_reset, null);
+        builder.setView(view);
 
         emailInput = view.findViewById(R.id.input_email);
         String email = getArguments().getString("email", "");

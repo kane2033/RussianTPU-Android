@@ -77,4 +77,9 @@
     <string name="reg_text_provider">Fill the left required fields to be able to login via chosen service in one click!</string>
     <string name="reg_text_required">Required fields are marked with - *</string>
     <string name="profile_text_required">You must enter current password to change your profile info</string>
+    <string name="group">Group</string>
+    <string name="get_groups_error">Error while trying to get list of groups</string>
+    <string name="group_none">None</string>
+    <string name="group_choose">Choose your group</string>
+    <string name="dialog_none">None</string>
 </resources>

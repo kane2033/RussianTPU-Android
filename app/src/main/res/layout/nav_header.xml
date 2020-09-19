@@ -9,25 +9,29 @@
     style="@style/nav_header_layout">
 
     <ImageView
+        android:id="@+id/account_icon"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/ic_tpu_logo" />
+        android:src="@drawable/ic_account_circle" />
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="5dp"
         android:text="@string/profile_title"
         style="@style/nav_header_text_profile"/>
     <TextView
         android:id="@+id/firstName"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="5dp"
         android:text="FirstName LastName"
         style="@style/nav_header_text"/>
     <TextView
         android:id="@+id/email"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="5dp"
         android:text="somebigassemailfortesting@mail.com"
         style="@style/nav_header_text"/>
 </LinearLayout>

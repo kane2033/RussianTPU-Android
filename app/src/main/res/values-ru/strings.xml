@@ -87,4 +87,9 @@
     <string name="reg_text_provider">Дозаполните поля, чтобы иметь возможность авторизоваться через выбранный сервис за один клик!</string>
     <string name="reg_text_required">Обязательные поля отмечены - *</string>
     <string name="profile_text_required">Для изменения данных о пользователе необходимо корректно написать текущий пароль</string>
+    <string name="group">Группа</string>
+    <string name="get_groups_error">Ошибка при получении групп</string>
+    <string name="group_none">Не указ.</string>
+    <string name="group_choose">Выберите группу</string>
+    <string name="dialog_none">Не указ.</string>
 </resources>

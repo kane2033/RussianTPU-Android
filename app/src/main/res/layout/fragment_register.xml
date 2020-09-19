@@ -92,7 +92,6 @@
                     android:id="@+id/input_firstname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     android:inputType="textCapWords" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -110,6 +109,25 @@
                     android:layout_height="wrap_content"
                     android:inputType="textCapWords" />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/text_input_margin"
+                android:text="@string/group"
+                style="@style/text_view_16"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/input_group_dialog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/text_input_margin"
+                android:text="@string/group_none"
+                android:textSize="16sp"
+                android:clickable="true"
+                android:focusable="true"
+                android:paddingStart="12dp"
+                style="@android:style/Widget.Material.Spinner.Underlined"/>
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"

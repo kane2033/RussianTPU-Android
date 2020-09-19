@@ -77,4 +77,9 @@
     <string name="reg_text_provider">填写左侧必填字段，以便能够一键通过所选服务登录！</string>
     <string name="reg_text_required">必填字段标有 - *</string>
     <string name="profile_text_required">您必须输入当前密码才能更改个人资料信息</string>
+    <string name="group">团</string>
+    <string name="get_groups_error">尝试获取组列表时出错</string>
+    <string name="group_none">不指定</string>
+    <string name="group_choose">选择你的组</string>
+    <string name="dialog_none">不指定</string>
 </resources>

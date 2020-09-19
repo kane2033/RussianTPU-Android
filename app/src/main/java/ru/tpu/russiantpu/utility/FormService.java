@@ -2,10 +2,18 @@ package ru.tpu.russiantpu.utility;
 
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
+
+import java.util.List;
 
 
 //класс для получения строк из формы
 public class FormService {
+
+    //метод получения группы, если
+    public String getGroup(TextView groupInput, List<String> groupNames) {
+        return groupInput.getText().toString().equals(groupNames.get(0)) ? null : groupInput.getText().toString();
+    }
 
     //метод получения выбранного пола из спиннера
     public String getSelectedGender(Spinner genderInput) {

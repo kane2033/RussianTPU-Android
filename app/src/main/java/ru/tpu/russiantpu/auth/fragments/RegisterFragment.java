@@ -24,16 +24,20 @@ import com.mobsandgeeks.saripaar.annotation.Email;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.mobsandgeeks.saripaar.annotation.Pattern;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import ru.tpu.russiantpu.R;
+import ru.tpu.russiantpu.dto.GroupsDTO;
 import ru.tpu.russiantpu.dto.UserDTO;
 import ru.tpu.russiantpu.utility.FormService;
 import ru.tpu.russiantpu.utility.SpinnerValidatorAdapter;
 import ru.tpu.russiantpu.utility.ToastService;
 import ru.tpu.russiantpu.utility.callbacks.GenericCallback;
+import ru.tpu.russiantpu.utility.callbacks.ListDialogCallback;
 import ru.tpu.russiantpu.utility.dialogFragmentServices.ErrorDialogService;
+import ru.tpu.russiantpu.utility.dialogFragmentServices.SearchListDialogService;
 import ru.tpu.russiantpu.utility.requests.GsonService;
 import ru.tpu.russiantpu.utility.requests.RequestService;
 
@@ -58,6 +62,12 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
     @Pattern(regex = "^(?=.{0,50}$).*", messageResId = R.string.middlename_error) //optional, max 50
     private TextInputEditText middleNameInput;
 
+    //private TextView groupInput;
+    //private String[] groupNames;
+    private List<String> groupNames = new ArrayList<>();
+    private TextView groupInput;
+    //private AutoCompleteTextView groupInput;
+
     private Spinner genderInput;
 
     @NotEmpty(messageResId = R.string.empty_field_error)
@@ -73,7 +83,6 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
     private ContentLoadingProgressBar progressBar;
 
     private UserDTO dto = new UserDTO();
-    private Activity activity;
     private Context applicationContext;
     private RequestService requestService;
     private GsonService gsonService;
@@ -85,7 +94,7 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final ScrollView layoutInflater = (ScrollView)inflater.inflate(R.layout.fragment_register, container, false);
-        activity = getActivity();
+        final Activity activity = getActivity();
         applicationContext = activity.getApplicationContext();
 
         emailInput = layoutInflater.findViewById(R.id.input_email);
@@ -93,6 +102,7 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
         firstNameInput = layoutInflater.findViewById(R.id.input_firstname);
         lastNameInput = layoutInflater.findViewById(R.id.input_lastname);
         middleNameInput = layoutInflater.findViewById(R.id.input_middlename);
+        groupInput = layoutInflater.findViewById(R.id.input_group_dialog);
         genderInput = layoutInflater.findViewById(R.id.input_gender_spinner);
         languageInput = layoutInflater.findViewById(R.id.input_language_spinner);
         phoneNumberInput = layoutInflater.findViewById(R.id.input_phone_number);
@@ -112,6 +122,56 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
 
         //получаем язык системы
         language = Locale.getDefault().getLanguage();
+
+        //получение списка групп с сервиса
+        requestService.doRequest("dicts/group", language, new GenericCallback<String>() {
+            @Override
+            public void onResponse(String json) {
+                ArrayList<GroupsDTO> groupsDTO = gsonService.fromJsonToArrayList(json, GroupsDTO.class);
+                groupNames.add(getResources().getString(R.string.group_none)); //первый элемент всегда "не указывать"
+                for (GroupsDTO group : groupsDTO) {
+                    groupNames.add(group.getGroupName());
+                }
+            }
+
+            @Override
+            public void onError(String message) {
+                //выключаем прогресс бар
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.hide();
+                    }
+                });
+                ErrorDialogService.showDialog(getResources().getString(R.string.get_groups_error), message, getFragmentManager());
+            }
+
+            @Override
+            public void onFailure(String message) {
+                //выключаем прогресс бар
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.hide();
+                    }
+                });
+                ErrorDialogService.showDialog(getResources().getString(R.string.get_groups_error), message, getFragmentManager());
+            }
+        });
+
+        //при нажатии на group input отображаем диалог со списком
+        groupInput.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //выводим выбранную группу через dialog fragment в text view
+                SearchListDialogService.showDialog(R.layout.fragment_search_list, groupNames, getFragmentManager(), new ListDialogCallback() {
+                    @Override
+                    public void onItemClick(String selectedGroup) {
+                        groupInput.setText(selectedGroup);
+                    }
+                });
+            }
+        });
 
         //если юзер регистрируется после авторизации
         //через сторонний сервис, заполняем имеющиеся поля
@@ -142,6 +202,7 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
     //если все поля пройдут валидацию
     @Override
     public void onValidationSucceeded() {
+        final Activity activity = getActivity();
         FormService formService = new FormService(); //класс берет значения из полей формы
         progressBar.show(); //включаем прогресс бар
         registerButton.setEnabled(false); //отключаем кнопку регистрации для избежания повторных запросов
@@ -153,13 +214,14 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
         String firstName = formService.getTextFromInput(firstNameInput);
         String lastName = formService.getTextFromInput(lastNameInput);
         String middleName = formService.getTextFromInput(middleNameInput);
+        String groupName = formService.getGroup(groupInput, groupNames);
         String gender = formService.getSelectedGender(genderInput); //пол не обязательное поле, поэтому может быть null
         String selectedLanguage = formService.getSelectedLanguage(languageInput, getResources().getStringArray(R.array.languages_array_keys));
         String phoneNumber = formService.getTextFromInput(phoneNumberInput);
 
         //заполняем дто регистрации, которое будем отправлять на сервис
         //если поля не заполнены, они равны null
-        dto.updateFields(email, password, firstName, lastName, middleName, gender, selectedLanguage, phoneNumber);
+        dto.updateFields(email, password, firstName, lastName, middleName, groupName, gender, selectedLanguage, phoneNumber);
 
         final GenericCallback<String> callback = new GenericCallback<String>() {
             @Override

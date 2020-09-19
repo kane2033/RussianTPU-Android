@@ -34,6 +34,9 @@
     <string name="first_name">Имя*</string>
     <string name="last_name">Фамилия</string>
     <string name="middle_name">Отчество</string>
+    <string name="group">Группа</string>
+    <string name="group_choose">Выберите группу</string>
+    <string name="group_none">Не указ.</string>
     <string name="gender">Пол</string>
     <string name="gender_male">Мужской</string>
     <string name="gender_female">Женский</string>
@@ -67,6 +70,7 @@
     <string name="dialog_cancel">Отменить</string>
     <string name="dialog_yes">Да</string>
     <string name="dialog_no">Нет</string>
+    <string name="dialog_none">Не указ.</string>
 
     <!--Notifications-->
     <string name="notification_channel_name">Новости</string>

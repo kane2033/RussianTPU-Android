@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -18,10 +19,12 @@ import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.mobsandgeeks.saripaar.annotation.Pattern;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ru.tpu.russiantpu.R;
 import ru.tpu.russiantpu.auth.activities.AuthActivity;
+import ru.tpu.russiantpu.dto.GroupsDTO;
 import ru.tpu.russiantpu.dto.UserDTO;
 import ru.tpu.russiantpu.utility.FormService;
 import ru.tpu.russiantpu.utility.LocaleService;
@@ -31,8 +34,10 @@ import ru.tpu.russiantpu.utility.StartActivityService;
 import ru.tpu.russiantpu.utility.ToastService;
 import ru.tpu.russiantpu.utility.callbacks.DialogCallback;
 import ru.tpu.russiantpu.utility.callbacks.GenericCallback;
+import ru.tpu.russiantpu.utility.callbacks.ListDialogCallback;
 import ru.tpu.russiantpu.utility.dialogFragmentServices.DialogService;
 import ru.tpu.russiantpu.utility.dialogFragmentServices.ErrorDialogService;
+import ru.tpu.russiantpu.utility.dialogFragmentServices.SearchListDialogService;
 import ru.tpu.russiantpu.utility.notifications.FirebaseNotificationService;
 import ru.tpu.russiantpu.utility.requests.GsonService;
 import ru.tpu.russiantpu.utility.requests.RequestService;
@@ -47,6 +52,9 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
 
     @Pattern(regex = "^(?=.{0,50}$).*", messageResId = R.string.middlename_error) //optional, max 50
     private TextInputEditText middleNameInput;
+
+    private TextView groupInput;
+    private List<String> groupNames = new ArrayList<>();
 
     //ввод пола не валидируется
     private Spinner genderInput;
@@ -100,6 +108,7 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
         lastNameInput = formContainer.findViewById(R.id.input_lastname);
         firstNameInput = formContainer.findViewById(R.id.input_firstname);
         middleNameInput = formContainer.findViewById(R.id.input_middlename);
+        groupInput = formContainer.findViewById(R.id.input_group_dialog);
         genderInput = formContainer.findViewById(R.id.input_gender_spinner);
         languageInput = formContainer.findViewById(R.id.input_language_spinner);
         phoneNumberInput = formContainer.findViewById(R.id.input_phone_number);
@@ -169,9 +178,65 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
             }
         });
 
-        progressBar.show(); //включаем прогресс бар
+        progressBar.show(); //включаем прогресс бар перед отправкой запросов
 
-        final GenericCallback<String> callback = new GenericCallback<String>() {
+        //данные, необходимые для совершения запроса
+        final String token = sharedPreferencesService.getToken();
+        final String language = sharedPreferencesService.getLanguage();
+        final String email = sharedPreferencesService.getEmail();
+        requestService = new RequestService(sharedPreferencesService, new StartActivityService(this));
+
+        //получение списка групп с сервиса
+        requestService.doRequest("dicts/group", language, new GenericCallback<String>() {
+            @Override
+            public void onResponse(String json) {
+                ArrayList<GroupsDTO> groupsDTO = gsonService.fromJsonToArrayList(json, GroupsDTO.class);
+                groupNames.add(getResources().getString(R.string.group_none)); //первый элемент всегда "не указывать"
+                for (GroupsDTO group : groupsDTO) {
+                    groupNames.add(group.getGroupName());
+                }
+            }
+
+            @Override
+            public void onError(String message) {
+                //выключаем прогресс бар
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.hide();
+                    }
+                });
+                ErrorDialogService.showDialog(getResources().getString(R.string.get_groups_error), message, getSupportFragmentManager());
+            }
+
+            @Override
+            public void onFailure(String message) {
+                //выключаем прогресс бар
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.hide();
+                    }
+                });
+                ErrorDialogService.showDialog(getResources().getString(R.string.get_groups_error), message, getSupportFragmentManager());
+            }
+        });
+
+        //при нажатии на group input отображаем диалог со списком
+        groupInput.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //выводим выбранную группу через dialog fragment в text view
+                SearchListDialogService.showDialog(R.layout.fragment_search_list, groupNames, getSupportFragmentManager(), new ListDialogCallback() {
+                    @Override
+                    public void onItemClick(String selectedGroup) {
+                        groupInput.setText(selectedGroup);
+                    }
+                });
+            }
+        });
+
+        final GenericCallback<String> getPersonalInfoCallback = new GenericCallback<String>() {
             @Override
             public void onResponse(String jsonBody) {
                 //получаем всю информацию о юзере с сервиса
@@ -185,7 +250,10 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
                         lastNameInput.setText(user.getLastName());
                         firstNameInput.setText(user.getFirstName());
                         middleNameInput.setText(user.getMiddleName());
-                        formService.setSelectedGender(genderInput, user.getGender()); //устанавливаем пол radiobutton
+                        //если из полученного дто группа не указана (null), записываем строку "не указывать"/"none" вместо null
+                        String groupName = user.getGroupName() == null ? getResources().getString(R.string.dialog_none) : user.getGroupName();
+                        groupInput.setText(groupName);
+                        formService.setSelectedGender(genderInput, user.getGender());
                         formService.setSelectedLanguage(languageInput, getResources().getStringArray(R.array.languages_array_keys), user.getLanguage());
                         phoneNumberInput.setText(user.getPhoneNumber());
                     }
@@ -218,11 +286,7 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
             }
         };
 
-        final String token = sharedPreferencesService.getToken();
-        final String language = sharedPreferencesService.getLanguage();
-        final String email = sharedPreferencesService.getEmail();
-        requestService = new RequestService(sharedPreferencesService, new StartActivityService(this));
-        requestService.doRequest("user/profile/", callback, token, language, "email", email);
+        requestService.doRequest("user/profile/", getPersonalInfoCallback, token, language, "email", email);
     }
 
     //метод активации и деактивации полей формы
@@ -251,11 +315,13 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
         String firstName = formService.getTextFromInput(firstNameInput);
         String lastName = formService.getTextFromInput(lastNameInput);
         String middleName = formService.getTextFromInput(middleNameInput);
+        final String groupName = formService.getGroup(groupInput, groupNames);
         String gender = formService.getSelectedGender(genderInput);
         final String language = formService.getSelectedLanguage(languageInput, getResources().getStringArray(R.array.languages_array_keys));
         final String oldLanguage = sharedPreferencesService.getLanguage();
+        final String oldGroupName = sharedPreferencesService.getGroupName();
         String phoneNumber = formService.getTextFromInput(phoneNumberInput);
-        final UserDTO dto = new UserDTO(email, currentPassword, newPassword, firstName, lastName, middleName, gender, language, phoneNumber);
+        final UserDTO dto = new UserDTO(email, currentPassword, newPassword, firstName, lastName, middleName, groupName, gender, language, phoneNumber);
 
         final GenericCallback<String> callback = new GenericCallback<String>() {
             @Override
@@ -281,6 +347,15 @@ public class ProfileActivity extends AppCompatActivity implements Validator.Vali
                             Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
+                        }
+                        else {
+                            String newGroupName = groupName == null ? "" : groupName; //новая группа, избегаем npe
+                            if (!newGroupName.equals(oldGroupName)) { //если поменялась группа
+                                //перезапускаем главное активити, чтобы заново загрузить меню 1 уровня и новую ссылку на расписание
+                                Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                            }
                         }
                     }
                 });
