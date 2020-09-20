@@ -24,6 +24,16 @@
             app:expandedTitleGravity="center_horizontal"
             >
 
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_gravity="bottom"
+                style="@style/Widget.MaterialComponents.TabLayout.Colored"
+                app:layout_collapseMode="pin"
+                app:tabMode="fixed"
+                app:tabContentStart="72dp" />
+
             <!--Плейсхолдер для симпатичной картинки-->
             <ImageView
                 android:layout_width="match_parent"
@@ -67,6 +77,16 @@
 
             </LinearLayout>
 
+<!--            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_gravity="bottom"
+                style="@style/Widget.MaterialComponents.TabLayout.Colored"
+                app:layout_collapseMode="pin"
+                app:tabMode="fixed"
+                app:tabContentStart="72dp" />-->
+
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -74,192 +94,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:clipToPadding="false"
         android:fillViewport="true"
         >
 
-        <RelativeLayout
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewpager"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-            <LinearLayout
-                android:id="@+id/profile_form"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="24dp"
-                android:orientation="vertical">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/text_input_margin"
-                    android:layout_marginBottom="@dimen/text_input_margin"
-                    android:hint="@string/last_name">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/input_lastname"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textCapWords" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/text_input_margin"
-                    android:layout_marginBottom="@dimen/text_input_margin"
-                    android:hint="@string/profile_firstname">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/input_firstname"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textCapWords" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/text_input_margin"
-                    android:layout_marginBottom="@dimen/text_input_margin"
-                    android:hint="@string/middle_name">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/input_middlename"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textCapWords" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/text_input_margin"
-                    android:text="@string/group"
-                    style="@style/text_view_16"/>
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/input_group_dialog"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/text_input_margin"
-                    android:text="@string/group_none"
-                    android:textSize="16sp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:paddingStart="12dp"
-                    style="@android:style/Widget.Material.Spinner.Underlined"/>
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/text_input_margin"
-                    android:text="@string/gender" 
-                    style="@style/text_view_16"/>
-
-                <Spinner
-                    android:id="@+id/input_gender_spinner"
-                    style="@android:style/Widget.Material.Spinner.Underlined"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/text_input_margin"
-                    android:entries="@array/gender_array" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/text_input_margin"
-                    android:text="@string/profile_language"
-                    style="@style/text_view_16"/>
-
-                <Spinner
-                    android:id="@+id/input_language_spinner"
-                    style="@android:style/Widget.Material.Spinner.Underlined"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/text_input_margin"
-                    android:entries="@array/languages_array" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/text_input_margin"
-                    android:hint="@string/phone_number">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/input_phone_number"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="phone"
-                        app:errorEnabled="true"
-                        />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <LinearLayout
-                    android:id="@+id/profile_form_edit_elements"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/text_input_margin"
-                    android:layout_marginBottom="@dimen/text_input_margin"
-                        android:hint="@string/profile_new_password">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/input_new_password"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="textPassword"
-                            app:errorEnabled="true"/>
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/text_input_margin"
-                    android:layout_marginBottom="@dimen/text_input_margin"
-                        android:hint="@string/profile_old_password">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/input_current_password"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="textPassword"
-                            app:errorEnabled="true"/>
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/text_input_margin"
-                        android:text="@string/profile_text_required" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/button_save"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/profile_save"/>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <androidx.core.widget.ContentLoadingProgressBar
-                android:id="@+id/progress_bar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="?android:attr/progressBarStyleLarge"
-                android:indeterminate="true"
-                android:indeterminateTintMode="src_atop"
-                android:indeterminateTint="@color/colorPrimary"
-                android:layout_centerInParent="true"
-                android:visibility="gone"/>
-        </RelativeLayout>
+<!--        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>-->
 
     </androidx.core.widget.NestedScrollView>
 

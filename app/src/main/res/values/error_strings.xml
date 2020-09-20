@@ -20,6 +20,7 @@
     <string name="get_groups_error">Ошибка при получении групп</string>
     <string name="profile_get_error">Ошибка при получении информации о пользователе</string>
     <string name="profile_save_error">Ошибка при сохранении информации о пользователе</string>
+    <string name="docs_get_error">Ошибка при получении списка документов</string>
     <string name="refresh_token_error">Ошибка при обновлении токена</string>
     <string name="token_expired_error">Ваш сеанс истек, необходимо повторно авторизоваться</string>
     <string name="reset_password_error">Ошибка при попытке восстановить пароль</string>

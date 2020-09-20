@@ -82,4 +82,7 @@
     <string name="group_none">不指定</string>
     <string name="group_choose">选择你的组</string>
     <string name="dialog_none">不指定</string>
+    <string name="personal_info_name">个人资料</string>
+    <string name="documents_name">文件资料</string>
+    <string name="docs_get_error">尝试获取文档列表时出错</string>
 </resources>

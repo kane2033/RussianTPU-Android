@@ -15,26 +15,33 @@
     <!--Элементы item_feed и item_list-->
     <style name="item_header_text">
         <item name="android:textSize">28sp</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body1</item>
+        <item name="android:padding">4dp</item>
         <item name="android:textAlignment">center</item>
     </style>
 
     <style name="item_text">
         <item name="android:padding">8dp</item>
         <item name="android:textAlignment">textStart</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body2</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body2</item>
     </style>
 
     <style name="item_date">
         <item name="android:paddingStart">8dp</item>
         <item name="android:textAlignment">textStart</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body2</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body2</item>
     </style>
 
     <style name="item_layout">
         <item name="android:layout_margin">4dp</item>
         <item name="android:padding">4dp</item>
         <item name="android:background">#FFFFFF</item>
+    </style>
+
+    <style name="item_doc_layout">
+        <item name="android:layout_margin">4dp</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:background">#e9e9e9</item>
     </style>
 
     <!--Элементы заголовка выдвижной шторки-->
@@ -63,17 +70,17 @@
 
     <style name="reg_header_text">
         <item name="android:textSize">24sp</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body1</item>
         <item name="android:textAlignment">center</item>
     </style>
 
     <style name="text_view_18">
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body1</item>
         <item name="android:textSize">18sp</item>
     </style>
 
     <style name="text_view_16">
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body1</item>
         <item name="android:textSize">16sp</item>
     </style>
 

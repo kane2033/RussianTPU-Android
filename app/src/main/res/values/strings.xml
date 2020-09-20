@@ -50,6 +50,10 @@
     <string name="validation_success">Все поля корректны, регистрируем вашу учетную запись…</string>
     <string name="reg_success">Регистрация успешна</string>
 
+    <!--Названия вкладок-->
+    <string name="personal_info_name">Профиль</string>
+    <string name="documents_name">Документы</string>
+
     <!--Строки для профиля пользователя-->
     <string name="profile_greeting">Добро пожаловать!</string>
     <string name="profile_title">Личный кабинет</string>

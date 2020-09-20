@@ -82,4 +82,7 @@
     <string name="group_none">None</string>
     <string name="group_choose">Choose your group</string>
     <string name="dialog_none">None</string>
+    <string name="personal_info_name">Profile</string>
+    <string name="documents_name">Documents</string>
+    <string name="docs_get_error">Error while trying to get list of documents</string>
 </resources>

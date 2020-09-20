@@ -92,4 +92,7 @@
     <string name="group_none">Не указ.</string>
     <string name="group_choose">Выберите группу</string>
     <string name="dialog_none">Не указ.</string>
+    <string name="personal_info_name">Профиль</string>
+    <string name="documents_name">Документы</string>
+    <string name="docs_get_error">Ошибка при получении списка документов</string>
 </resources>

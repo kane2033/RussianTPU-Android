@@ -7,4 +7,5 @@
     <dimen name="item_header_text_size">30sp</dimen>
     <dimen name="text_input_margin">8dp</dimen>
     <dimen name="register_layout_margin">24dp</dimen>
+    <dimen name="doc_text_margin">4dp</dimen>
 </resources>

@@ -83,7 +83,6 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
     private ContentLoadingProgressBar progressBar;
 
     private UserDTO dto = new UserDTO();
-    private Context applicationContext;
     private RequestService requestService;
     private GsonService gsonService;
     private ToastService toastService;
@@ -95,7 +94,7 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final ScrollView layoutInflater = (ScrollView)inflater.inflate(R.layout.fragment_register, container, false);
         final Activity activity = getActivity();
-        applicationContext = activity.getApplicationContext();
+        Context applicationContext = activity.getApplicationContext();
 
         emailInput = layoutInflater.findViewById(R.id.input_email);
         passwordInput = layoutInflater.findViewById(R.id.input_password);
@@ -285,7 +284,7 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
     public void onValidationFailed(List<ValidationError> errors) {
         for (ValidationError error : errors) {
             View view = error.getView();
-            String message = error.getCollatedErrorMessage(applicationContext);
+            String message = error.getCollatedErrorMessage(getActivity().getApplicationContext());
 
             //отображение ошибки
             if (view instanceof TextInputEditText) {
