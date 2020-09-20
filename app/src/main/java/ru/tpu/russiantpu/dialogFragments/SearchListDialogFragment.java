@@ -28,6 +28,7 @@ public class SearchListDialogFragment extends DialogFragment {
     private final ListDialogCallback callback; //интерфейс содержит действия при нажатии на элемент списка
     private final int layoutResId; //Id of layout
     private final List<String> list; //отображаемый список
+    private List<String> filteredList = new ArrayList<>(); //отфильтрованный список
 
     public SearchListDialogFragment(ListDialogCallback callback, int layoutResId, List<String> list) {
         this.callback = callback;
@@ -55,7 +56,12 @@ public class SearchListDialogFragment extends DialogFragment {
         adapter.setOnItemClickListener(new ClickListener() {
             @Override
             public void onItemClick(int position, View v) {
-                callback.onItemClick(list.get(position)); //возвращаем через коллбэк выбранный предмет
+                if (filteredList.isEmpty()) { //если юзер ничего не вводил в поиск
+                    callback.onItemClick(list.get(position)); //возвращаем через коллбэк выбранный предмет
+                }
+                else {
+                    callback.onItemClick(filteredList.get(position));
+                }
                 getDialog().dismiss();
             }
             //пока не используется, оставлен на будущее
@@ -88,7 +94,7 @@ public class SearchListDialogFragment extends DialogFragment {
     }
 
     private void filterList(String text, SearchListDialogDataAdapter adapter) {
-        List<String> filteredList = new ArrayList<>();
+        filteredList = new ArrayList<>();
         for (String item : list) {
             if (item.toLowerCase().contains(text.toLowerCase())) {
                 filteredList.add(item);
