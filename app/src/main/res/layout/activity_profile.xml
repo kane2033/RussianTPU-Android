@@ -77,16 +77,6 @@
 
             </LinearLayout>
 
-<!--            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tabs"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:layout_gravity="bottom"
-                style="@style/Widget.MaterialComponents.TabLayout.Colored"
-                app:layout_collapseMode="pin"
-                app:tabMode="fixed"
-                app:tabContentStart="72dp" />-->
-
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -101,13 +91,8 @@
             android:id="@+id/viewpager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:fillViewport="true"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-
-<!--        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/viewpager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>-->
 
     </androidx.core.widget.NestedScrollView>
 

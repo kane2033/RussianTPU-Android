@@ -173,7 +173,7 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
                         progressBar.hide();
                     }
                 });
-                ErrorDialogService.showDialog(getResources().getString(R.string.get_groups_error), message, getFragmentManager());
+                toastService.showToast(message);
             }
 
             @Override
@@ -185,7 +185,7 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
                         progressBar.hide();
                     }
                 });
-                ErrorDialogService.showDialog(getResources().getString(R.string.get_groups_error), message, getFragmentManager());
+                toastService.showToast(R.string.get_groups_error);
             }
         });
 
@@ -237,7 +237,7 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
                         progressBar.hide();
                     }
                 });
-                ErrorDialogService.showDialog(getResources().getString(R.string.profile_get_error), message, getFragmentManager());
+                toastService.showToast(message);
             }
 
             @Override
@@ -249,7 +249,7 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
                         progressBar.hide();
                     }
                 });
-                ErrorDialogService.showDialog(getResources().getString(R.string.profile_get_error), message, getFragmentManager());
+                toastService.showToast(R.string.profile_get_error);
             }
         };
 
@@ -360,7 +360,7 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
                         saveButton.setEnabled(true);
                     }
                 });
-                ErrorDialogService.showDialog(getResources().getString(R.string.profile_save_error), message, getFragmentManager());
+                toastService.showToast(R.string.profile_save_error);
             }
         };
 

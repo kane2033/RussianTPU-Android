@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -23,6 +24,9 @@ import ru.tpu.russiantpu.utility.FragmentReplacer;
 //фрагмент, отображающий список статей (новостей)
 public class LinksFragment extends Fragment {
 
+    private ArrayList<LinkItem> items;
+    private final String itemsKey = "items";
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -32,7 +36,14 @@ public class LinksFragment extends Fragment {
         RecyclerView recyclerView = layoutInflater.findViewById(R.id.list); //список
         final FragmentReplacer fragmentReplacer = new FragmentReplacer(activity);
 
-        final ArrayList<LinkItem> items = getArguments().getParcelableArrayList("children"); //получение пунктов из родительского фрагмента
+        //восстанавливаем элементы из временной памяти
+        // (пр.: смена ориентации)
+        if (savedInstanceState != null) {
+            items = savedInstanceState.getParcelableArrayList(itemsKey);
+        }
+        else { //иначе достаем список из args
+            items = getArguments().getParcelableArrayList("children"); //получение пунктов из родительского фрагмента
+        }
         String header = getArguments().getString("header"); //название выбранного пункта будет отображаться в тулбаре
         activity.setTitle(header); //установка названия пункта в тулбар
 
@@ -58,5 +69,11 @@ public class LinksFragment extends Fragment {
             recyclerView.setAdapter(adapter);
         }
         return layoutInflater;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle bundle) {
+        super.onSaveInstanceState(bundle);
+        bundle.putParcelableArrayList(itemsKey, items);
     }
 }

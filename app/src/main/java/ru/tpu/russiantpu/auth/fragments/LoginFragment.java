@@ -34,6 +34,7 @@ import ru.tpu.russiantpu.dto.TokensDTO;
 import ru.tpu.russiantpu.dto.UserDTO;
 import ru.tpu.russiantpu.main.activities.MainActivity;
 import ru.tpu.russiantpu.utility.SharedPreferencesService;
+import ru.tpu.russiantpu.utility.ToastService;
 import ru.tpu.russiantpu.utility.auth.FacebookAuthService;
 import ru.tpu.russiantpu.utility.auth.GoogleAuthService;
 import ru.tpu.russiantpu.utility.auth.VKAuthService;
@@ -100,6 +101,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
 
         requestService = new RequestService();
         gsonService = new GsonService();
+        final ToastService toastService = new ToastService(getContext());
 
         //валидируем содержимое фрагмента, поэтому передаем фрагмент в классы валидаторов
         validator = new Validator(this);
@@ -123,7 +125,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
 
             @Override
             public void onFailure(String message) {
-                ErrorDialogService.showDialog(getResources().getString(R.string.login_error), message, getFragmentManager());
+                toastService.showToast(R.string.login_error);
             }
         };
 
@@ -193,7 +195,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
                         enableButtons(true);
                     }
                 });
-                ErrorDialogService.showDialog(getResources().getString(R.string.login_error), message, getFragmentManager());
+                toastService.showToast(R.string.login_error);
             }
         };
 
@@ -228,7 +230,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
 
             @Override
             public void onFailure(String message) {
-                ErrorDialogService.showDialog(getResources().getString(R.string.login_error), message, getFragmentManager());
+                toastService.showToast(R.string.login_error);
             }
         };
 

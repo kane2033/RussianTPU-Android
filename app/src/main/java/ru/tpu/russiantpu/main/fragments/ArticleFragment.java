@@ -10,6 +10,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
@@ -19,8 +20,8 @@ import ru.tpu.russiantpu.main.items.Article;
 import ru.tpu.russiantpu.utility.ChromeClient;
 import ru.tpu.russiantpu.utility.SharedPreferencesService;
 import ru.tpu.russiantpu.utility.StartActivityService;
+import ru.tpu.russiantpu.utility.ToastService;
 import ru.tpu.russiantpu.utility.callbacks.GenericCallback;
-import ru.tpu.russiantpu.utility.dialogFragmentServices.ErrorDialogService;
 import ru.tpu.russiantpu.utility.requests.GsonService;
 import ru.tpu.russiantpu.utility.requests.RequestService;
 
@@ -34,6 +35,7 @@ public class ArticleFragment extends Fragment {
     private RequestService requestService;
 
     private Article article;
+    private final String articleKey = "article";
 
     @Nullable
     @Override
@@ -50,82 +52,104 @@ public class ArticleFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        //вспомогательные классы
         final Activity activity = getActivity();
-        final SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(activity);
-        final GsonService gsonService = new GsonService();
-        requestService = new RequestService(sharedPreferencesService, new StartActivityService(activity));
 
-        String selectedArticleId = getArguments().getString("id");
+        //восстанавливаем элементы из временной памяти
+        // (пр.: смена ориентации)
+        if (savedInstanceState != null && savedInstanceState.getParcelable(articleKey) != null) {
+            article = savedInstanceState.getParcelable(articleKey);
+            showArticle(activity);
+        }
+        else { //иначе делаем запрос на сервис
+            //вспомогательные классы
+            final SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(activity);
+            final GsonService gsonService = new GsonService();
+            final ToastService toastService = new ToastService(getContext());
+            requestService = new RequestService(sharedPreferencesService, new StartActivityService(activity));
 
-        progressBar.show(); //включаем прогресс бар
+            String selectedArticleId = getArguments().getString("id");
 
-        //реализация коллбека - что произойдет при получении данных с сервера
-        GenericCallback<String> callback = new GenericCallback<String>() {
-            @Override
-            public void onResponse(String jsonBody) {
-                article = gsonService.fromJsonToObject(jsonBody, Article.class);
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (article.getSubject() == null) { //если нет контента, уведомляем
-                            missingContentText.setText(R.string.missing_content);
+            progressBar.show(); //включаем прогресс бар
+
+            //реализация коллбека - что произойдет при получении данных с сервера
+            GenericCallback<String> callback = new GenericCallback<String>() {
+                @Override
+                public void onResponse(String jsonBody) {
+                    article = gsonService.fromJsonToObject(jsonBody, Article.class);
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (article.getSubject() == null) { //если нет контента, уведомляем
+                                missingContentText.setText(R.string.missing_content);
+                            }
+                            else { //иначе заполняем фрагмент содержимым статьи
+                                showArticle(activity);
+                            }
+                            progressBar.hide();
                         }
-                        else { //иначе заполняем фрагмент содержимым статьи
-                            //установка заголовка в тулбаре
-                            activity.setTitle(article.getTopic());
+                    });
+                }
 
-                            //настройки для отображения видео
-                            webView.getSettings().setJavaScriptEnabled(true);
-                            webView.setWebChromeClient(new ChromeClient(webView, frameLayout));
-
-                            //отображение в формате html
-                            webView.loadData(article.getText(), "text/html; charset=utf-8", "UTF-8");
+                @Override
+                public void onError(String message) {
+                    //выключаем прогресс бар
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressBar.hide();
                         }
-                        progressBar.hide();
-                    }
-                });
-            }
+                    });
+                    toastService.showToast(message);
+                }
 
-            @Override
-            public void onError(String message) {
-                //выключаем прогресс бар
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressBar.hide();
-                    }
-                });
-                ErrorDialogService.showDialog(getResources().getString(R.string.article_error), message, getFragmentManager());
-            }
+                @Override
+                public void onFailure(String message) {
+                    //выключаем прогресс бар
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressBar.hide();
+                        }
+                    });
+                    toastService.showToast(R.string.article_error);
+                }
+            };
 
-            @Override
-            public void onFailure(String message) {
-                //выключаем прогресс бар
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressBar.hide();
-                    }
-                });
-                ErrorDialogService.showDialog(getResources().getString(R.string.article_error), message, getFragmentManager());
-            }
-        };
+            //получение JWT токена
+            String token = sharedPreferencesService.getToken();
+            String language = sharedPreferencesService.getLanguage();
+            //запрос за получение списка статей по айди пункта меню
+            requestService.doRequest("article/" + selectedArticleId, callback, token, language, "fromMenu", "true");
+        }
+    }
 
-        //получение JWT токена
-        String token = sharedPreferencesService.getToken();
-        String language = sharedPreferencesService.getLanguage();
-        //запрос за получение списка статей по айди пункта меню
-        requestService.doRequest("article/" + selectedArticleId, callback, token, language, "fromMenu", "true");
+    //метод выводит полученную статью на экран
+    private void showArticle(Activity activity) {
+        //установка заголовка в тулбаре
+        activity.setTitle(article.getTopic());
+        //настройки для отображения видео
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.setWebChromeClient(new ChromeClient(webView, frameLayout));
+        //отображение в формате html
+        webView.loadData(article.getText(), "text/html; charset=utf-8", "UTF-8");
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle bundle) {
+        super.onSaveInstanceState(bundle);
+        bundle.putParcelable(articleKey, article);
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         //при закрытии фрагмента отменяем все запросы
-        requestService.cancelAllRequests();
-        //выключаем прогрессбар
-        progressBar.hide();
+        if (requestService != null ) {
+            requestService.cancelAllRequests();
+        }
+        if (progressBar != null) {
+            //выключаем прогрессбар
+            progressBar.hide();
+        }
     }
 }

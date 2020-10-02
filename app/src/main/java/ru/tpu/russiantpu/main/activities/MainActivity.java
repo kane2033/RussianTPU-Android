@@ -23,23 +23,27 @@ import java.util.ArrayList;
 
 import ru.tpu.russiantpu.R;
 import ru.tpu.russiantpu.dto.UserDTO;
+import ru.tpu.russiantpu.main.items.Item;
 import ru.tpu.russiantpu.main.items.LinkItem;
 import ru.tpu.russiantpu.utility.FragmentReplacer;
 import ru.tpu.russiantpu.utility.LocaleService;
 import ru.tpu.russiantpu.utility.SharedPreferencesService;
 import ru.tpu.russiantpu.utility.StartActivityService;
+import ru.tpu.russiantpu.utility.ToastService;
 import ru.tpu.russiantpu.utility.callbacks.GenericCallback;
-import ru.tpu.russiantpu.utility.dialogFragmentServices.ErrorDialogService;
 import ru.tpu.russiantpu.utility.requests.GsonService;
 import ru.tpu.russiantpu.utility.requests.RequestService;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private DrawerLayout drawer;
-    private ArrayList<LinkItem> drawerItems;
     private FragmentReplacer fragmentReplacer;
     private RequestService requestService;
+
+    private DrawerLayout drawer;
+
+    private ArrayList<LinkItem> drawerItems;
+    private final String drawerItemsKey = "drawerItems";
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -60,8 +64,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final NavigationView navigationView = findViewById(R.id.nav_view);
         final View header = navigationView.getHeaderView(0);
         navigationView.setNavigationItemSelectedListener(this);
-/*        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);*/
         final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -82,78 +84,102 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         firstNameTextView.setText(user.getFirstName());
         emailTextView.setText(user.getEmail());
 
-        final ContentLoadingProgressBar progressBar = findViewById(R.id.progress_bar);
-        progressBar.show(); //включаем прогресс бар
-
-        final FragmentManager fragmentManager = getSupportFragmentManager();
-        final GsonService gsonService = new GsonService();
-
-        //запрос на сервис для получения пунктов выдвижного меню
-        requestService = new RequestService(sharedPreferencesService, new StartActivityService(this));
-        //реализация коллбека - что произойдет при получении данных с сервиса
-        GenericCallback<String> callback = new GenericCallback<String>() {
-            @Override
-            public void onResponse(String jsonBody) {
-                //получение списка пунктов бокового меню (1 уровень)
-                drawerItems = gsonService.fromJsonToArrayList(jsonBody, LinkItem.class);
-                Log.d("GET_REQUEST", "Получены предметы шторки");
-
-                //обновление элементов интерфейса в потоке UI
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressBar.hide(); //выключаем прогресс бар
-                        Menu menu = navigationView.getMenu();
-                        //заполняем боковое меню пунктами 1 уровня
-                        for (int i = 0; i < drawerItems.size(); i++) {
-                            menu.add(1, i, 0, drawerItems.get(i).getName());
-                        }
-
-                        toggle.syncState();
-                        if (!drawerItems.isEmpty()) {
-                            LinkItem initialItem = drawerItems.get(0);
-                            fragmentReplacer.setInitialFragment(initialItem);
-                        }
-                    }
-                });
-            }
-
-            @Override
-            public void onError(String message) {
-                //выключаем прогресс бар
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressBar.hide();
-                    }
-                });
-                ErrorDialogService.showDialog(getResources().getString(R.string.drawer_error), message, fragmentManager);
-            }
-
-            @Override
-            public void onFailure(String message) {
-                //выключаем прогресс бар
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressBar.hide();
-                    }
-                });
-                ErrorDialogService.showDialog(getResources().getString(R.string.drawer_error), message, fragmentManager);
-            }
-        };
-        //делаем запрос на получение пунктов меню на языке пользователя
-        requestService.doRequest("menu", callback, token, user.getLanguage(), "language", user.getLanguage(), "email", user.getEmail());
-
         //передаем ссылку fragmentManager в класс,
         // осуществляющий переход между фрагментами
         fragmentReplacer = new FragmentReplacer(this);
+
+        //восстанавливаем элементы из временной памяти
+        // (пр.: смена ориентации)
+        if (savedInstanceState != null) {
+            drawerItems = savedInstanceState.getParcelableArrayList(drawerItemsKey);
+            populateMenu(navigationView, toggle); //заполняем боковое меню
+        }
+        else { //иначе делаем запрос на сервис
+            final ContentLoadingProgressBar progressBar = findViewById(R.id.progress_bar);
+            progressBar.show(); //включаем прогресс бар
+
+            final FragmentManager fragmentManager = getSupportFragmentManager();
+            final GsonService gsonService = new GsonService();
+            final ToastService toastService = new ToastService(this);
+
+            //запрос на сервис для получения пунктов выдвижного меню
+            requestService = new RequestService(sharedPreferencesService, new StartActivityService(this));
+            //реализация коллбека - что произойдет при получении данных с сервиса
+            GenericCallback<String> callback = new GenericCallback<String>() {
+                @Override
+                public void onResponse(String jsonBody) {
+                    //получение списка пунктов бокового меню (1 уровень)
+                    drawerItems = gsonService.fromJsonToArrayList(jsonBody, LinkItem.class);
+                    Log.d("GET_REQUEST", "Получены предметы шторки");
+
+                    //обновление элементов интерфейса в потоке UI
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressBar.hide(); //выключаем прогресс бар
+
+                            populateMenu(navigationView, toggle); //заполняем боковое меню
+
+                            if (!drawerItems.isEmpty()) {
+                                Item selectedItem = drawerItems.get(0);
+                                fragmentReplacer.setInitialFragment(selectedItem);
+                            }
+                        }
+                    });
+                }
+
+                @Override
+                public void onError(String message) {
+                    //выключаем прогресс бар
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressBar.hide();
+                        }
+                    });
+                    toastService.showToast(message);
+                    //ErrorDialogService.showDialog(getResources().getString(R.string.drawer_error), message, fragmentManager);
+                }
+
+                @Override
+                public void onFailure(String message) {
+                    //выключаем прогресс бар
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressBar.hide();
+                        }
+                    });
+                    toastService.showToast(R.string.drawer_error);
+                }
+            };
+            //делаем запрос на получение пунктов меню на языке пользователя
+            requestService.doRequest("menu", callback, token, user.getLanguage(), "language", user.getLanguage(), "email", user.getEmail());
+        }
+
+    }
+
+    //метод заполнения боковой шторки
+    private void populateMenu(NavigationView navigationView, ActionBarDrawerToggle toggle) {
+        Menu menu = navigationView.getMenu();
+        //заполняем боковое меню пунктами 1 уровня
+        for (int i = 0; i < drawerItems.size(); i++) {
+            menu.add(1, i, 0, drawerItems.get(i).getName());
+        }
+
+        toggle.syncState();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle bundle) {
+        super.onSaveInstanceState(bundle);
+        bundle.putParcelableArrayList(drawerItemsKey, drawerItems); //сохраняем предметы шторки
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
-        LinkItem selectedItem = drawerItems.get(itemId);
+        Item selectedItem = drawerItems.get(itemId);
         fragmentReplacer.goToFragment(selectedItem);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -173,7 +199,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onStop() {
         super.onStop();
         //при приостановке активити останавливаем все запросы
-        requestService.cancelAllRequests();
+        if (requestService != null) {
+            requestService.cancelAllRequests();
+        }
     }
-
 }

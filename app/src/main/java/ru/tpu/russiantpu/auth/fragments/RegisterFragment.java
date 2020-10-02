@@ -142,7 +142,7 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
                         progressBar.hide();
                     }
                 });
-                ErrorDialogService.showDialog(getResources().getString(R.string.get_groups_error), message, getFragmentManager());
+                toastService.showToast(R.string.get_groups_error);
             }
 
             @Override
@@ -154,7 +154,7 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
                         progressBar.hide();
                     }
                 });
-                ErrorDialogService.showDialog(getResources().getString(R.string.get_groups_error), message, getFragmentManager());
+                toastService.showToast(R.string.get_groups_error);
             }
         });
 
@@ -263,7 +263,7 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
                         registerButton.setEnabled(true);
                     }
                 });
-                ErrorDialogService.showDialog(getResources().getString(R.string.register_error), message, getFragmentManager());
+                toastService.showToast(R.string.register_error);
             }
         };
 

@@ -106,6 +106,7 @@ public class ResetPasswordFragment extends DialogFragment implements Validator.V
     @Override
     public void onValidationSucceeded() {
         final Activity activity = getActivity();
+        final ToastService toastService = new ToastService(activity);
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -124,7 +125,6 @@ public class ResetPasswordFragment extends DialogFragment implements Validator.V
                         switchSendButton(true);
                     }
                 });
-                ToastService toastService = new ToastService(activity);
                 toastService.showToast(R.string.reset_password_success);
                 getDialog().dismiss();
             }
@@ -150,7 +150,7 @@ public class ResetPasswordFragment extends DialogFragment implements Validator.V
                         switchSendButton(true);
                     }
                 });
-                ErrorDialogService.showDialog(getResources().getString(R.string.reset_password_error), message, getFragmentManager());
+                toastService.showToast(R.string.reset_password_error);
             }
         };
         requestService.doPostRequest("auth/password/reset/request", callback, language, "email", email);

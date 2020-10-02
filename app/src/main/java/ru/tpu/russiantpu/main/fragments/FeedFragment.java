@@ -9,11 +9,11 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -27,8 +27,8 @@ import ru.tpu.russiantpu.main.items.Item;
 import ru.tpu.russiantpu.utility.FragmentReplacer;
 import ru.tpu.russiantpu.utility.SharedPreferencesService;
 import ru.tpu.russiantpu.utility.StartActivityService;
+import ru.tpu.russiantpu.utility.ToastService;
 import ru.tpu.russiantpu.utility.callbacks.GenericCallback;
-import ru.tpu.russiantpu.utility.dialogFragmentServices.ErrorDialogService;
 import ru.tpu.russiantpu.utility.requests.GsonService;
 import ru.tpu.russiantpu.utility.requests.RequestService;
 
@@ -38,11 +38,13 @@ public class FeedFragment extends Fragment {
     private RequestService requestService;
     private ContentLoadingProgressBar progressBar;
 
+    private ArrayList<FeedItem> items = new ArrayList<>();
+    private final String itemsKey = "items";
+
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final Activity activity = getActivity();
-        final FragmentManager fragmentManager = getFragmentManager();
 
         final RelativeLayout layoutInflater = (RelativeLayout)inflater.inflate(R.layout.fragment_feed, container, false);
         final RecyclerView recyclerView = layoutInflater.findViewById(R.id.list); //список
@@ -53,11 +55,10 @@ public class FeedFragment extends Fragment {
         final SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(activity);
         final FragmentReplacer fragmentReplacer = new FragmentReplacer((AppCompatActivity) activity);
         final GsonService gsonService = new GsonService();
+        final ToastService toastService = new ToastService(getContext());
         requestService = new RequestService(sharedPreferencesService, new StartActivityService(activity));
 
-        final ArrayList<FeedItem> items = new ArrayList<>();
         final FeedDataAdapter adapter = new FeedDataAdapter(getContext(), items);
-
         adapter.setOnItemClickListener(new ClickListener() {
             @Override
             public void onItemClick(int position, View v) {
@@ -72,86 +73,98 @@ public class FeedFragment extends Fragment {
         });
         recyclerView.setAdapter(adapter);
 
-        String selectedItemId = null; //айди родительского пункта
-        if (getArguments() != null) {
-            selectedItemId = getArguments().getString("id");
-            String header = getArguments().getString("header"); //название выбранного пункта будет отображаться в тулбаре
-            activity.setTitle(header); //установка названия пункта в тулбар
+        //восстанавливаем элементы из временной памяти
+        // (пр.: смена ориентации)
+        if (savedInstanceState != null) {
+            items.clear();
+            items.addAll(savedInstanceState.<FeedItem>getParcelableArrayList(itemsKey));
+            adapter.notifyDataSetChanged();
         }
+        else { //иначе делаем запрос на сервис
+            String selectedItemId = null; //айди родительского пункта
+            if (getArguments() != null) {
+                selectedItemId = getArguments().getString("id");
+                String header = getArguments().getString("header"); //название выбранного пункта будет отображаться в тулбаре
+                activity.setTitle(header); //установка названия пункта в тулбар
+            }
 
+            progressBar.show(); //включаем прогресс бар
+            //реализация коллбека - что произойдет при получении данных с сервера
+            GenericCallback<String> callback = new GenericCallback<String>() {
+                @Override
+                public void onResponse(String jsonBody) {
+                    items.clear();
+                    items.addAll(gsonService.fromJsonToArrayList(jsonBody, FeedItem.class));
 
-        progressBar.show(); //включаем прогресс бар
-
-        //реализация коллбека - что произойдет при получении данных с сервера
-        GenericCallback<String> callback = new GenericCallback<String>() {
-            @Override
-            public void onResponse(String jsonBody) {
-                items.addAll(gsonService.fromJsonToArrayList(jsonBody, FeedItem.class));
-
-                //отрисовываем список статей в потоке интерфейса
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (items.size() != 0) { //если нет контента, уведомляем
-                            Log.d("FEED_FRAGMENT", "Сколько статей получено: " + items.size());
-                            adapter.notifyDataSetChanged();
+                    //отрисовываем список статей в потоке интерфейса
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (items.size() != 0) { //если нет контента, уведомляем
+                                Log.d("FEED_FRAGMENT", "Сколько статей получено: " + items.size());
+                                adapter.notifyDataSetChanged();
+                            }
+                            else {
+                                missingContentText.setText(R.string.missing_content);
+                            }
+                            progressBar.hide(); //выключаем прогресс бар
                         }
-                        else {
-                            missingContentText.setText(R.string.missing_content);
+
+                    });
+                }
+
+                @Override
+                public void onError(String message) {
+                    //выключаем прогресс бар
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressBar.hide();
                         }
-                        progressBar.hide(); //выключаем прогресс бар
-                    }
+                    });
+                    toastService.showToast(message);
+                }
 
-                });
-            }
+                @Override
+                public void onFailure(String message) {
+                    //выключаем прогресс бар
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressBar.hide();
+                        }
+                    });
+                    toastService.showToast(R.string.feed_error);
+                }
+            };
 
-            @Override
-            public void onError(String message) {
-                //выключаем прогресс бар
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressBar.hide();
-                    }
-                });
-                ErrorDialogService.showDialog(getResources().getString(R.string.feed_error), message, fragmentManager);
-            }
+            //получение JWT токена
+            String token = sharedPreferencesService.getToken();
+            String language = sharedPreferencesService.getLanguage();
 
-            @Override
-            public void onFailure(String message) {
-                //выключаем прогресс бар
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressBar.hide();
-                    }
-                });
-                ErrorDialogService.showDialog(getResources().getString(R.string.feed_error), message, fragmentManager);
-            }
-        };
-
-        //получение JWT токена
-        String token = sharedPreferencesService.getToken();
-        String language = sharedPreferencesService.getLanguage();
-
-        //запрос за получение списка статей по айди пункта меню
-        requestService.doRequest("article/list/" + selectedItemId, callback, token, language, "fromMenu", "true");
+            //запрос за получение списка статей по айди пункта меню
+            requestService.doRequest("article/list/" + selectedItemId, callback, token, language, "fromMenu", "true");
+        }
 
         return layoutInflater;
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onSaveInstanceState(@NonNull Bundle bundle) {
+        super.onSaveInstanceState(bundle);
+        bundle.putParcelableArrayList(itemsKey, items);
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        //при закрытии фрагмента отменяем все запросы
-        requestService.cancelAllRequests();
-        //выключаем прогрессбар
-        progressBar.hide();
+        if (requestService != null && progressBar != null) {
+            //при закрытии фрагмента отменяем все запросы
+            requestService.cancelAllRequests();
+            //выключаем прогрессбар
+            progressBar.hide();
+        }
+
     }
 
 }

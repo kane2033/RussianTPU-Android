@@ -1,6 +1,7 @@
 package ru.tpu.russiantpu.main.fragments.profile;
 
 import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,8 +23,8 @@ import ru.tpu.russiantpu.main.dataAdapters.DocumentsDataAdapter;
 import ru.tpu.russiantpu.utility.DownloadFileFromUrl;
 import ru.tpu.russiantpu.utility.SharedPreferencesService;
 import ru.tpu.russiantpu.utility.StartActivityService;
+import ru.tpu.russiantpu.utility.ToastService;
 import ru.tpu.russiantpu.utility.callbacks.GenericCallback;
-import ru.tpu.russiantpu.utility.dialogFragmentServices.ErrorDialogService;
 import ru.tpu.russiantpu.utility.requests.GsonService;
 import ru.tpu.russiantpu.utility.requests.RequestService;
 
@@ -31,6 +32,12 @@ public class DocumentsFragment extends Fragment {
 
     private RequestService requestService;
     private ContentLoadingProgressBar progressBar;
+
+    //переменные файла
+    private String url; //ссылка на скачивание
+    private String fileName; //название файла
+
+    private String token; //токен для получения файла
 
     @Nullable
     @Override
@@ -45,6 +52,7 @@ public class DocumentsFragment extends Fragment {
         //вспомогательные классы
         final SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(activity);
         final GsonService gsonService = new GsonService();
+        final ToastService toastService = new ToastService(getContext());
         requestService = new RequestService(sharedPreferencesService, new StartActivityService(activity));
 
         final ArrayList<DocumentDTO> items = new ArrayList<>();
@@ -52,15 +60,15 @@ public class DocumentsFragment extends Fragment {
 
         //получение информации о юзере из sharedPreferences
         final String email = sharedPreferencesService.getEmail();
-        final String token = sharedPreferencesService.getToken();
         final String language = sharedPreferencesService.getLanguage();
+        token = sharedPreferencesService.getToken();
 
         adapter.setOnItemClickListener(new ClickListener() {
             @Override
             public void onItemClick(int position, View v) {
-                String url = items.get(position).getUrl();
-                String fileName = items.get(position).getFileName();
-                DownloadFileFromUrl.downloadFile(url, fileName, token, activity);
+                url = items.get(position).getUrl();
+                fileName = items.get(position).getFileName();
+                DownloadFileFromUrl.downloadFile(url, fileName, token, DocumentsFragment.this);
             }
             //пока не используется, оставлен на будущее
             @Override
@@ -97,7 +105,7 @@ public class DocumentsFragment extends Fragment {
                         progressBar.hide();
                     }
                 });
-                ErrorDialogService.showDialog(getResources().getString(R.string.docs_get_error), message, fragmentManager);
+                toastService.showToast(message);
             }
 
             @Override
@@ -109,7 +117,7 @@ public class DocumentsFragment extends Fragment {
                         progressBar.hide();
                     }
                 });
-                ErrorDialogService.showDialog(getResources().getString(R.string.docs_get_error), message, fragmentManager);
+                toastService.showToast(R.string.docs_get_error);
             }
         };
 
@@ -117,6 +125,15 @@ public class DocumentsFragment extends Fragment {
         requestService.doRequest("document", callback, token, language, "email", email);
 
         return layoutInflater;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        //если юзер дал разрешение на сохранение файла через диалоговое окно, пытаемся скачать файл повторно
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+            DownloadFileFromUrl.downloadFile(url, fileName, token, DocumentsFragment.this);
+        }
     }
 
     @Override

@@ -1,9 +1,12 @@
 package ru.tpu.russiantpu.main.items;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import ru.tpu.russiantpu.main.enums.ContentType;
 
 //класс представляет собой единицу превью статьи
-public class FeedItem extends Item{
+public class FeedItem extends Item implements Parcelable {
     private String topic; //заголовок
     private String briefText;
     private String subject;
@@ -58,4 +61,45 @@ public class FeedItem extends Item{
         this.createDate = createDate;
         this.articleImage = articleImage;
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.topic);
+        dest.writeString(this.briefText);
+        dest.writeString(this.subject);
+        dest.writeString(this.createDate);
+        dest.writeString(this.articleImage);
+        dest.writeString(this.getId());
+        dest.writeInt(this.getPosition());
+        dest.writeString(getType().toString());
+    }
+
+    protected FeedItem(Parcel in) {
+        this.topic = in.readString();
+        this.briefText = in.readString();
+        this.subject = in.readString();
+        this.createDate = in.readString();
+        this.articleImage = in.readString();
+        setId(in.readString());
+        setPosition(in.readInt());
+        setType(ContentType.valueOf(in.readString()));
+    }
+
+    public static final Creator<FeedItem> CREATOR = new Creator<FeedItem>() {
+        @Override
+        public FeedItem createFromParcel(Parcel source) {
+            return new FeedItem(source);
+        }
+
+        @Override
+        public FeedItem[] newArray(int size) {
+            return new FeedItem[size];
+        }
+    };
 }
