@@ -77,7 +77,9 @@ public class FeedItem extends Item implements Parcelable {
         dest.writeString(this.articleImage);
         dest.writeString(this.getId());
         dest.writeInt(this.getPosition());
-        dest.writeString(getType().toString());
+        if (getType() != null) {
+            dest.writeString(getType().toString());
+        }
     }
 
     protected FeedItem(Parcel in) {

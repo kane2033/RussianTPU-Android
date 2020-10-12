@@ -18,9 +18,11 @@ import ru.tpu.russiantpu.auth.activities.AuthActivity;
 import ru.tpu.russiantpu.main.fragmentAdapters.ProfileFragmentsAdapter;
 import ru.tpu.russiantpu.utility.LocaleService;
 import ru.tpu.russiantpu.utility.SharedPreferencesService;
+import ru.tpu.russiantpu.utility.StartActivityService;
 import ru.tpu.russiantpu.utility.callbacks.DialogCallback;
 import ru.tpu.russiantpu.utility.dialogFragmentServices.DialogService;
 import ru.tpu.russiantpu.utility.notifications.FirebaseNotificationService;
+import ru.tpu.russiantpu.utility.requests.RequestService;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -53,7 +55,9 @@ public class ProfileActivity extends AppCompatActivity {
                 DialogCallback dialogCallback = new DialogCallback() {
                     @Override
                     public void onPositiveButton() { //выходим из учетной записи
-                        FirebaseNotificationService.unsubscribeFromNotifications(sharedPreferencesService.getLanguage()); //отписываемся от рассылки уведомлений
+                        FirebaseNotificationService.unsubscribeFromNotifications(sharedPreferencesService.getLanguage()); //отписываемся от рассылки уведомлений по языку
+                        final RequestService requestService = new RequestService(sharedPreferencesService, new StartActivityService(ProfileActivity.this));
+                        FirebaseNotificationService.unsubscribeUserFromNotifications(requestService, sharedPreferencesService.getEmail(), sharedPreferencesService.getLanguage()); //отписываеся от уведомлений для конкретного юзера
                         sharedPreferencesService.clearCredentials(); //удаляем из памяти инфу о юзере
                         //переходим на авторизацию
                         Intent intent = new Intent(ProfileActivity.this, AuthActivity.class);

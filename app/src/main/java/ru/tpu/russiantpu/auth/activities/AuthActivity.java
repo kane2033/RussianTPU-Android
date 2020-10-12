@@ -36,7 +36,7 @@ public class AuthActivity extends FragmentActivity {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(this);
-        RequestService requestService = new RequestService();
+        final RequestService requestService = new RequestService();
 
         final String language = sharedPreferencesService.getLanguage().equals("") ? Locale.getDefault().getLanguage() : sharedPreferencesService.getLanguage();
         //установка языка приложения
@@ -45,8 +45,8 @@ public class AuthActivity extends FragmentActivity {
         setContentView(R.layout.activity_auth);
 
         //получение JWT токена
-        String token = sharedPreferencesService.getToken();
-        String email = sharedPreferencesService.getEmail();
+        final String token = sharedPreferencesService.getToken();
+        final String email = sharedPreferencesService.getEmail();
 
         //если запрос успешен (код 200), вызовется коллбэк с переходом в главную активити
         //(запрос успешен, если токен валиден)
@@ -54,6 +54,7 @@ public class AuthActivity extends FragmentActivity {
             @Override
             public void onResponse(String value) {
                 FirebaseNotificationService.subscribeToNotifications(language); //подписываем пользователя на уведомления по языку
+                FirebaseNotificationService.subscribeUserToNotifications(requestService, email, language); //подисываем конкретного юзера на уведомления
                 Intent intent = new Intent(AuthActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish(); //закрываем активити логина

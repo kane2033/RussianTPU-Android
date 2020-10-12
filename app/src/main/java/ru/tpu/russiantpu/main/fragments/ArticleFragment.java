@@ -79,7 +79,7 @@ public class ArticleFragment extends Fragment {
                     activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (article.getSubject() == null) { //если нет контента, уведомляем
+                            if (article.getTopic() == null) { //если нет контента, уведомляем
                                 missingContentText.setText(R.string.missing_content);
                             }
                             else { //иначе заполняем фрагмент содержимым статьи

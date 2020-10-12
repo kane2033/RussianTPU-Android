@@ -147,8 +147,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
         toMainActivityCallback = new GenericCallback<String>() {
             @Override
             public void onResponse(String jsonBody) {
-                //подписываемся на группу уведомлений по языку
-                FirebaseNotificationService.subscribeToNotifications(language);
+                //получение токенов с сервиса
+                TokensDTO tokens = gsonService.fromJsonToObject(jsonBody, TokensDTO.class);
+
+                FirebaseNotificationService.subscribeToNotifications(language); //подписываемся на группу уведомлений по языку
+                FirebaseNotificationService.subscribeUserToNotifications(requestService, tokens.getUser().getEmail(), language); //подисываем конкретного юзера на уведомления
                 //выключаем прогресс бар, включаем кнопки
                 activity.runOnUiThread(new Runnable() {
                     @Override
@@ -157,8 +160,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
                         enableButtons(true);
                     }
                 });
-                //получение токенов с сервиса
-                TokensDTO tokens = gsonService.fromJsonToObject(jsonBody, TokensDTO.class);
 
                 //сохраняем JWT токен в sharedPreferences для последующего использования
                 SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(activity);
