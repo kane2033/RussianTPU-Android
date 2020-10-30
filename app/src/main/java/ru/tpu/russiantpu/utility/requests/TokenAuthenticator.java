@@ -42,7 +42,7 @@ public class TokenAuthenticator implements Authenticator {
 
             //обновляем токен с помощью рефреш токена
             RequestService requestService = new RequestService();
-            String language = sharedPreferencesService.getLanguage();
+            String language = sharedPreferencesService.getLanguageId();
             String jsonBody = requestService.doPutRequestSync("token", refreshToken, language);
             if (jsonBody == null) { //если запрос не успешен
                 startActivityService.startAuthActivityTokenExpired(); //возвращаемся на активити логина

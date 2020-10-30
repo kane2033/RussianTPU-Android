@@ -28,6 +28,7 @@ import java.util.List;
 
 import ru.tpu.russiantpu.R;
 import ru.tpu.russiantpu.dto.GroupsDTO;
+import ru.tpu.russiantpu.dto.LanguageDTO;
 import ru.tpu.russiantpu.dto.UserDTO;
 import ru.tpu.russiantpu.main.activities.MainActivity;
 import ru.tpu.russiantpu.utility.FormService;
@@ -36,6 +37,7 @@ import ru.tpu.russiantpu.utility.SharedPreferencesService;
 import ru.tpu.russiantpu.utility.SpinnerValidatorAdapter;
 import ru.tpu.russiantpu.utility.StartActivityService;
 import ru.tpu.russiantpu.utility.ToastService;
+import ru.tpu.russiantpu.utility.adapters.LanguagesAdapter;
 import ru.tpu.russiantpu.utility.callbacks.GenericCallback;
 import ru.tpu.russiantpu.utility.callbacks.ListDialogCallback;
 import ru.tpu.russiantpu.utility.dialogFragmentServices.ErrorDialogService;
@@ -63,6 +65,7 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
 
     @NotEmpty(messageResId = R.string.empty_field_error)
     private Spinner languageInput; //список выбора языка
+    private final List<LanguageDTO> languageDTOS = new ArrayList<>(); //пустой список заполнится после получение результата с сервиса
 
     @Pattern(regex = "^(?=.{0,20}$).*", messageResId = R.string.phone_number) //optional, max 20
     private TextInputEditText phoneNumberInput;
@@ -101,7 +104,7 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
         toastService = new ToastService(activity);
 
         //установка языка интерфейса приложения
-        LocaleService.setLocale(activity, sharedPreferencesService.getLanguage());
+        LocaleService.setLocale(activity, sharedPreferencesService.getLanguageName());
 
         //все элементы формы в LinearLayout
         formContainer = layoutInflater.findViewById(R.id.profile_form);
@@ -149,12 +152,12 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
 
         //данные, необходимые для совершения запроса
         final String token = sharedPreferencesService.getToken();
-        final String language = sharedPreferencesService.getLanguage();
+        final String language = sharedPreferencesService.getLanguageId();
         final String email = sharedPreferencesService.getEmail();
         requestService = new RequestService(sharedPreferencesService, new StartActivityService(activity));
 
         //получение списка групп с сервиса
-        requestService.doRequest("dicts/group", language, new GenericCallback<String>() {
+        requestService.doRequest("dict/group", language, new GenericCallback<String>() {
             @Override
             public void onResponse(String json) {
                 ArrayList<GroupsDTO> groupsDTO = gsonService.fromJsonToArrayList(json, GroupsDTO.class);
@@ -203,6 +206,51 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
             }
         });
 
+        //инициализация адаптера выбора языка
+        final LanguagesAdapter languagesInputAdapter = new LanguagesAdapter(requireContext(), languageDTOS);
+        languagesInputAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        languageInput.setAdapter(languagesInputAdapter);
+
+        //получение списка языков из бд
+        requestService.doRequest("dict/language", language, new GenericCallback<String>() {
+            @Override
+            public void onResponse(String json) {
+                //полученные языки заносим в список (спиннер)
+                languageDTOS.addAll(gsonService.fromJsonToArrayList(json, LanguageDTO.class));
+                //уведомляем адаптер о получении языков
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        languagesInputAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(String message) {
+                //выключаем прогресс бар
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.hide();
+                    }
+                });
+                toastService.showToast(R.string.get_languages_error);
+            }
+
+            @Override
+            public void onFailure(String message) {
+                //выключаем прогресс бар
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.hide();
+                    }
+                });
+                toastService.showToast(R.string.get_languages_error);
+            }
+        });
+
         final GenericCallback<String> getPersonalInfoCallback = new GenericCallback<String>() {
             @Override
             public void onResponse(String jsonBody) {
@@ -217,11 +265,9 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
                         lastNameInput.setText(user.getLastName());
                         firstNameInput.setText(user.getFirstName());
                         middleNameInput.setText(user.getMiddleName());
-                        //если из полученного дто группа не указана (null), записываем строку "не указывать"/"none" вместо null
-                        String groupName = user.getGroupName() == null ? getResources().getString(R.string.dialog_none) : user.getGroupName();
-                        groupInput.setText(groupName);
+                        groupInput.setText(formService.setGroup(user.getGroupName(), getResources().getString(R.string.dialog_none)));
                         formService.setSelectedGender(genderInput, user.getGender());
-                        formService.setSelectedLanguage(languageInput, getResources().getStringArray(R.array.languages_array_keys), user.getLanguage());
+                        formService.setSelectedLanguage(languageInput, user.getLanguageId(), languageDTOS);
                         phoneNumberInput.setText(user.getPhoneNumber());
                     }
                 });
@@ -287,11 +333,13 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
         String middleName = formService.getTextFromInput(middleNameInput);
         final String groupName = formService.getGroup(groupInput, groupNames);
         String gender = formService.getSelectedGender(genderInput);
-        final String language = formService.getSelectedLanguage(languageInput, getResources().getStringArray(R.array.languages_array_keys));
-        final String oldLanguage = sharedPreferencesService.getLanguage();
+        final LanguageDTO languageDTO = formService.getSelectedLanguage(languageInput);
+        final String languageId = languageDTO.getId();
+        final String oldLanguageId = sharedPreferencesService.getLanguageId();
+        final String oldLanguageShortName = sharedPreferencesService.getLanguageName();
         final String oldGroupName = sharedPreferencesService.getGroupName();
         String phoneNumber = formService.getTextFromInput(phoneNumberInput);
-        final UserDTO dto = new UserDTO(email, currentPassword, newPassword, firstName, lastName, middleName, groupName, gender, language, phoneNumber);
+        final UserDTO dto = new UserDTO(email, currentPassword, newPassword, firstName, lastName, middleName, groupName, gender, languageId, languageDTO.getShortName(), phoneNumber);
 
         final GenericCallback<String> callback = new GenericCallback<String>() {
             @Override
@@ -310,10 +358,10 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
                         sharedPreferencesService.setUser(dto); //запись в память новой информации о пользователе
 
                         //если поменялся язык
-                        if (!language.equals(oldLanguage)) {
-                            FirebaseNotificationService.unsubscribeFromNotifications(oldLanguage); //отписываемся от рассылки уведомлений на текущий язык
-                            FirebaseNotificationService.subscribeToNotifications(language); //подписываемся на новый язык
-                            LocaleService.setLocale(activity, language); //установка нового языка приложения
+                        if (!languageId.equals(oldLanguageId)) {
+                            FirebaseNotificationService.unsubscribeFromNotifications(oldLanguageShortName); //отписываемся от рассылки уведомлений на текущий язык
+                            FirebaseNotificationService.subscribeToNotifications(languageDTO.getShortName()); //подписываемся на новый язык
+                            LocaleService.setLocale(activity, languageDTO.getShortName()); //установка нового языка приложения
                             Intent intent = new Intent(activity, MainActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
@@ -365,7 +413,7 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
         };
 
         final String json = gsonService.fromObjectToJson(dto);
-        requestService.doPutRequest("user/edit", callback, token, language, json);
+        requestService.doPutRequest("user/edit", callback, token, languageId, json);
     }
 
     //если валидация не успешна
@@ -381,11 +429,6 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
             }
         }
     }
-
-/*    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }*/
 
     @Override
     public void onStop() {

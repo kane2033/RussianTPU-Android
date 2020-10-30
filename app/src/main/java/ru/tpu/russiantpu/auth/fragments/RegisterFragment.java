@@ -30,10 +30,12 @@ import java.util.Locale;
 
 import ru.tpu.russiantpu.R;
 import ru.tpu.russiantpu.dto.GroupsDTO;
+import ru.tpu.russiantpu.dto.LanguageDTO;
 import ru.tpu.russiantpu.dto.UserDTO;
 import ru.tpu.russiantpu.utility.FormService;
 import ru.tpu.russiantpu.utility.SpinnerValidatorAdapter;
 import ru.tpu.russiantpu.utility.ToastService;
+import ru.tpu.russiantpu.utility.adapters.LanguagesAdapter;
 import ru.tpu.russiantpu.utility.callbacks.GenericCallback;
 import ru.tpu.russiantpu.utility.callbacks.ListDialogCallback;
 import ru.tpu.russiantpu.utility.dialogFragmentServices.ErrorDialogService;
@@ -62,11 +64,8 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
     @Pattern(regex = "^(?=.{0,50}$).*", messageResId = R.string.middlename_error) //optional, max 50
     private TextInputEditText middleNameInput;
 
-    //private TextView groupInput;
-    //private String[] groupNames;
     private List<String> groupNames = new ArrayList<>();
     private TextView groupInput;
-    //private AutoCompleteTextView groupInput;
 
     private Spinner genderInput;
 
@@ -123,7 +122,7 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
         language = Locale.getDefault().getLanguage();
 
         //получение списка групп с сервиса
-        requestService.doRequest("dicts/group", language, new GenericCallback<String>() {
+        requestService.doRequest("dict/group", language, new GenericCallback<String>() {
             @Override
             public void onResponse(String json) {
                 ArrayList<GroupsDTO> groupsDTO = gsonService.fromJsonToArrayList(json, GroupsDTO.class);
@@ -172,6 +171,52 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
             }
         });
 
+        //инициализация адаптера выбора языка
+        final List<LanguageDTO> languageDTOS = new ArrayList<>(); //пустой список заполнится после получение результата с сервиса
+        final LanguagesAdapter languagesInputAdapter = new LanguagesAdapter(requireContext(), languageDTOS);
+        languagesInputAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        languageInput.setAdapter(languagesInputAdapter);
+
+        //получение списка языков из бд
+        requestService.doRequest("dict/language", language, new GenericCallback<String>() {
+            @Override
+            public void onResponse(String json) {
+                //полученные языки заносим в список (спиннер)
+                languageDTOS.addAll(gsonService.fromJsonToArrayList(json, LanguageDTO.class));
+                //уведомляем адаптер о получении языков
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        languagesInputAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(String message) {
+                //выключаем прогресс бар
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.hide();
+                    }
+                });
+                toastService.showToast(R.string.get_languages_error);
+            }
+
+            @Override
+            public void onFailure(String message) {
+                //выключаем прогресс бар
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.hide();
+                    }
+                });
+                toastService.showToast(R.string.get_languages_error);
+            }
+        });
+
         //если юзер регистрируется после авторизации
         //через сторонний сервис, заполняем имеющиеся поля
         if (getArguments() != null) {
@@ -215,7 +260,7 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
         String middleName = formService.getTextFromInput(middleNameInput);
         String groupName = formService.getGroup(groupInput, groupNames);
         String gender = formService.getSelectedGender(genderInput); //пол не обязательное поле, поэтому может быть null
-        String selectedLanguage = formService.getSelectedLanguage(languageInput, getResources().getStringArray(R.array.languages_array_keys));
+        String selectedLanguage = formService.getSelectedLanguage(languageInput).getId();
         String phoneNumber = formService.getTextFromInput(phoneNumberInput);
 
         //заполняем дто регистрации, которое будем отправлять на сервис

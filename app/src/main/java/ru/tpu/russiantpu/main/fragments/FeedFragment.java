@@ -73,78 +73,81 @@ public class FeedFragment extends Fragment {
         });
         recyclerView.setAdapter(adapter);
 
-        //восстанавливаем элементы из временной памяти
-        // (пр.: смена ориентации)
-        if (savedInstanceState != null) {
-            items.clear();
-            items.addAll(savedInstanceState.<FeedItem>getParcelableArrayList(itemsKey));
-            adapter.notifyDataSetChanged();
-        }
-        else { //иначе делаем запрос на сервис
-            String selectedItemId = null; //айди родительского пункта
-            if (getArguments() != null) {
-                selectedItemId = getArguments().getString("id");
-                String header = getArguments().getString("header"); //название выбранного пункта будет отображаться в тулбаре
-                activity.setTitle(header); //установка названия пункта в тулбар
+        //загружаем предметы, только если массив предмет пуст;
+        // он не пуст, если фрагмент восстанавливается из бэкстека
+        if (items.size() == 0) {
+            //восстанавливаем элементы из временной памяти
+            // (пр.: смена ориентации)
+            if (savedInstanceState != null) {
+                items.addAll(savedInstanceState.<FeedItem>getParcelableArrayList(itemsKey));
+                adapter.notifyDataSetChanged();
             }
+            else { //иначе делаем запрос на сервис
+                String selectedItemId = null; //айди родительского пункта
+                if (getArguments() != null) {
+                    selectedItemId = getArguments().getString("id");
+                    String header = getArguments().getString("header"); //название выбранного пункта будет отображаться в тулбаре
+                    activity.setTitle(header); //установка названия пункта в тулбар
+                }
 
-            progressBar.show(); //включаем прогресс бар
-            //реализация коллбека - что произойдет при получении данных с сервера
-            GenericCallback<String> callback = new GenericCallback<String>() {
-                @Override
-                public void onResponse(String jsonBody) {
-                    items.clear();
-                    items.addAll(gsonService.fromJsonToArrayList(jsonBody, FeedItem.class));
+                progressBar.show(); //включаем прогресс бар
+                //реализация коллбека - что произойдет при получении данных с сервера
+                GenericCallback<String> callback = new GenericCallback<String>() {
+                    @Override
+                    public void onResponse(String jsonBody) {
+                        items.addAll(gsonService.fromJsonToArrayList(jsonBody, FeedItem.class));
 
-                    //отрисовываем список статей в потоке интерфейса
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (items.size() != 0) { //если нет контента, уведомляем
-                                Log.d("FEED_FRAGMENT", "Сколько статей получено: " + items.size());
-                                adapter.notifyDataSetChanged();
+                        //отрисовываем список статей в потоке интерфейса
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (items.size() != 0) { //если нет контента, уведомляем
+                                    Log.d("FEED_FRAGMENT", "Сколько статей получено: " + items.size());
+                                    adapter.notifyDataSetChanged();
+                                }
+                                else {
+                                    missingContentText.setText(R.string.missing_content);
+                                }
+                                progressBar.hide(); //выключаем прогресс бар
                             }
-                            else {
-                                missingContentText.setText(R.string.missing_content);
+
+                        });
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        //выключаем прогресс бар
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressBar.hide();
                             }
-                            progressBar.hide(); //выключаем прогресс бар
-                        }
+                        });
+                        toastService.showToast(message);
+                    }
 
-                    });
-                }
+                    @Override
+                    public void onFailure(String message) {
+                        //выключаем прогресс бар
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressBar.hide();
+                            }
+                        });
+                        toastService.showToast(R.string.feed_error);
+                    }
+                };
 
-                @Override
-                public void onError(String message) {
-                    //выключаем прогресс бар
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            progressBar.hide();
-                        }
-                    });
-                    toastService.showToast(message);
-                }
+                //получение JWT токена
+                String token = sharedPreferencesService.getToken();
+                String language = sharedPreferencesService.getLanguageId();
 
-                @Override
-                public void onFailure(String message) {
-                    //выключаем прогресс бар
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            progressBar.hide();
-                        }
-                    });
-                    toastService.showToast(R.string.feed_error);
-                }
-            };
-
-            //получение JWT токена
-            String token = sharedPreferencesService.getToken();
-            String language = sharedPreferencesService.getLanguage();
-
-            //запрос за получение списка статей по айди пункта меню
-            requestService.doRequest("article/list/" + selectedItemId, callback, token, language, "fromMenu", "true");
+                //запрос за получение списка статей по айди пункта меню
+                requestService.doRequest("article/list/" + selectedItemId, callback, token, language, "fromMenu", "true");
+            }
         }
+
 
         return layoutInflater;
     }
@@ -167,4 +170,9 @@ public class FeedFragment extends Fragment {
 
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.d("LIFECYCLE", "onDestroyView(): The fragment returns to the layout from the back stack.");
+    }
 }

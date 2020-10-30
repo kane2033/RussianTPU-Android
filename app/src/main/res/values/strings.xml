@@ -1,86 +1,86 @@
 <resources>
     <string name="app_name">PreTPU</string>
 
-    <string name="navigation_drawer_open">Открыть шторку</string>
-    <string name="navigation_drawer_close">Закрыть шторку</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <!--Языки-->
-    <string name="language_rus">Русский</string>
-    <string name="language_en">Английский</string>
-    <string name="language_zh">Китайский</string>
+    <string name="language_rus">Russian</string>
+    <string name="language_en">English</string>
+    <string name="language_zh">Chinese</string>
 
     <!--Поля ввода для логина-->
     <string name="email">E-mail</string>
-    <string name="password">Пароль</string>
-    <string name="forgot_password">Забыли пароль?</string>
-    <string name="remember_me">Запомнить меня</string>
-    <string name="login">Войти</string>
-    <string name="goto_register">Нет аккаунта? Зарегистрируйтесь!</string>
-    <string name="login_via_service">Войдите через социальные сети</string>
+    <string name="password">Password</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="remember_me">Remember me</string>
+    <string name="login">Login</string>
+    <string name="goto_register">Don\'t have account yet? Sign up!</string>
+    <string name="login_via_service">Login via service</string>
 
     <!--Восстановление пароля-->
-    <string name="reset_password_header">Сброс пароля</string>
-    <string name="reset_password_text">Забыли свой пароль? Напишите ваш адрес электронной почты и мы пришлем вам ссылку на сброс пароля.</string>
-    <string name="reset_password_send">Восстановить мой пароль</string>
-    <string name="reset_password_success">Ссылка на восстановление пароля отправлена на вашу почту</string>
+    <string name="reset_password_header">Password reset</string>
+    <string name="reset_password_text">Forgot your password? Enter your email address and we will send you a link to reset your password.</string>
+    <string name="reset_password_send">Reset my password</string>
+    <string name="reset_password_success">Link for resetting password has been sent to your email</string>
 
     <!--Поля ввода для регистрации-->
-    <string name="reg_header">Регистрация</string>
-    <string name="reg_text">Заполните все необходимые поля для успешной регистрации</string>
-    <string name="reg_text_provider">Дозаполните поля, чтобы иметь возможность авторизоваться через выбранный сервис за один клик!</string>
-    <string name="reg_text_required">Обязательные поля отмечены - *</string>
+    <string name="reg_header">Registration</string>
+    <string name="reg_text">Fill all the required fields to successfully register</string>
+    <string name="reg_text_provider">Fill the left required fields to be able to login via chosen service in one click!</string>
+    <string name="reg_text_required">Required fields are marked with - *</string>
     <string name="email_reg">E-mail*</string>
-    <string name="password_reg">Пароль*</string>
-    <string name="first_name">Имя*</string>
-    <string name="last_name">Фамилия</string>
-    <string name="middle_name">Отчество</string>
-    <string name="group">Группа</string>
-    <string name="group_choose">Выберите группу</string>
-    <string name="group_none">Не указ.</string>
-    <string name="gender">Пол</string>
-    <string name="gender_male">Мужской</string>
-    <string name="gender_female">Женский</string>
-    <string name="gender_none">Не указ.</string>
-    <string name="choose_language">Язык*</string>
-    <string name="language">Язык</string>
-    <string name="phone_number">Номер телефона</string>
-    <string name="checkbox">Согласие на обработку персональных данных*</string>
-    <string name="register">Зарегистрироваться</string>
+    <string name="password_reg">Password*</string>
+    <string name="first_name">First name*</string>
+    <string name="last_name">Last name</string>
+    <string name="middle_name">Middle name</string>
+    <string name="group">Group</string>
+    <string name="group_choose">Choose your group</string>
+    <string name="group_none">None</string>
+    <string name="gender">Gender</string>
+    <string name="gender_male">Male</string>
+    <string name="gender_female">Female</string>
+    <string name="gender_none">None</string>
+    <string name="choose_language">Language*</string>
+    <string name="language">Language</string>
+    <string name="phone_number">Phone number</string>
+    <string name="checkbox">Data use agreement*</string>
+    <string name="register">Register</string>
     <!--Текст ошибок и статусов выполнения-->
-    <string name="validation_success">Все поля корректны, регистрируем вашу учетную запись…</string>
-    <string name="reg_success">Регистрация успешна</string>
+    <string name="validation_success">All fields validated successfully, your account is being registered…</string>
+    <string name="reg_success">Registration successful</string>
 
     <!--Названия вкладок-->
-    <string name="personal_info_name">Профиль</string>
-    <string name="documents_name">Документы</string>
+    <string name="personal_info_name">Profile</string>
+    <string name="documents_name">Documents</string>
 
     <!--Строки для профиля пользователя-->
-    <string name="profile_greeting">Добро пожаловать!</string>
-    <string name="profile_title">Личный кабинет</string>
-    <string name="profile_edit_button">Редактировать профиль</string>
-    <string name="profile_logout">Выход из учетной записи</string>
-    <string name="profile_logout_confirm">Вы действительно хотите выйти из учетной записи?</string>
+    <string name="profile_greeting">Welcome!</string>
+    <string name="profile_title">My profile</string>
+    <string name="profile_edit_button">Edit profile</string>
+    <string name="profile_logout">Logout</string>
+    <string name="profile_logout_confirm">Are you sure you want to log out?</string>
     <!--Поля данных о пользователе-->
-    <string name="profile_old_password">Текущий пароль*</string>
-    <string name="profile_new_password">Новый пароль</string>
-    <string name="profile_firstname">Имя</string>
-    <string name="profile_language">Язык</string>
-    <string name="profile_text_required">Для изменения данных о пользователе необходимо корректно написать текущий пароль</string>
-    <string name="profile_save">Сохранить изменения</string>
-    <string name="profile_save_success">Изменения успешно сохранены</string>
+    <string name="profile_old_password">Current password*</string>
+    <string name="profile_new_password">New password</string>
+    <string name="profile_firstname">First name</string>
+    <string name="profile_language">Language</string>
+    <string name="profile_text_required">You must enter current password to change your profile info</string>
+    <string name="profile_save">Save changes</string>
+    <string name="profile_save_success">The changes have been successfully saved</string>
 
     <!--DialogFragments-->
     <string name="dialog_ok">OK</string>
-    <string name="dialog_cancel">Отменить</string>
-    <string name="dialog_yes">Да</string>
-    <string name="dialog_no">Нет</string>
-    <string name="dialog_none">Не указ.</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_yes">Yes</string>
+    <string name="dialog_no">No</string>
+    <string name="dialog_none">None</string>
 
     <!--Notifications-->
-    <string name="notification_channel_name">Новости</string>
-    <string name="notification_channel_description">Новости ТПУ</string>
+    <string name="notification_channel_name">News</string>
+    <string name="notification_channel_description">TPU news</string>
 
-    <string name="missing_content">Контент отсутствует</string>
+    <string name="missing_content">Content is missing</string>
 
     <!--Тэг, необходимый для перехода на предыдущий фрагмент-->
     <string name="prev_frag_tag" translatable="false">PREV_FRAGMENT</string>

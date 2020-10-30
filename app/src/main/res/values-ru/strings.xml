@@ -95,4 +95,6 @@
     <string name="personal_info_name">Профиль</string>
     <string name="documents_name">Документы</string>
     <string name="docs_get_error">Ошибка при получении списка документов</string>
+    <string name="get_languages_error">Ошибка при получении списка языков</string>
+    <string name="docs_download_error">Ошибка при попытке загрузить документ</string>
 </resources>

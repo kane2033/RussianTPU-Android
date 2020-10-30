@@ -35,12 +35,12 @@ public class AuthActivity extends FragmentActivity {
         * */
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
-        SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(this);
+        final SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(this);
         final RequestService requestService = new RequestService();
 
-        final String language = sharedPreferencesService.getLanguage().equals("") ? Locale.getDefault().getLanguage() : sharedPreferencesService.getLanguage();
+        final String languageShortName = sharedPreferencesService.getLanguageName().equals("") ? Locale.getDefault().getLanguage() : sharedPreferencesService.getLanguageName();
         //установка языка приложения
-        LocaleService.setLocale(this, language);
+        LocaleService.setLocale(this, languageShortName);
 
         setContentView(R.layout.activity_auth);
 
@@ -53,8 +53,9 @@ public class AuthActivity extends FragmentActivity {
         GenericCallback<String> callback = new GenericCallback<String>() {
             @Override
             public void onResponse(String value) {
-                FirebaseNotificationService.subscribeToNotifications(language); //подписываем пользователя на уведомления по языку
-                FirebaseNotificationService.subscribeUserToNotifications(requestService, email, language); //подисываем конкретного юзера на уведомления
+                FirebaseNotificationService.subscribeToNotifications(languageShortName); //подписываем пользователя на уведомления по языку
+                final String languageId = sharedPreferencesService.getLanguageName();
+                FirebaseNotificationService.subscribeUserToNotifications(requestService, email, languageId); //подисываем конкретного юзера на уведомления
                 Intent intent = new Intent(AuthActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish(); //закрываем активити логина
@@ -72,7 +73,7 @@ public class AuthActivity extends FragmentActivity {
             }
         };
 
-        requestService.doRequest("token/status", language, callback, "token", token, "email", email);
+        requestService.doRequest("token/status", languageShortName, callback, "token", token, "email", email);
     }
 
     //метод запуска фрагмета логина

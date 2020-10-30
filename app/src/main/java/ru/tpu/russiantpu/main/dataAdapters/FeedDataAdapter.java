@@ -42,8 +42,11 @@ public class FeedDataAdapter extends RecyclerView.Adapter<FeedDataAdapter.ViewHo
 
         //конвертация строки base64 в картинку
         ImageConverter imageConverter = new ImageConverter();
-        Bitmap imgBitmap = imageConverter.stringToBitmap(item.getArticleImage());
-        holder.image.setImageBitmap(imgBitmap);
+        if (item.getArticleImage() != null) { //если есть картинка
+            Bitmap imgBitmap = imageConverter.stringToBitmap(item.getArticleImage());
+            holder.image.setVisibility(View.VISIBLE); //делаем view видимым
+            holder.image.setImageBitmap(imgBitmap);
+        }
 
         holder.header.setText(item.getTopic());
         holder.previewText.setText(item.getBriefText());

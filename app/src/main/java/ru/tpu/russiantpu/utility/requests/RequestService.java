@@ -66,23 +66,23 @@ public class RequestService {
 
     //GET запрос на url с произвольным количеством параметров:
     //параметры вводятся форматом - название параметра, значение параметра, ...
-    public void doRequest(String url, final GenericCallback<String> callback, String token, String language, String... params) {
+    public void doRequest(String url, final GenericCallback<String> callback, String token, String languageId, String... params) {
         String builtUrl = buildUrlWithParams(url, params);
         Request request = new Request.Builder()
                 .url(builtUrl)
                 .addHeader("Authorization", "Bearer " + token) //JWT
-                .addHeader("Accept-Language", language) //язык
+                .addHeader("Accept-Language", languageId) //язык
                 .build();
 
         enqueue(request, callback);
     }
 
     //GET запрос на url без токена
-    public void doRequest(String url, String language, final GenericCallback<String> callback, String... params) {
+    public void doRequest(String url, String languageId, final GenericCallback<String> callback, String... params) {
         String builtUrl = buildUrlWithParams(url, params);
         Request request = new Request.Builder()
                 .url(builtUrl)
-                .addHeader("Accept-Language", language) //язык
+                .addHeader("Accept-Language", languageId) //язык
                 .build();
 
         enqueue(request, callback);
@@ -97,11 +97,11 @@ public class RequestService {
     }
 
     //post запрос - в параметрах получаем строку формата json, которая отправляется в теле запроса
-    public void doPostRequest(String url, final GenericCallback<String> callback, String language, String json) {
+    public void doPostRequest(String url, final GenericCallback<String> callback, String languageId, String json) {
         RequestBody body = RequestBody.create(json, JSON);
         Request request = new Request.Builder()
                 .url(API_URL + url)
-                .addHeader("Accept-Language", language) //язык
+                .addHeader("Accept-Language", languageId) //язык
                 .post(body)
                 .build();
 
@@ -109,12 +109,12 @@ public class RequestService {
     }
 
     //post запрос с параметрами
-    public void doPostRequest(String url, final GenericCallback<String> callback, String language, String... params) {
+    public void doPostRequest(String url, final GenericCallback<String> callback, String languageId, String... params) {
         RequestBody body = RequestBody.create("", null); //пустое тело
         String builtUrl = buildUrlWithParams(url, params);
         Request request = new Request.Builder()
                 .url(builtUrl)
-                .addHeader("Accept-Language", language) //язык
+                .addHeader("Accept-Language", languageId) //язык
                 .post(body)
                 .build();
 
@@ -122,11 +122,11 @@ public class RequestService {
     }
 
     //put запрос - в параметрах получаем строку формата json, которая отправляется в теле запроса
-    public void doPutRequest(String url, final GenericCallback<String> callback, String token, String language, String json) {
+    public void doPutRequest(String url, final GenericCallback<String> callback, String token, String languageId, String json) {
         RequestBody body = RequestBody.create(json, JSON);
         Request request = new Request.Builder()
                 .url(API_URL + url)
-                .addHeader("Accept-Language", language) //язык
+                .addHeader("Accept-Language", languageId) //язык
                 .addHeader("Authorization", "Bearer " + token)
                 .put(body)
                 .build();
@@ -134,11 +134,11 @@ public class RequestService {
         enqueue(request, callback);
     }
 
-    public String doPutRequestSync(String url, String token, String language) {
+    public String doPutRequestSync(String url, String token, String languageId) {
         RequestBody body = RequestBody.create("", null);
         Request request = new Request.Builder()
                 .url(API_URL + url)
-                .addHeader("Accept-Language", language) //язык
+                .addHeader("Accept-Language", languageId) //язык
                 .addHeader("Authorization", "Bearer " + token)
                 .put(body)
                 .build();

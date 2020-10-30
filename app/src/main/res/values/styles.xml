@@ -33,9 +33,15 @@
     </style>
 
     <style name="item_layout">
-        <item name="android:layout_margin">4dp</item>
+        <item name="android:layout_margin">12dp</item>
         <item name="android:padding">4dp</item>
         <item name="android:background">#FFFFFF</item>
+    </style>
+    
+    <style name="item_layout_card">
+        <item name="cardElevation">4dp</item>
+        <item name="cardUseCompatPadding">true</item>
+        <item name="cardCornerRadius">8dp</item>
     </style>
 
     <style name="item_doc_layout">

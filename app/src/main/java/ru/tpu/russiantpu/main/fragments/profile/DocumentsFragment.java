@@ -60,7 +60,7 @@ public class DocumentsFragment extends Fragment {
 
         //получение информации о юзере из sharedPreferences
         final String email = sharedPreferencesService.getEmail();
-        final String language = sharedPreferencesService.getLanguage();
+        final String language = sharedPreferencesService.getLanguageId();
         token = sharedPreferencesService.getToken();
 
         adapter.setOnItemClickListener(new ClickListener() {

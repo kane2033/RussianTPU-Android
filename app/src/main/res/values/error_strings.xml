@@ -1,30 +1,32 @@
 <resources>
     <!--Ошбики при валидации-->
-    <string name="email_error">Адрес почты некорректен</string>
-    <string name="password_error">"Пароль должен содержать минимум 8 символов,  одну прописную букву, одну цифру. Разрешенные символы:  ! &amp; ^ % $ # @ _ | \\ / "</string>
-    <string name="lastname_error">Превышен лимит символов</string>
-    <string name="firstname_error">Превышен лимит символов</string>
-    <string name="middlename_error">Превышен лимит символов</string>
-    <string name="language_error">Язык не выбран</string>
-    <string name="phone_error">Превышен лимит символов</string>
-    <string name="empty_field_error">Поле должно быть заполнено</string>
-    <string name="checkbox_error">Вы должны согласиться на обработку персональных данных</string>
+    <string name="email_error">Email is invalid</string>
+    <string name="password_error">"Password must be a minimum of 8 characters in length, contain at least one uppercase letter and one digit. Allowed characters:  ! &amp; ^ % $ # @ _ | \\ / "</string>
+    <string name="lastname_error">Character limit exceeded</string>
+    <string name="firstname_error">Character limit exceeded</string>
+    <string name="middlename_error">Character limit exceeded</string>
+    <string name="language_error">Language not selected</string>
+    <string name="phone_error">Character limit exceeded</string>
+    <string name="empty_field_error">Field cannot be empty</string>
+    <string name="checkbox_error">You must agree for user data usage</string>
 
     <!--Общие заголовки ошибок-->
-    <string name="auth_error">Ошибка при попытке авторизоваться</string>
-    <string name="login_error">Ошибка при попытке войти</string>
-    <string name="register_error">Ошибка при попытке зарегистрироваться</string>
-    <string name="drawer_error">Ошибка при получении предметов выдвижной шторки</string>
-    <string name="article_error">Ошибка при получении статьи</string>
-    <string name="feed_error">Ошибка при получении списка статей</string>
-    <string name="get_groups_error">Ошибка при получении групп</string>
-    <string name="profile_get_error">Ошибка при получении информации о пользователе</string>
-    <string name="profile_save_error">Ошибка при сохранении информации о пользователе</string>
-    <string name="docs_get_error">Ошибка при получении списка документов</string>
-    <string name="refresh_token_error">Ошибка при обновлении токена</string>
-    <string name="token_expired_error">Ваш сеанс истек, необходимо повторно авторизоваться</string>
-    <string name="reset_password_error">Ошибка при попытке восстановить пароль</string>
+    <string name="auth_error">Error while trying to authorize</string>
+    <string name="login_error">Error while trying to login</string>
+    <string name="register_error">Error while trying to register</string>
+    <string name="drawer_error">Error while trying to get drawer items list</string>
+    <string name="article_error">Error while trying to get article</string>
+    <string name="feed_error">Error while trying to get list of articles</string>
+    <string name="get_groups_error">Error while trying to get list of groups</string>
+    <string name="get_languages_error">Error while trying to get list of languages</string>
+    <string name="profile_get_error">Error while trying to get user info</string>
+    <string name="profile_save_error">Error while trying to save user info</string>
+    <string name="docs_get_error">Error while trying to get list of documents</string>
+    <string name="docs_download_error">Error while trying to download a document</string>
+    <string name="refresh_token_error">Error while trying to update token</string>
+    <string name="token_expired_error">Your session is expired, please login again</string>
+    <string name="reset_password_error">Error while trying to reset password</string>
 
 
-    <string name="token_invalid_error">Вам необходимо авторизоваться</string>
+    <string name="token_invalid_error">You need to be logged in</string>
 </resources>

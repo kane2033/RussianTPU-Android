@@ -85,4 +85,6 @@
     <string name="personal_info_name">个人资料</string>
     <string name="documents_name">文件资料</string>
     <string name="docs_get_error">尝试获取文档列表时出错</string>
+    <string name="get_languages_error">尝试获取语言列表时出错</string>
+    <string name="docs_download_error">尝试下载文件时发生错误</string>
 </resources>

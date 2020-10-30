@@ -18,9 +18,10 @@
             android:focusableInTouchMode="true">
 
             <ImageView
-                android:src="@drawable/ic_tpu"
-                android:layout_width="wrap_content"
-                android:layout_height="150dp"
+                android:src="@drawable/ic_tpu_logo_aya_caption"
+                android:layout_width="match_parent"
+                android:scaleType="fitCenter"
+                android:layout_height="126dp"
                 android:layout_marginBottom="24dp"
                 android:layout_gravity="center_horizontal" />
 

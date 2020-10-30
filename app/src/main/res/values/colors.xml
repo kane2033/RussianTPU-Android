@@ -3,4 +3,5 @@
     <color name="colorPrimary">#80bf44</color>
     <color name="colorPrimaryDark">#4e8e0d</color>
     <color name="colorAccent">#b3f274</color>
+    <color name="recycler_background">#ECEFF1</color>
 </resources>

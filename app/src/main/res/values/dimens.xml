@@ -8,4 +8,6 @@
     <dimen name="text_input_margin">8dp</dimen>
     <dimen name="register_layout_margin">24dp</dimen>
     <dimen name="doc_text_margin">4dp</dimen>
+    <dimen name="recycler_margin">8dp</dimen>
+    <dimen name="item_padding">4dp</dimen>
 </resources>

@@ -13,7 +13,8 @@ public class SharedPreferencesService {
     private final String refreshTokenKey = "refreshToken";
     private final String emailTokenKey = "email";
     private final String firstNameKey = "firstName";
-    private final String languageKey = "language";
+    private final String languageIdKey = "languageId";
+    private final String languageNameKey = "languageName";
     private final String groupKey = "group";
 
     private final SharedPreferences sharedPreferences;
@@ -38,12 +39,14 @@ public class SharedPreferencesService {
 
     public String getFirstName() {return sharedPreferences.getString(firstNameKey, "");}
 
-    public String getLanguage() {return sharedPreferences.getString(languageKey, "");}
+    public String getLanguageId() {return sharedPreferences.getString(languageIdKey, "");}
+
+    public String getLanguageName() {return sharedPreferences.getString(languageNameKey, "");}
 
     public String getGroupName() {return sharedPreferences.getString(groupKey, "");}
 
     public UserDTO getUser() {
-        return new UserDTO(getEmail(), getFirstName(), getLanguage());
+        return new UserDTO(getEmail(), getFirstName(), getLanguageId(), getLanguageName());
     }
 
     public void setCredentials(String token, String refreshToken, UserDTO user) {
@@ -54,7 +57,8 @@ public class SharedPreferencesService {
         //сохраняем пользователя
         editor.putString(emailTokenKey, user.getEmail());
         editor.putString(firstNameKey, user.getFirstName());
-        editor.putString(languageKey, user.getLanguage());
+        editor.putString(languageIdKey, user.getLanguageId());
+        editor.putString(languageNameKey, user.getLanguageName());
         editor.putString(groupKey, user.getGroupName());
         editor.commit();
     }
@@ -88,7 +92,8 @@ public class SharedPreferencesService {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(emailTokenKey, user.getEmail());
         editor.putString(firstNameKey, user.getFirstName());
-        editor.putString(languageKey, user.getLanguage());
+        editor.putString(languageIdKey, user.getLanguageId());
+        editor.putString(languageNameKey, user.getLanguageName());
         editor.putString(groupKey, user.getGroupName());
         editor.commit();
     }
@@ -105,9 +110,15 @@ public class SharedPreferencesService {
         editor.commit();
     }
 
-    public void setLanguage(String language) {
+    public void setLanguageId(String languageId) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(languageKey, language);
+        editor.putString(languageIdKey, languageId);
+        editor.commit();
+    }
+
+    public void setLanguageName(String languageName) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(languageNameKey, languageName);
         editor.commit();
     }
 

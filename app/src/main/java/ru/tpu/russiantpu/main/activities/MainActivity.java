@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final String token = sharedPreferencesService.getToken();
         UserDTO user = sharedPreferencesService.getUser();
         //установка языка приложения (интерфейса)
-        LocaleService.setLocale(this, user.getLanguage());
+        LocaleService.setLocale(this, user.getLanguageName());
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             };
             //делаем запрос на получение пунктов меню на языке пользователя
-            requestService.doRequest("menu", callback, token, user.getLanguage(), "language", user.getLanguage(), "email", user.getEmail());
+            requestService.doRequest("menu", callback, token, user.getLanguageId(), "language", user.getLanguageId(), "email", user.getEmail());
         }
 
     }

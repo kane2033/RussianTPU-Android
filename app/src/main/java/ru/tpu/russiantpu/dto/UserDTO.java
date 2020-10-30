@@ -10,7 +10,8 @@ public class UserDTO implements Parcelable {
     private String lastName;
     private String middleName;
     private String gender;
-    private String language;
+    private String languageId;
+    private String languageName;
     private String phoneNumber;
     private String groupName;
     private String provider;
@@ -22,7 +23,7 @@ public class UserDTO implements Parcelable {
     //конструктор для обновления информации о пользователе в активити профиля
     public UserDTO(String email, String password, String newPassword, String firstName,
                    String lastName, String middleName, String groupName, String gender,
-                   String language, String phoneNumber) {
+                   String languageId, String languageName, String phoneNumber) {
         this.email = email;
         this.password = password;
         this.newPassword = newPassword;
@@ -31,14 +32,16 @@ public class UserDTO implements Parcelable {
         this.middleName = middleName;
         this.groupName = groupName;
         this.gender = gender;
-        this.language = language;
+        this.languageId = languageId;
+        this.languageName = languageName;
         this.phoneNumber = phoneNumber;
     }
 
-    public UserDTO(String email, String firstName, String language) {
+    public UserDTO(String email, String firstName, String languageId, String languageName) {
         this.email = email;
         this.firstName = firstName;
-        this.language = language;
+        this.languageId = languageId;
+        this.languageName = languageName;
     }
 
     //метод используется в тех случаях, когда нельзя создавать новый экземпляр объекта,
@@ -53,7 +56,7 @@ public class UserDTO implements Parcelable {
         this.middleName = middleName;
         this.groupName = groupName;
         this.gender = gender;
-        this.language = language;
+        this.languageId = language;
         this.phoneNumber = phoneNumber;
     }
 
@@ -113,12 +116,20 @@ public class UserDTO implements Parcelable {
         this.gender = gender;
     }
 
-    public String getLanguage() {
-        return language;
+    public String getLanguageId() {
+        return languageId;
     }
 
-    public void setLanguage(String language) {
-        this.language = language;
+    public void setLanguageId(String languageId) {
+        this.languageId = languageId;
+    }
+
+    public String getLanguageName() {
+        return languageName;
+    }
+
+    public void setLanguageName(String languageName) {
+        this.languageName = languageName;
     }
 
     public String getPhoneNumber() {

@@ -51,7 +51,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, notificationsId)
-                .setSmallIcon(R.drawable.ic_tpu_logo)
+                .setSmallIcon(R.drawable.ic_tpu_logo_aya_notification)
                 .setLargeIcon(BitmapFactory.decodeResource(this.getResources(), R.mipmap.ic_launcher_tpu))
                 .setContentTitle(messageTitle)
                 .setContentText(messageBody)

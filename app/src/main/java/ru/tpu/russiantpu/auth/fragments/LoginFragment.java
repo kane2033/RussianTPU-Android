@@ -150,8 +150,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
                 //получение токенов с сервиса
                 TokensDTO tokens = gsonService.fromJsonToObject(jsonBody, TokensDTO.class);
 
-                FirebaseNotificationService.subscribeToNotifications(language); //подписываемся на группу уведомлений по языку
-                FirebaseNotificationService.subscribeUserToNotifications(requestService, tokens.getUser().getEmail(), language); //подисываем конкретного юзера на уведомления
+                FirebaseNotificationService.subscribeToNotifications(tokens.getUser().getLanguageName()); //подписываемся на группу уведомлений по языку
+                FirebaseNotificationService.subscribeUserToNotifications(requestService, tokens.getUser().getEmail(), tokens.getUser().getLanguageId()); //подисываем конкретного юзера на уведомления
                 //выключаем прогресс бар, включаем кнопки
                 activity.runOnUiThread(new Runnable() {
                     @Override

@@ -6,6 +6,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import ru.tpu.russiantpu.dto.LanguageDTO;
+
 
 //класс для получения строк из формы
 public class FormService {
@@ -13,6 +15,11 @@ public class FormService {
     //метод получения группы, если
     public String getGroup(TextView groupInput, List<String> groupNames) {
         return groupInput.getText().toString().equals(groupNames.get(0)) ? null : groupInput.getText().toString();
+    }
+
+    //если из полученного дто группа не указана (null), записываем строку "не указывать"/"none" вместо null
+    public String setGroup(String groupName, String noneStr) {
+       return groupName == null ? noneStr : groupName;
     }
 
     //метод получения выбранного пола из спиннера
@@ -46,6 +53,20 @@ public class FormService {
                 break;
             default:
                 break;
+        }
+    }
+
+    //метод возвращает id выбранного языка
+    public LanguageDTO getSelectedLanguage(Spinner languageInput) {
+        return (LanguageDTO) languageInput.getSelectedItem();
+    }
+
+    //метод устанавливает выбор в спиннере в соответствии с id языка, полученного с ервиса
+    public void setSelectedLanguage(Spinner languageInput, String selectedLanguageId, List<LanguageDTO> languages) {
+        for (int i = 0; i < languages.size(); i++) {
+            if (languages.get(i).getId().equals(selectedLanguageId)) {
+                languageInput.setSelection(i);
+            }
         }
     }
 

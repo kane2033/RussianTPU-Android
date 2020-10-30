@@ -117,7 +117,7 @@ public class ArticleFragment extends Fragment {
 
             //получение JWT токена
             String token = sharedPreferencesService.getToken();
-            String language = sharedPreferencesService.getLanguage();
+            String language = sharedPreferencesService.getLanguageId();
             //запрос за получение списка статей по айди пункта меню
             requestService.doRequest("article/" + selectedArticleId, callback, token, language, "fromMenu", "true");
         }

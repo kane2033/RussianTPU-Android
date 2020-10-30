@@ -85,4 +85,6 @@
     <string name="personal_info_name">Profile</string>
     <string name="documents_name">Documents</string>
     <string name="docs_get_error">Error while trying to get list of documents</string>
+    <string name="get_languages_error">Error while trying to get list of languages</string>
+    <string name="docs_download_error">Error while trying to download a document</string>
 </resources>

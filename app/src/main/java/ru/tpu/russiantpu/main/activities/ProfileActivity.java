@@ -32,7 +32,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         //установка языка интерфейса приложения
         final SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(this);
-        LocaleService.setLocale(this, sharedPreferencesService.getLanguage());
+        LocaleService.setLocale(this, sharedPreferencesService.getLanguageName());
 
         setContentView(R.layout.activity_profile);
 
@@ -55,9 +55,9 @@ public class ProfileActivity extends AppCompatActivity {
                 DialogCallback dialogCallback = new DialogCallback() {
                     @Override
                     public void onPositiveButton() { //выходим из учетной записи
-                        FirebaseNotificationService.unsubscribeFromNotifications(sharedPreferencesService.getLanguage()); //отписываемся от рассылки уведомлений по языку
+                        FirebaseNotificationService.unsubscribeFromNotifications(sharedPreferencesService.getLanguageName()); //отписываемся от рассылки уведомлений по языку
                         final RequestService requestService = new RequestService(sharedPreferencesService, new StartActivityService(ProfileActivity.this));
-                        FirebaseNotificationService.unsubscribeUserFromNotifications(requestService, sharedPreferencesService.getEmail(), sharedPreferencesService.getLanguage()); //отписываеся от уведомлений для конкретного юзера
+                        FirebaseNotificationService.unsubscribeUserFromNotifications(requestService, sharedPreferencesService.getEmail(), sharedPreferencesService.getLanguageId()); //отписываеся от уведомлений для конкретного юзера
                         sharedPreferencesService.clearCredentials(); //удаляем из памяти инфу о юзере
                         //переходим на авторизацию
                         Intent intent = new Intent(ProfileActivity.this, AuthActivity.class);
