@@ -212,7 +212,7 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
         languageInput.setAdapter(languagesInputAdapter);
 
         //получение списка языков из бд
-        requestService.doRequest("dict/language", language, new GenericCallback<String>() {
+        requestService.doRequest("language", language, new GenericCallback<String>() {
             @Override
             public void onResponse(String json) {
                 //полученные языки заносим в список (спиннер)

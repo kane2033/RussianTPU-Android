@@ -87,4 +87,10 @@
     <string name="docs_get_error">尝试获取文档列表时出错</string>
     <string name="get_languages_error">尝试获取语言列表时出错</string>
     <string name="docs_download_error">尝试下载文件时发生错误</string>
+    <string name="portal_personal_card">个人卡</string>
+    <string name="portal_grades">成绩</string>
+    <string name="portal_scholarship">奖学金</string>
+    <string name="portal_payment">付款</string>
+    <string name="portal_my_payments">我的付款</string>
+    <string name="portal_name">TPU门户资料</string>
 </resources>

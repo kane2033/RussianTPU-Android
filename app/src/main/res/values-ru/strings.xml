@@ -97,4 +97,10 @@
     <string name="docs_get_error">Ошибка при получении списка документов</string>
     <string name="get_languages_error">Ошибка при получении списка языков</string>
     <string name="docs_download_error">Ошибка при попытке загрузить документ</string>
+    <string name="portal_my_payments">Мои платежи</string>
+    <string name="portal_payment">Оплата</string>
+    <string name="portal_scholarship">Стипендия</string>
+    <string name="portal_grades">Оценки</string>
+    <string name="portal_personal_card">Личная карточка</string>
+    <string name="portal_name">Профиль портала ТПУ</string>
 </resources>

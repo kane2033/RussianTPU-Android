@@ -87,4 +87,10 @@
     <string name="docs_get_error">Error while trying to get list of documents</string>
     <string name="get_languages_error">Error while trying to get list of languages</string>
     <string name="docs_download_error">Error while trying to download a document</string>
+    <string name="portal_personal_card">Personal card</string>
+    <string name="portal_grades">Grades</string>
+    <string name="portal_scholarship">Scholarship</string>
+    <string name="portal_payment">Payment</string>
+    <string name="portal_my_payments">My payments</string>
+    <string name="portal_name">TPU portal profile</string>
 </resources>

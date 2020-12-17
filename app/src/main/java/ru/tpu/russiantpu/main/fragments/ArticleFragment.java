@@ -119,7 +119,7 @@ public class ArticleFragment extends Fragment {
             String token = sharedPreferencesService.getToken();
             String language = sharedPreferencesService.getLanguageId();
             //запрос за получение списка статей по айди пункта меню
-            requestService.doRequest("article/" + selectedArticleId, callback, token, language, "fromMenu", "true");
+            requestService.doRequest("article/" + selectedArticleId, callback, token, language);
         }
     }
 

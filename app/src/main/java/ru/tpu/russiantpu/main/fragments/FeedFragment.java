@@ -144,7 +144,7 @@ public class FeedFragment extends Fragment {
                 String language = sharedPreferencesService.getLanguageId();
 
                 //запрос за получение списка статей по айди пункта меню
-                requestService.doRequest("article/list/" + selectedItemId, callback, token, language, "fromMenu", "true");
+                requestService.doRequest("article/list/" + selectedItemId, callback, token, language);
             }
         }
 
