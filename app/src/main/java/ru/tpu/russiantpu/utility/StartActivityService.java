@@ -9,7 +9,7 @@ import ru.tpu.russiantpu.auth.activities.AuthActivity;
 
 //класс осуществляет переходы между активити
 public class StartActivityService {
-    private Context context;
+    private final Context context;
 
     public StartActivityService(Context context) {
         this.context = context;

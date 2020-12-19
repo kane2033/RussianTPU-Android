@@ -10,7 +10,7 @@ import androidx.fragment.app.FragmentManager;
 import java.util.Locale;
 
 import ru.tpu.russiantpu.R;
-import ru.tpu.russiantpu.auth.fragments.LoginFragment;
+import ru.tpu.russiantpu.auth.fragments.StartFragment;
 import ru.tpu.russiantpu.main.activities.MainActivity;
 import ru.tpu.russiantpu.utility.LocaleService;
 import ru.tpu.russiantpu.utility.SharedPreferencesService;
@@ -21,7 +21,6 @@ import ru.tpu.russiantpu.utility.requests.RequestService;
 
 public class AuthActivity extends FragmentActivity {
 
-    private FragmentManager fragmentManager;
     private final String fragmentTag = String.valueOf(R.string.prev_auth_frag_tag);
 
     @Override
@@ -64,12 +63,12 @@ public class AuthActivity extends FragmentActivity {
             //иначе запускаем фрагмент логина
             @Override
             public void onError(String message) {
-                goToLogin();
+                goToStartFragment();
             }
 
             @Override
             public void onFailure(String message) {
-                goToLogin();
+                goToStartFragment();
             }
         };
 
@@ -77,10 +76,10 @@ public class AuthActivity extends FragmentActivity {
     }
 
     //метод запуска фрагмета логина
-    private void goToLogin() {
-        fragmentManager = getSupportFragmentManager();
+    private void goToStartFragment() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fragment_container,
-                new LoginFragment()).commit();
+                new StartFragment()).commit();
     }
 
     @Override

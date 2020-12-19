@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:fitsSystemWindows="true">
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:fillViewport="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="56dp"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical"
             android:paddingLeft="24dp"
-            android:paddingRight="24dp"
-            android:focusableInTouchMode="true">
+            android:paddingTop="56dp"
+            android:paddingRight="24dp">
 
             <ImageView
-                android:src="@drawable/ic_tpu_logo_aya_caption"
                 android:layout_width="match_parent"
-                android:scaleType="fitCenter"
                 android:layout_height="126dp"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="24dp"
-                android:layout_gravity="center_horizontal" />
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_tpu_logo_aya_caption" />
 
             <!-- Email Label -->
             <com.google.android.material.textfield.TextInputLayout
@@ -32,6 +32,7 @@
                 android:layout_marginTop="@dimen/text_input_margin"
                 android:layout_marginBottom="@dimen/text_input_margin"
                 android:hint="@string/email">
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/input_email"
                     android:layout_width="match_parent"
@@ -45,7 +46,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/text_input_margin"
                 android:layout_marginBottom="@dimen/text_input_margin"
-                android:hint="@string/password" >
+                android:hint="@string/password">
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/input_password"
                     android:layout_width="match_parent"
@@ -55,25 +57,25 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
+
                 <TextView
                     android:id="@+id/reset_password"
-                    android:clickable="true"
-                    android:focusable="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:text="@string/forgot_password"
                     android:textColor="@color/colorPrimaryDark"
-                    android:textStyle="bold"
-                    android:text="@string/forgot_password" />
+                    android:textStyle="bold" />
 
                 <com.google.android.material.checkbox.MaterialCheckBox
                     android:id="@+id/remember_me_checkbox"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:textSize="@dimen/text_size"
+                    android:layout_height="wrap_content"
                     android:text="@string/remember_me"
-                    />
+                    android:textSize="@dimen/text_size" />
             </RelativeLayout>
 
             <com.google.android.material.button.MaterialButton
@@ -83,15 +85,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 android:padding="12dp"
-                android:text="@string/login"/>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/goto_register"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:text="@string/goto_register"
-                android:gravity="center" />
+                android:text="@string/login" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -109,50 +103,50 @@
 
                 <ImageView
                     android:id="@+id/button_login_google"
-                    android:clickable="true"
-                    android:focusable="true"
                     android:layout_width="42dp"
                     android:layout_height="42dp"
                     android:layout_weight="1"
                     android:adjustViewBounds="true"
+                    android:clickable="true"
                     android:cropToPadding="true"
+                    android:focusable="true"
                     android:src="@drawable/ic_google_icon" />
 
                 <ImageView
                     android:id="@+id/button_login_facebook"
-                    android:clickable="true"
-                    android:focusable="true"
                     android:layout_width="42dp"
                     android:layout_height="42dp"
                     android:layout_weight="1"
                     android:adjustViewBounds="true"
+                    android:clickable="true"
                     android:cropToPadding="true"
+                    android:focusable="true"
                     android:src="@drawable/ic_facebook" />
 
                 <ImageView
                     android:id="@+id/button_login_vk"
-                    android:clickable="true"
-                    android:focusable="true"
                     android:layout_width="42dp"
                     android:layout_height="42dp"
                     android:layout_weight="1"
                     android:adjustViewBounds="true"
+                    android:clickable="true"
                     android:cropToPadding="true"
+                    android:focusable="true"
                     android:src="@drawable/ic_vk" />
             </LinearLayout>
         </LinearLayout>
 
         <androidx.core.widget.ContentLoadingProgressBar
             android:id="@+id/progress_bar"
+            style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="?android:attr/progressBarStyleLarge"
-            android:indeterminate="true"
-            android:indeterminateTintMode="src_atop"
-            android:indeterminateTint="@color/colorPrimary"
             android:layout_centerInParent="true"
-            android:visibility="gone"/>
+            android:indeterminate="true"
+            android:indeterminateTint="@color/colorPrimary"
+            android:indeterminateTintMode="src_atop"
+            android:visibility="gone" />
     </RelativeLayout>
-
-
 </ScrollView>
+
+

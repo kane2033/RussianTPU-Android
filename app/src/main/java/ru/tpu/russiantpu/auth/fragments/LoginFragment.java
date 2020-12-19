@@ -58,7 +58,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
     private TextView resetPassword;
     private MaterialCheckBox rememberMeCheckBox;
     private Button loginButton;
-    private Button gotoRegisterButton;
     private ImageView loginGoogle;
     private ImageView loginFacebook;
     private ImageView loginVK;
@@ -87,14 +86,12 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
         rememberMeCheckBox = layoutInflater.findViewById(R.id.remember_me_checkbox);
         resetPassword = layoutInflater.findViewById(R.id.reset_password);
         loginButton = layoutInflater.findViewById(R.id.button_login);
-        gotoRegisterButton = layoutInflater.findViewById(R.id.goto_register);
         loginGoogle = layoutInflater.findViewById(R.id.button_login_google);
         loginFacebook = layoutInflater.findViewById(R.id.button_login_facebook);
         loginVK = layoutInflater.findViewById(R.id.button_login_vk);
         progressBar = layoutInflater.findViewById(R.id.progress_bar);
 
         loginButton.setOnClickListener(this);
-        gotoRegisterButton.setOnClickListener(this);
         loginGoogle.setOnClickListener(this);
         loginFacebook.setOnClickListener(this);
         loginVK.setOnClickListener(this);
@@ -264,7 +261,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
     //для избежания повторных запросов
     private void enableButtons(boolean enable) {
         loginButton.setEnabled(enable);
-        gotoRegisterButton.setEnabled(enable);
         loginGoogle.setEnabled(enable);
         loginFacebook.setEnabled(enable);
         loginVK.setEnabled(enable);
@@ -277,10 +273,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
                 //валидируем поля email и пароль,
                 //результат в onValidationSucceeded, onValidationFailed
                 validator.validate();
-                break;
-            case R.id.goto_register:
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new RegisterFragment()).addToBackStack(fragmentTag).commit();
                 break;
             case R.id.button_login_google:
                 //инициализируем логин через google,
