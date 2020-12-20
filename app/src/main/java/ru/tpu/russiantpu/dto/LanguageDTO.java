@@ -2,13 +2,13 @@ package ru.tpu.russiantpu.dto;
 
 public class LanguageDTO {
     private final String id;
-    private final String fullName;
+    private final String name;
     private final String shortName;
     private final String image;
 
-    public LanguageDTO(String id, String fullName, String shortName, String image) {
+    public LanguageDTO(String id, String name, String shortName, String image) {
         this.id = id;
-        this.fullName = fullName;
+        this.name = name;
         this.shortName = shortName;
         this.image = image;
     }
@@ -17,8 +17,8 @@ public class LanguageDTO {
         return id;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getName() {
+        return name;
     }
 
     public String getShortName() {

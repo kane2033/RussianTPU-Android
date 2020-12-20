@@ -163,7 +163,7 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
                 ArrayList<GroupsDTO> groupsDTO = gsonService.fromJsonToArrayList(json, GroupsDTO.class);
                 groupNames.add(getResources().getString(R.string.group_none)); //первый элемент всегда "не указывать"
                 for (GroupsDTO group : groupsDTO) {
-                    groupNames.add(group.getGroupName());
+                    groupNames.add(group.getName());
                 }
             }
 

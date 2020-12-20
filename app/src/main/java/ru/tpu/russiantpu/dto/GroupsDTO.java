@@ -2,30 +2,30 @@ package ru.tpu.russiantpu.dto;
 
 //DTO групп ТПУ
 public class GroupsDTO {
-    private String idGroup;
-    private String groupName;
+    private String id;
+    private String name;
     private String internalGroupId;
 
-    public GroupsDTO(String idGroup, String groupName, String internalGroupId) {
-        this.idGroup = idGroup;
-        this.groupName = groupName;
+    public GroupsDTO(String id, String name, String internalGroupId) {
+        this.id = id;
+        this.name = name;
         this.internalGroupId = internalGroupId;
     }
 
-    public String getIdGroup() {
-        return idGroup;
+    public String getId() {
+        return id;
     }
 
-    public void setIdGroup(String idGroup) {
-        this.idGroup = idGroup;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getGroupName() {
-        return groupName;
+    public String getName() {
+        return name;
     }
 
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getInternalGroupId() {

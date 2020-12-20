@@ -41,7 +41,7 @@ public class LanguagesAdapter extends ArrayAdapter<LanguageDTO> {
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         TextView label = (TextView) super.getView(position, convertView, parent);
         //label.setPadding(label.getPaddingLeft(), 0, label.getPaddingRight(), 0);
-        label.setText(languages.get(position).getFullName()); //отображем полное название языка
+        label.setText(languages.get(position).getName()); //отображем полное название языка
         return label;
     }
 
@@ -52,7 +52,7 @@ public class LanguagesAdapter extends ArrayAdapter<LanguageDTO> {
                                 @NonNull ViewGroup parent) {
         TextView label = (TextView) super.getDropDownView(position, convertView, parent);
         //label.setPadding(label.getPaddingLeft(), 4, label.getPaddingRight(), 4);
-        label.setText(languages.get(position).getFullName());
+        label.setText(languages.get(position).getName());
         return label;
     }
 
