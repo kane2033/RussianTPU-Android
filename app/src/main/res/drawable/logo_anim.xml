@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/ic_tpu_logo_aya_caption">
+    <target
+        android:name="topGroup"
+        android:animation="@animator/top_bottom_anim" />
+    <target
+        android:name="bottomGroup"
+        android:animation="@animator/bottom_top_anim" />
+    <target
+        android:name="caption"
+        android:animation="@animator/bottom_top_anim" />
+</animated-vector>

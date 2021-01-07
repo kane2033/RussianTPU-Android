@@ -12,6 +12,12 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <!-- Кастомная AppTheme.Launcher. Устанавливает в качестве фона вашу drawable -->
+    <style name="AppTheme.Launcher">
+        <!--        <item name="android:windowBackground">#ffffff</item>-->
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+    </style>
+
     <!--Элементы item_feed и item_list-->
     <style name="item_header_text">
         <item name="android:textSize">28sp</item>

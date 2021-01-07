@@ -1,17 +1,18 @@
 package ru.tpu.russiantpu.auth.fragments;
 
-import android.content.res.Configuration;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.VideoView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.yqritc.scalablevideoview.ScalableVideoView;
+
+import java.io.IOException;
 
 import ru.tpu.russiantpu.R;
 
@@ -23,7 +24,7 @@ public class StartFragment extends Fragment implements View.OnClickListener {
     private Button loginButton;
     private Button gotoRegisterButton;
 
-    private VideoView videoView;
+    private ScalableVideoView videoView;
     //private MediaPlayer mediaPlayer = new MediaPlayer();
     //private AssetFileDescriptor fileDescriptor;
 
@@ -36,23 +37,22 @@ public class StartFragment extends Fragment implements View.OnClickListener {
         loginButton = layoutInflater.findViewById(R.id.goto_login);
         gotoRegisterButton = layoutInflater.findViewById(R.id.goto_register);
 
-        // Видео неккоректно проигрывается в портретном режиме, поэтому таком режиме видео не запускаем
-        if (getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
-            // Включаем видео на заднем плане из ресурсов
-            videoView = layoutInflater.findViewById(R.id.video_view);
-            //videoView.setSurfaceTextureListener(this);
-            //fileDescriptor = requireContext().getResources().openRawResourceFd(R.raw.tpu480);
-            //mediaPlayer.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
+        // Включаем видео на заднем плане из ресурсов
+        videoView = layoutInflater.findViewById(R.id.video_view);
 
-            videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        //Uri uri = Uri.parse("android.resource://" + requireActivity().getPackageName() + "/" + R.raw.tpu480);
+
+        try {
+            videoView.setRawData(R.raw.tpu480);
+            videoView.prepare(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
-                    mp.setLooping(true);
+                    videoView.setLooping(true);
+                    videoView.start();
                 }
             });
-            Uri uri = Uri.parse("android.resource://" + requireActivity().getPackageName() + "/" + R.raw.tpu480vertical);
-            videoView.setVideoURI(uri);
-            videoView.start();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         loginButton.setOnClickListener(this);
@@ -82,7 +82,7 @@ public class StartFragment extends Fragment implements View.OnClickListener {
         super.onResume();
         // Заново запускаем видео
         if (videoView != null) {
-            videoView.start();
+            //videoView.start();
         }
     }
 
