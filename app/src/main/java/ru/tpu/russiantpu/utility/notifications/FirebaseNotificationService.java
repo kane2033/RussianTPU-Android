@@ -79,33 +79,59 @@ public class FirebaseNotificationService {
         requestService.doPostRequest("auth/fcmToken/disable", callback, language, "email", email);
     }
 
+    public static void subscribeToAllNotifications() {
+        FirebaseMessaging.getInstance().subscribeToTopic("news_all")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("FIREBASE_SUB", "successfully subscribed to `news_all`");
+                        } else {
+                            Log.d("FIREBASE_SUB", "subscription failed (`news_all`)");
+                        }
+                    }
+                });
+    }
+
+    public static void unsubscribeToAllNotifications() {
+        FirebaseMessaging.getInstance().subscribeToTopic("news_all")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("FIREBASE_SUB", "successfully unsubscribed from `news_all`");
+                        } else {
+                            Log.d("FIREBASE_SUB", "failed while trying to unsubscribe from news_all");
+                        }
+                    }
+                });
+    }
+
     //метод подписки приложения пользователя по языку (топику)
-    public static void subscribeToNotifications(String language) {
+    public static void subscribeToNotifications(final String language) {
         FirebaseMessaging.getInstance().subscribeToTopic("news_" + language)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Log.d("FIREBASE_SUB", "successfully subscribed");
-                        }
-                        else {
-                            Log.d("FIREBASE_SUB", "subscription failed");
+                            Log.d("FIREBASE_SUB", "successfully subscribed to news_" + language);
+                        } else {
+                            Log.d("FIREBASE_SUB", "subscription failed (news_" + language + ")");
                         }
                     }
                 });
     }
 
     //метод отписки приложения пользователя по языку (топику)
-    public static void unsubscribeFromNotifications(String language) {
+    public static void unsubscribeFromNotifications(final String language) {
         FirebaseMessaging.getInstance().unsubscribeFromTopic("news_" + language)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Log.d("FIREBASE_UNSUB", "successfully unsubscribed");
-                        }
-                        else {
-                            Log.d("FIREBASE_UNSUB", "failed while trying to unsubscribe");
+                            Log.d("FIREBASE_UNSUB", "successfully unsubscribed from news_ + " + language);
+                        } else {
+                            Log.d("FIREBASE_UNSUB", "failed while trying to unsubscribe from news_" + language);
                         }
                     }
                 });

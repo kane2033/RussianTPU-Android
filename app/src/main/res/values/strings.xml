@@ -77,6 +77,10 @@
     <string name="portal_payment">Payment</string>
     <string name="portal_my_payments">My payments</string>
 
+    <!--Календарь событий-->
+    <string name="calendar_name">Events calendar</string>
+    <string name="calendar_today_date">This day, %1$s</string>
+
     <!--DialogFragments-->
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancel</string>

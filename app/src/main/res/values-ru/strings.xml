@@ -103,4 +103,7 @@
     <string name="portal_grades">Оценки</string>
     <string name="portal_personal_card">Личная карточка</string>
     <string name="portal_name">Профиль портала ТПУ</string>
+    <string name="calendar_name">Календарь событий</string>
+    <string name="calendar_get_error">Ошибка при попытке получить список событий</string>
+    <string name="calendar_today_date">В этот день, %1$s</string>
 </resources>

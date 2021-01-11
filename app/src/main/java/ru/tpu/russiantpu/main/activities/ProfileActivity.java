@@ -55,6 +55,7 @@ public class ProfileActivity extends AppCompatActivity {
                 DialogCallback dialogCallback = new DialogCallback() {
                     @Override
                     public void onPositiveButton() { //выходим из учетной записи
+                        FirebaseNotificationService.unsubscribeToAllNotifications(); //отписка от группы news_all
                         FirebaseNotificationService.unsubscribeFromNotifications(sharedPreferencesService.getLanguageName()); //отписываемся от рассылки уведомлений по языку
                         final RequestService requestService = new RequestService(sharedPreferencesService, new StartActivityService(ProfileActivity.this));
                         FirebaseNotificationService.unsubscribeUserFromNotifications(requestService, sharedPreferencesService.getEmail(), sharedPreferencesService.getLanguageId()); //отписываеся от уведомлений для конкретного юзера

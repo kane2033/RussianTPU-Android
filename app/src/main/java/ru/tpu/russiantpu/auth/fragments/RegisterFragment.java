@@ -122,7 +122,7 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
         language = Locale.getDefault().getLanguage();
 
         //получение списка групп с сервиса
-        requestService.doRequest("dict/group", language, new GenericCallback<String>() {
+        requestService.doRequest("studyGroup", language, new GenericCallback<String>() {
             @Override
             public void onResponse(String json) {
                 ArrayList<GroupsDTO> groupsDTO = gsonService.fromJsonToArrayList(json, GroupsDTO.class);

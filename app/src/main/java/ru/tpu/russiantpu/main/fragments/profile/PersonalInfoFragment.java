@@ -157,7 +157,7 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
         requestService = new RequestService(sharedPreferencesService, new StartActivityService(activity));
 
         //получение списка групп с сервиса
-        requestService.doRequest("dict/group", language, new GenericCallback<String>() {
+        requestService.doRequest("studyGroup", language, new GenericCallback<String>() {
             @Override
             public void onResponse(String json) {
                 ArrayList<GroupsDTO> groupsDTO = gsonService.fromJsonToArrayList(json, GroupsDTO.class);

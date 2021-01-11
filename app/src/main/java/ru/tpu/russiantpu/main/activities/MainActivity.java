@@ -15,7 +15,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -98,7 +97,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             final ContentLoadingProgressBar progressBar = findViewById(R.id.progress_bar);
             progressBar.show(); //включаем прогресс бар
 
-            final FragmentManager fragmentManager = getSupportFragmentManager();
             final GsonService gsonService = new GsonService();
             final ToastService toastService = new ToastService(this);
 
@@ -162,9 +160,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //метод заполнения боковой шторки
     private void populateMenu(NavigationView navigationView, ActionBarDrawerToggle toggle) {
         Menu menu = navigationView.getMenu();
+
+        // первый элемент - календарь событий
+        menu.add(0, 0, 0, getString(R.string.calendar_name));
+
         //заполняем боковое меню пунктами 1 уровня
-        for (int i = 0; i < drawerItems.size(); i++) {
-            menu.add(1, i, 0, drawerItems.get(i).getName());
+        for (int i = 1; i <= drawerItems.size(); i++) {
+            menu.add(1, i, 0, drawerItems.get(i - 1).getName());
         }
 
         toggle.syncState();
@@ -179,8 +181,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
-        Item selectedItem = drawerItems.get(itemId);
-        fragmentReplacer.goToFragment(selectedItem);
+
+        // первый элемент - календарь событий
+        if (itemId == 0) {
+            startActivity(new Intent(this, CalendarActivity.class));
+        } else { // иначе переходим на элемент меню, полученный с сервиса
+            Item selectedItem = drawerItems.get(itemId - 1);
+            fragmentReplacer.goToFragment(selectedItem);
+        }
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

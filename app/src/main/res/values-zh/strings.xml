@@ -93,4 +93,7 @@
     <string name="portal_payment">付款</string>
     <string name="portal_my_payments">我的付款</string>
     <string name="portal_name">TPU门户资料</string>
+    <string name="calendar_name">活动日历</string>
+    <string name="calendar_get_error">尝试获取事件时出错</string>
+    <string name="calendar_today_date">这天， %1$s</string>
 </resources>

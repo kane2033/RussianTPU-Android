@@ -1,6 +1,7 @@
 package ru.tpu.russiantpu.utility.requests;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
@@ -8,16 +9,22 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Date;
+
+import ru.tpu.russiantpu.utility.requests.adapters.DateTypeAdapter;
 
 //класс-сервис, отвечающий за
 //сериализацию и десериализацию
 //на базе библиотеки Gson
 public class GsonService {
 
-    private Gson gson = new Gson();
+    private Gson gson;
 
     public GsonService() {
-
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Date.class, new DateTypeAdapter());
+        //gsonBuilder.setDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+        gson = gsonBuilder.create();
     }
 
     //получает на вход json строку и класс
