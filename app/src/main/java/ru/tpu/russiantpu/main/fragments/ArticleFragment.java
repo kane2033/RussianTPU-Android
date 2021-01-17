@@ -131,7 +131,8 @@ public class ArticleFragment extends Fragment {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebChromeClient(new ChromeClient(webView, frameLayout));
         //отображение в формате html
-        webView.loadData(article.getText(), "text/html; charset=utf-8", "UTF-8");
+        webView.loadDataWithBaseURL("https://internationals.tpu.ru:8080",
+                article.getText(), "text/html", "UTF-8", null);
     }
 
     @Override
