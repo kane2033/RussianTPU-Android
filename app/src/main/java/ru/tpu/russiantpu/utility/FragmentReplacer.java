@@ -1,8 +1,10 @@
 package ru.tpu.russiantpu.utility;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -41,7 +43,13 @@ public class FragmentReplacer {
             case SCHEDULE: //ссылка на расписание
                 castedItem = (LinkItem) item;
                 if (castedItem.getUrl() != null && !castedItem.getUrl().isEmpty()) { //открываем браузер только при наличии ссылки
-                    activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(((LinkItem) item).getUrl())));
+                    try {
+                        Uri uri = Uri.parse(castedItem.getUrl());
+                        activity.startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                    }
+                    catch (ActivityNotFoundException e) {
+                        Log.d("FRAGMENT_REPLACER", "Не удалось открыть ссылку " + castedItem.getUrl());
+                    }
                 }
                 return null;
             case LINKS_LIST: //список ссылок на следующие пункты
