@@ -16,22 +16,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".auth.activities.SplashActivity"
-            android:theme="@style/AppTheme.Launcher"
-            android:screenOrientation="portrait"
+            android:name=".auth.activities.AuthActivity"
+            android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".auth.activities.AuthActivity"
-            android:theme="@style/AppTheme.NoEnterAnim"
-            android:windowSoftInputMode="adjustPan">
-            <intent-filter>
-                <action android:name="android.intent.action.ALL_APPS" />
-                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity

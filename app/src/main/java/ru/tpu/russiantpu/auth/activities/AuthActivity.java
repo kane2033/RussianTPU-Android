@@ -11,12 +11,9 @@ import java.util.Locale;
 
 import ru.tpu.russiantpu.R;
 import ru.tpu.russiantpu.auth.fragments.StartFragment;
-import ru.tpu.russiantpu.main.activities.MainActivity;
 import ru.tpu.russiantpu.utility.LocaleService;
 import ru.tpu.russiantpu.utility.SharedPreferencesService;
 import ru.tpu.russiantpu.utility.auth.VKAuthService;
-import ru.tpu.russiantpu.utility.callbacks.GenericCallback;
-import ru.tpu.russiantpu.utility.notifications.FirebaseNotificationService;
 import ru.tpu.russiantpu.utility.requests.RequestService;
 
 public class AuthActivity extends FragmentActivity {
@@ -43,7 +40,11 @@ public class AuthActivity extends FragmentActivity {
 
         setContentView(R.layout.activity_auth);
 
-        //получение JWT токена
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.fragment_container,
+                new StartFragment()).commit();
+
+/*        //получение JWT токена
         final String token = sharedPreferencesService.getToken();
         final String email = sharedPreferencesService.getEmail();
 
@@ -72,15 +73,15 @@ public class AuthActivity extends FragmentActivity {
             }
         };
 
-        requestService.doRequest("token/status", languageShortName, callback, "token", token, "email", email);
+        requestService.doRequest("token/status", languageShortName, callback, "token", token, "email", email);*/
     }
 
-    //метод запуска фрагмета логина
+/*    //метод запуска фрагмета логина
     private void goToStartFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fragment_container,
                 new StartFragment()).commit();
-    }
+    }*/
 
     @Override
     public void onBackPressed() {
