@@ -69,7 +69,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.5" />
+            app:layout_constraintGuide_percent="0.6" />
 
         <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/remember_me_checkbox"

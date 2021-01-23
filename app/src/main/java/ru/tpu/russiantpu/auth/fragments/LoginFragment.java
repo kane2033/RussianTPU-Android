@@ -33,6 +33,7 @@ import ru.tpu.russiantpu.dto.LoginDTO;
 import ru.tpu.russiantpu.dto.TokensDTO;
 import ru.tpu.russiantpu.dto.UserDTO;
 import ru.tpu.russiantpu.main.activities.MainActivity;
+import ru.tpu.russiantpu.utility.AuthService;
 import ru.tpu.russiantpu.utility.SharedPreferencesService;
 import ru.tpu.russiantpu.utility.ToastService;
 import ru.tpu.russiantpu.utility.auth.FacebookAuthService;
@@ -42,7 +43,6 @@ import ru.tpu.russiantpu.utility.callbacks.GenericCallback;
 import ru.tpu.russiantpu.utility.callbacks.VKTokenCallback;
 import ru.tpu.russiantpu.utility.dialogFragmentServices.ErrorDialogService;
 import ru.tpu.russiantpu.utility.dialogFragmentServices.ResetPasswordDialogService;
-import ru.tpu.russiantpu.utility.notifications.FirebaseNotificationService;
 import ru.tpu.russiantpu.utility.requests.GsonService;
 import ru.tpu.russiantpu.utility.requests.RequestService;
 
@@ -144,12 +144,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
         toMainActivityCallback = new GenericCallback<String>() {
             @Override
             public void onResponse(String jsonBody) {
-                //получение токенов с сервиса
-                TokensDTO tokens = gsonService.fromJsonToObject(jsonBody, TokensDTO.class);
-
-                FirebaseNotificationService.subscribeToAllNotifications(); //подписываемся на группу news_all
-                FirebaseNotificationService.subscribeToNotifications(tokens.getUser().getLanguageName()); //подписываемся на группу уведомлений по языку
-                FirebaseNotificationService.subscribeUserToNotifications(requestService, tokens.getUser().getEmail(), tokens.getUser().getLanguageId()); //подисываем конкретного юзера на уведомления
                 //выключаем прогресс бар, включаем кнопки
                 activity.runOnUiThread(new Runnable() {
                     @Override
@@ -159,9 +153,13 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
                     }
                 });
 
-                //сохраняем JWT токен в sharedPreferences для последующего использования
+                //получение токенов с сервиса
+                TokensDTO tokens = gsonService.fromJsonToObject(jsonBody, TokensDTO.class);
+
                 SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(activity);
-                sharedPreferencesService.setCredentials(tokens.getToken(), tokens.getRefreshToken(), tokens.getUser());
+                // Подпись и сохранение токена
+                AuthService.INSTANCE.login(tokens, requestService, sharedPreferencesService);
+
                 //очистка фрагментов из стека при переходе в основную активити - в противном случае, при нажатии кнопки "назад"
                 //происходит непредвиденный переход в логин
                 getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);

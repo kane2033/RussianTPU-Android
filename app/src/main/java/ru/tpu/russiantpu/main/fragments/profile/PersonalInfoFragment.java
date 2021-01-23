@@ -3,6 +3,8 @@ package ru.tpu.russiantpu.main.fragments.profile;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,7 @@ import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
@@ -34,7 +37,6 @@ import ru.tpu.russiantpu.main.activities.MainActivity;
 import ru.tpu.russiantpu.utility.FormService;
 import ru.tpu.russiantpu.utility.LocaleService;
 import ru.tpu.russiantpu.utility.SharedPreferencesService;
-import ru.tpu.russiantpu.utility.SpinnerValidatorAdapter;
 import ru.tpu.russiantpu.utility.StartActivityService;
 import ru.tpu.russiantpu.utility.ToastService;
 import ru.tpu.russiantpu.utility.adapters.LanguagesAdapter;
@@ -45,6 +47,8 @@ import ru.tpu.russiantpu.utility.dialogFragmentServices.SearchListDialogService;
 import ru.tpu.russiantpu.utility.notifications.FirebaseNotificationService;
 import ru.tpu.russiantpu.utility.requests.GsonService;
 import ru.tpu.russiantpu.utility.requests.RequestService;
+import ru.tpu.russiantpu.utility.validation.SpinnerValidatorAdapter;
+import ru.tpu.russiantpu.utility.validation.TextInputLayoutValidatorAdapter;
 
 public class PersonalInfoFragment extends Fragment implements Validator.ValidationListener {
 
@@ -70,11 +74,14 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
     @Pattern(regex = "^(?=.{0,20}$).*", messageResId = R.string.phone_number) //optional, max 20
     private TextInputEditText phoneNumberInput;
 
-    @NotEmpty(messageResId = R.string.empty_field_error)
-    @Pattern(regex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d!&^%$#@_|\\/\\\\]{8,}$", messageResId = R.string.password_error)
+    @Pattern(regex = "(^$)|(^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d!&^%$#@_|\\/\\\\]{8,}$)", messageResId = R.string.password_error)
     private TextInputEditText currentPasswordInput;
+    private TextInputLayout currentPasswordInputLayout;
 
-    @Pattern(regex = "(^$)|(^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d!&^%$#@_|\\/\\\\]{8,}$)", messageResId = R.string.password_error) //пустая строка или regex пароля
+    private TextView passwordRequiredText;
+
+    @Pattern(regex = "(^$)|(^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d!&^%$#@_|\\/\\\\]{8,}$)", messageResId = R.string.password_error)
+    //пустая строка или regex пароля
     private TextInputEditText newPasswordInput;
 
     private Button saveButton;
@@ -119,9 +126,31 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
         phoneNumberInput = formContainer.findViewById(R.id.input_phone_number);
         newPasswordInput = formContainer.findViewById(R.id.input_new_password);
         currentPasswordInput = formContainer.findViewById(R.id.input_current_password);
+        currentPasswordInputLayout = formContainer.findViewById(R.id.input_current_password_layout);
+        passwordRequiredText = formContainer.findViewById(R.id.password_required_text);
         saveButton = formContainer.findViewById(R.id.button_save);
         ImageButton editButton = activity.findViewById(R.id.button_edit);
         progressBar = layoutInflater.findViewById(R.id.progress_bar);
+
+        // Отображаем поле "Текущий пароль", только если введен новый пароль
+        newPasswordInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                int visibility = s.length() > 0 ? View.VISIBLE : View.GONE;
+                currentPasswordInputLayout.setVisibility(visibility);
+                passwordRequiredText.setVisibility(visibility);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         //устанавливаем все поля нередактируемыми
         enableEditableFields(false);
@@ -130,6 +159,7 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
         final Validator validator = new Validator(this);
         validator.setValidationListener(this);
         validator.registerAdapter(Spinner.class, new SpinnerValidatorAdapter()); //кастомный валидатор для списка языков
+        validator.registerAdapter(TextInputLayout.class, new TextInputLayoutValidatorAdapter());
 
         //при нажатии кнопки "сохранить изменения"
         saveButton.setOnClickListener(new View.OnClickListener() {

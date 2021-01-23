@@ -62,11 +62,11 @@
     <string name="profile_logout">Logout</string>
     <string name="profile_logout_confirm">Are you sure you want to log out?</string>
     <!--Поля данных о пользователе-->
-    <string name="profile_old_password">Current password*</string>
+    <string name="profile_old_password">Current password</string>
     <string name="profile_new_password">New password</string>
     <string name="profile_firstname">First name</string>
     <string name="profile_language">Language</string>
-    <string name="profile_text_required">You must enter current password to change your profile info</string>
+    <string name="profile_password_required">To change password, you must enter the current one.</string>
     <string name="profile_save">Save changes</string>
     <string name="profile_save_success">The changes have been successfully saved</string>
 

@@ -12,15 +12,28 @@ import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import ru.tpu.russiantpu.dto.FirebaseDTO;
+import ru.tpu.russiantpu.dto.TokensDTO;
 import ru.tpu.russiantpu.utility.callbacks.GenericCallback;
 import ru.tpu.russiantpu.utility.requests.GsonService;
 import ru.tpu.russiantpu.utility.requests.RequestService;
 
 /**
-* Класс, ответственный за подписку и отписку от уведомлений на реализации Firebase.
+ * Класс, ответственный за подписку и отписку от уведомлений на реализации Firebase.
  * Существует два типа - подписка по токену пользователя и по языку (топику)
-* */
+ */
 public class FirebaseNotificationService {
+
+    // метод подписи на все группы
+    public static void subscribeEverything(final TokensDTO tokens, final RequestService requestService) {
+        FirebaseNotificationService.subscribeToAllNotifications(); //подписываемся на группу news_all
+        FirebaseNotificationService.subscribeToNotifications(tokens.getUser().getLanguageName()); //подписываемся на группу уведомлений по языку
+        FirebaseNotificationService.subscribeUserToNotifications(requestService, tokens.getUser().getEmail(), tokens.getUser().getLanguageId()); //подисываем конкретного юзера на уведомления
+    }
+
+    // метод отписки от всех групп
+    public static void unsubscribeEverything() {
+
+    }
 
     //метод подписки пользователя по токену firebase - отсылается регистрация на сервис
     public static void subscribeUserToNotifications(final RequestService requestService, final String email, final String language) {

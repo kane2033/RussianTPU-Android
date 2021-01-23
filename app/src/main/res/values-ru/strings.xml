@@ -38,7 +38,7 @@
     <string name="profile_edit_button">Редактировать профиль</string>
     <string name="profile_logout">Выйти из учетной записи</string>
     <!--Поля данных о пользователе-->
-    <string name="profile_old_password">Текущий пароль*</string>
+    <string name="profile_old_password">Текущий пароль</string>
     <string name="profile_new_password">Новый пароль</string>
     <string name="profile_firstname">Имя</string>
     <string name="profile_language">Язык</string>
@@ -86,7 +86,7 @@
     <string name="reg_text">Заполните все необходимые поля для успешной регистрации</string>
     <string name="reg_text_provider">Дозаполните поля, чтобы иметь возможность авторизоваться через выбранный сервис за один клик!</string>
     <string name="reg_text_required">Обязательные поля отмечены - *</string>
-    <string name="profile_text_required">Для изменения данных о пользователе необходимо корректно написать текущий пароль</string>
+    <string name="profile_password_required">Чтобы сменить пароль, нужно ввести текущий.</string>
     <string name="group">Группа</string>
     <string name="get_groups_error">Ошибка при получении групп</string>
     <string name="group_none">Не указ.</string>

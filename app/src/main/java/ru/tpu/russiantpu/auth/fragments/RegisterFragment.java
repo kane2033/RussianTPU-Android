@@ -2,6 +2,7 @@ package ru.tpu.russiantpu.auth.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,9 +32,12 @@ import java.util.Locale;
 import ru.tpu.russiantpu.R;
 import ru.tpu.russiantpu.dto.GroupsDTO;
 import ru.tpu.russiantpu.dto.LanguageDTO;
+import ru.tpu.russiantpu.dto.TokensDTO;
 import ru.tpu.russiantpu.dto.UserDTO;
+import ru.tpu.russiantpu.main.activities.MainActivity;
+import ru.tpu.russiantpu.utility.AuthService;
 import ru.tpu.russiantpu.utility.FormService;
-import ru.tpu.russiantpu.utility.SpinnerValidatorAdapter;
+import ru.tpu.russiantpu.utility.SharedPreferencesService;
 import ru.tpu.russiantpu.utility.ToastService;
 import ru.tpu.russiantpu.utility.adapters.LanguagesAdapter;
 import ru.tpu.russiantpu.utility.callbacks.GenericCallback;
@@ -42,6 +46,7 @@ import ru.tpu.russiantpu.utility.dialogFragmentServices.ErrorDialogService;
 import ru.tpu.russiantpu.utility.dialogFragmentServices.SearchListDialogService;
 import ru.tpu.russiantpu.utility.requests.GsonService;
 import ru.tpu.russiantpu.utility.requests.RequestService;
+import ru.tpu.russiantpu.utility.validation.SpinnerValidatorAdapter;
 
 public class RegisterFragment extends Fragment implements Validator.ValidationListener {
 
@@ -64,7 +69,7 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
     @Pattern(regex = "^(?=.{0,50}$).*", messageResId = R.string.middlename_error) //optional, max 50
     private TextInputEditText middleNameInput;
 
-    private List<String> groupNames = new ArrayList<>();
+    private final List<String> groupNames = new ArrayList<>();
     private TextView groupInput;
 
     private Spinner genderInput;
@@ -88,10 +93,14 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
 
     private String language;
 
+    // Флаг, дающий знать, использована ли регистрация
+    // через сторонние сервисы
+    private boolean isServiceRegister = false;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final ScrollView layoutInflater = (ScrollView)inflater.inflate(R.layout.fragment_register, container, false);
+        final ScrollView layoutInflater = (ScrollView) inflater.inflate(R.layout.fragment_register, container, false);
         final Activity activity = getActivity();
         Context applicationContext = activity.getApplicationContext();
 
@@ -220,6 +229,7 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
         //если юзер регистрируется после авторизации
         //через сторонний сервис, заполняем имеющиеся поля
         if (getArguments() != null) {
+            isServiceRegister = true;
             dto = getArguments().getParcelable("registerDTO");
             emailInput.setText(dto.getEmail());
             firstNameInput.setText(dto.getFirstName());
@@ -270,6 +280,7 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
         final GenericCallback<String> callback = new GenericCallback<String>() {
             @Override
             public void onResponse(String jsonBody) {
+                //сразу авторизуемся после регистрации, если логин через соцсети
                 //выключаем прогресс бар и включаем кнопку регистрации
                 activity.runOnUiThread(new Runnable() {
                     @Override
@@ -280,9 +291,22 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
                 });
                 toastService.showToast(R.string.reg_success);
 
-                // переход обратно на фрагмент логина при успешной регистрации
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new LoginFragment()).addToBackStack(fragmentTag).commit();
+                // Если регистрация совершена через сторонний сервис
+                // сразу же делаем логин
+                if (isServiceRegister) {
+                    TokensDTO tokens = new GsonService().fromJsonToObject(jsonBody, TokensDTO.class);
+                    SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(requireActivity());
+                    AuthService.INSTANCE.login(tokens, requestService, sharedPreferencesService);
+
+                    // Переходим в основное приложение
+                    Intent intent = new Intent(getContext(), MainActivity.class);
+                    activity.startActivity(intent);
+                    activity.finish();
+                } else {
+                    // иначе переход обратно на фрагмент логина при успешной регистрации
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            new LoginFragment()).addToBackStack(fragmentTag).commit();
+                }
             }
 
             @Override

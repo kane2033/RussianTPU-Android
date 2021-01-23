@@ -1,4 +1,4 @@
-package ru.tpu.russiantpu.utility;
+package ru.tpu.russiantpu.utility.validation;
 
 import android.widget.Spinner;
 

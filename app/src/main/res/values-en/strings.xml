@@ -5,7 +5,7 @@
     <string name="language">Language</string>
     <string name="last_name">Last name</string>
     <string name="profile_language">Language</string>
-    <string name="profile_old_password">Current password*</string>
+    <string name="profile_old_password">Current password</string>
     <string name="profile_save">Save changes</string>
     <string name="checkbox">Data use agreement*</string>
     <string name="profile_edit_button">Edit profile</string>
@@ -76,7 +76,7 @@
     <string name="reg_text">Fill all the required fields to successfully register</string>
     <string name="reg_text_provider">Fill the left required fields to be able to login via chosen service in one click!</string>
     <string name="reg_text_required">Required fields are marked with - *</string>
-    <string name="profile_text_required">You must enter current password to change your profile info</string>
+    <string name="profile_password_required">To change password, you must enter the current one.</string>
     <string name="group">Group</string>
     <string name="get_groups_error">Error while trying to get list of groups</string>
     <string name="group_none">None</string>
