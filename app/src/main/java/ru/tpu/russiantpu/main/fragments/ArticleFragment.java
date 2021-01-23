@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
 
@@ -125,8 +126,6 @@ public class ArticleFragment extends Fragment {
 
     //метод выводит полученную статью на экран
     private void showArticle(Activity activity) {
-        //установка заголовка в тулбаре
-        activity.setTitle(article.getTopic());
         //настройки для отображения видео
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebChromeClient(new ChromeClient(webView, frameLayout));
@@ -141,11 +140,26 @@ public class ArticleFragment extends Fragment {
         bundle.putParcelable(articleKey, article);
     }
 
+    /*
+     * Прячем тулбар в onResume и onStop
+     * */
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+    }
+
     @Override
     public void onDetach() {
         super.onDetach();
         //при закрытии фрагмента отменяем все запросы
-        if (requestService != null ) {
+        if (requestService != null) {
             requestService.cancelAllRequests();
         }
         if (progressBar != null) {
