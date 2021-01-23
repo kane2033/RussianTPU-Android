@@ -54,19 +54,15 @@ public class DocumentsDataAdapter extends RecyclerView.Adapter<DocumentsDataAdap
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         final TextView name;
         final TextView loadDate;
-        final View downloadView;
         final TextView fileName;
 
         ViewHolder(View view){
             super(view);
+            view.setOnClickListener(this);
+            view.setOnLongClickListener(this);
             name = view.findViewById(R.id.doc_name);
             loadDate = view.findViewById(R.id.doc_date);
-            downloadView = view.findViewById(R.id.doc_download);
-            fileName = downloadView.findViewById(R.id.doc_file_name);
-            //устанавливаем клик на контейнер элементов загрузки
-            //(название файла и иконка)
-            downloadView.setOnClickListener(this);
-            downloadView.setOnLongClickListener(this);
+            fileName = view.findViewById(R.id.doc_file_name);
         }
 
         @Override

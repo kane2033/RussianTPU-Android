@@ -337,6 +337,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Val
     public void onDetach() {
         super.onDetach();
         //при закрытии фрагмента отменяем все запросы
-        requestService.cancelAllRequests();
+        if (requestService != null) {
+            requestService.cancelAllRequests();
+        }
     }
 }

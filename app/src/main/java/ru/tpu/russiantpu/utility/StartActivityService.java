@@ -20,10 +20,14 @@ public class StartActivityService {
     public void startAuthActivityTokenExpired() {
         ToastService toastService = new ToastService(context);
         toastService.showToast(R.string.token_expired_error);
-        Intent intent = new Intent(context, AuthActivity.class);
-        context.startActivity(intent);
         if (context instanceof Activity) {
             ((Activity) context).finishAffinity(); //закрываем текущую активити
+            // Удаляем из памяти информацию о юзере (в том числе токен)
+            Activity activity = (Activity) context;
+            SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(activity);
+            sharedPreferencesService.clearCredentials();
         }
+        Intent intent = new Intent(context, AuthActivity.class);
+        context.startActivity(intent);
     }
 }

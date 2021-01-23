@@ -100,14 +100,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/text_input_margin"
                 android:layout_marginBottom="@dimen/text_input_margin"
-                android:hint="@string/password_reg">
+                android:hint="@string/password_reg"
+                app:passwordToggleEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/input_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
-                    app:errorEnabled="true"/>
+                    app:errorEnabled="true" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textview.MaterialTextView

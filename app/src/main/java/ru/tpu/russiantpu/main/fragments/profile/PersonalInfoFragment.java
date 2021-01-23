@@ -89,7 +89,7 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
     private FormService formService;
     private ToastService toastService;
 
-    private boolean areFieldsEditable = true;
+    private boolean areFieldsEditable = false;
 
     @Nullable
     @Override
@@ -124,7 +124,7 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
         progressBar = layoutInflater.findViewById(R.id.progress_bar);
 
         //устанавливаем все поля нередактируемыми
-        switchFieldsEditable();
+        enableEditableFields(false);
 
         //валидируем содержимое фрагмента, поэтому передаем фрагмент в классы валидаторов
         final Validator validator = new Validator(this);
@@ -144,7 +144,8 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
             @Override
             public void onClick(View v) {
                 //включаем/выключаем поля для редактирования
-                switchFieldsEditable();
+                areFieldsEditable = !areFieldsEditable;
+                enableEditableFields(areFieldsEditable);
             }
         });
 
@@ -305,15 +306,15 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
     }
 
     //метод активации и деактивации полей формы
-    private void switchFieldsEditable() {
+    private void enableEditableFields(boolean enable) {
         //отключаем/включаем все поля формы
-        areFieldsEditable = !areFieldsEditable;
+        //areFieldsEditable = !areFieldsEditable;
         for (int i = 0; i < formContainer.getChildCount(); i++) {
             View child = formContainer.getChildAt(i);
-            child.setEnabled(areFieldsEditable);
+            child.setEnabled(enable);
         }
         //отображаем/скрываем элементы редактирования информации юзера
-        int visibility = areFieldsEditable ? View.VISIBLE : View.GONE;
+        int visibility = enable ? View.VISIBLE : View.GONE;
         formContainerEditElements.setVisibility(visibility);
     }
 
@@ -354,7 +355,7 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
                         progressBar.hide(); //выключаем прогресс бар
                         saveButton.setEnabled(true); //включаем кнопку сохранения
                         toastService.showToast(R.string.profile_save_success);
-                        switchFieldsEditable(); //отключаем редактирование полей
+                        enableEditableFields(false); //отключаем редактирование полей
                         sharedPreferencesService.setUser(dto); //запись в память новой информации о пользователе
 
                         //если поменялся язык

@@ -79,6 +79,7 @@ public class ProfileActivity extends AppCompatActivity {
         ProfileFragmentsAdapter adapter = new ProfileFragmentsAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, getResources());
         ViewPager viewPager = findViewById(R.id.viewpager);
         viewPager.setAdapter(adapter);
+        viewPager.setOffscreenPageLimit(3);
         viewPager.setCurrentItem(0);
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);

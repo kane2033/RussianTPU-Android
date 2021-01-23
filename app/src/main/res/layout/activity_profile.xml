@@ -10,7 +10,7 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="256dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         android:fitsSystemWindows="true"
         >
@@ -21,8 +21,8 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
-            app:expandedTitleGravity="center_horizontal"
-            >
+            app:expandedTitleGravity="center"
+            app:maxLines="3">
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabs"
@@ -30,9 +30,7 @@
                 android:layout_height="?attr/actionBarSize"
                 android:layout_gravity="bottom"
                 style="@style/Widget.MaterialComponents.TabLayout.Colored"
-                app:layout_collapseMode="pin"
-                app:tabMode="fixed"
-                app:tabContentStart="72dp" />
+                app:tabMode="scrollable" />
 
             <!--Плейсхолдер для симпатичной картинки-->
             <ImageView

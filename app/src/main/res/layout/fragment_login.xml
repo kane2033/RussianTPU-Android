@@ -1,140 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:fillViewport="true">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:focusableInTouchMode="true"
+        android:paddingLeft="24dp"
+        android:paddingTop="56dp"
+        android:paddingRight="24dp"
+        android:paddingBottom="24dp">
 
-        <LinearLayout
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="match_parent"
+            android:layout_height="126dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="24dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_tpu_logo_aya_caption"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Email Label -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_email_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:focusableInTouchMode="true"
+            android:layout_marginTop="@dimen/text_input_margin_login"
+            android:layout_marginBottom="@dimen/text_input_margin_login"
+            android:hint="@string/email"
+            app:layout_constraintEnd_toEndOf="@id/logo"
+            app:layout_constraintStart_toStartOf="@id/logo"
+            app:layout_constraintTop_toBottomOf="@id/logo">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/input_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Password Label -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_password_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/text_input_margin_login"
+            android:hint="@string/password"
+            app:layout_constraintEnd_toEndOf="@id/input_email_layout"
+            app:layout_constraintStart_toStartOf="@id/input_email_layout"
+            app:layout_constraintTop_toBottomOf="@id/input_email_layout"
+            app:passwordToggleEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/input_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
-            android:paddingLeft="24dp"
-            android:paddingTop="56dp"
-            android:paddingRight="24dp">
+            app:layout_constraintGuide_percent="0.5" />
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="126dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="24dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_tpu_logo_aya_caption" />
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/remember_me_checkbox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/remember_me"
+            android:textSize="@dimen/text_size"
+            app:layout_constraintEnd_toStartOf="@+id/guideline"
+            app:layout_constraintStart_toStartOf="@+id/input_password_layout"
+            app:layout_constraintTop_toBottomOf="@+id/input_password_layout" />
 
-            <!-- Email Label -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/text_input_margin"
-                android:layout_marginBottom="@dimen/text_input_margin"
-                android:hint="@string/email">
+        <TextView
+            android:id="@+id/reset_password"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="end"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:text="@string/forgot_password"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/input_password_layout"
+            app:layout_constraintStart_toEndOf="@+id/remember_me_checkbox"
+            app:layout_constraintTop_toBottomOf="@+id/input_password_layout" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/input_email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress" />
-            </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_login"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/text_input_margin_login"
+            android:padding="12dp"
+            android:text="@string/login"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/remember_me_checkbox" />
 
-            <!-- Password Label -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/text_input_margin"
-                android:layout_marginBottom="@dimen/text_input_margin"
-                android:hint="@string/password">
+        <TextView
+            android:id="@+id/login_via_service_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/text_input_margin_login"
+            android:gravity="center"
+            android:text="@string/login_via_service"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="@+id/button_login"
+            app:layout_constraintStart_toStartOf="@+id/button_login"
+            app:layout_constraintTop_toBottomOf="@+id/button_login" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/input_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPassword" />
-            </com.google.android.material.textfield.TextInputLayout>
+        <ImageView
+            android:id="@+id/button_login_google"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_margin="@dimen/text_input_margin_login"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_google_icon"
+            app:layout_constraintBottom_toBottomOf="@+id/button_login_facebook"
+            app:layout_constraintEnd_toStartOf="@+id/button_login_facebook"
+            app:layout_constraintStart_toStartOf="@+id/login_via_service_text_view"
+            app:layout_constraintTop_toTopOf="@+id/button_login_facebook" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/button_login_facebook"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_margin="@dimen/text_input_margin_login"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_facebook"
+            app:layout_constraintEnd_toEndOf="@+id/login_via_service_text_view"
+            app:layout_constraintStart_toEndOf="@+id/button_login_vk"
+            app:layout_constraintStart_toStartOf="@+id/login_via_service_text_view"
+            app:layout_constraintTop_toBottomOf="@+id/login_via_service_text_view" />
 
-                <TextView
-                    android:id="@+id/reset_password"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:text="@string/forgot_password"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textStyle="bold" />
-
-                <com.google.android.material.checkbox.MaterialCheckBox
-                    android:id="@+id/remember_me_checkbox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/remember_me"
-                    android:textSize="@dimen/text_size" />
-            </RelativeLayout>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_login"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:padding="12dp"
-                android:text="@string/login" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:gravity="center"
-                android:text="@string/login_via_service"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textSize="18sp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="12dp">
-
-                <ImageView
-                    android:id="@+id/button_login_google"
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    android:layout_weight="1"
-                    android:adjustViewBounds="true"
-                    android:clickable="true"
-                    android:cropToPadding="true"
-                    android:focusable="true"
-                    android:src="@drawable/ic_google_icon" />
-
-                <ImageView
-                    android:id="@+id/button_login_facebook"
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    android:layout_weight="1"
-                    android:adjustViewBounds="true"
-                    android:clickable="true"
-                    android:cropToPadding="true"
-                    android:focusable="true"
-                    android:src="@drawable/ic_facebook" />
-
-                <ImageView
-                    android:id="@+id/button_login_vk"
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    android:layout_weight="1"
-                    android:adjustViewBounds="true"
-                    android:clickable="true"
-                    android:cropToPadding="true"
-                    android:focusable="true"
-                    android:src="@drawable/ic_vk" />
-            </LinearLayout>
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/button_login_vk"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_margin="@dimen/text_input_margin_login"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_vk"
+            app:layout_constraintBottom_toBottomOf="@+id/button_login_facebook"
+            app:layout_constraintEnd_toEndOf="@+id/login_via_service_text_view"
+            app:layout_constraintStart_toEndOf="@+id/button_login_facebook"
+            app:layout_constraintTop_toTopOf="@+id/button_login_facebook" />
 
         <androidx.core.widget.ContentLoadingProgressBar
             android:id="@+id/progress_bar"
@@ -145,8 +169,12 @@
             android:indeterminate="true"
             android:indeterminateTint="@color/colorPrimary"
             android:indeterminateTintMode="src_atop"
-            android:visibility="gone" />
-    </RelativeLayout>
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
 
 

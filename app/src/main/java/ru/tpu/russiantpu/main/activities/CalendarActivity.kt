@@ -103,10 +103,14 @@ class CalendarActivity : AppCompatActivity() {
                 runOnUiThread {
                     progressBar.hide()
                     // добавляем точки на дни с событиями
-                    calendar.addDecorator(EventDecorator(
+                    val drawable = ContextCompat.getDrawable(this@CalendarActivity,
+                            R.drawable.circle)
+                    drawable?.let { calendar.addDecorator(EventDecorator(drawable, dates)) }
+
+/*                    calendar.addDecorator(EventDecorator(
                             ContextCompat.getColor(this@CalendarActivity, R.color.red_700),
                             dates)
-                    )
+                    )*/
                 }
             }
 

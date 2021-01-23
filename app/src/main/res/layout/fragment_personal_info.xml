@@ -136,14 +136,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/text_input_margin"
                     android:layout_marginBottom="@dimen/text_input_margin"
-                    android:hint="@string/profile_new_password">
+                    android:hint="@string/profile_new_password"
+                    app:passwordToggleEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/input_new_password"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textPassword"
-                        app:errorEnabled="true"/>
+                        app:errorEnabled="true" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -151,14 +152,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/text_input_margin"
                     android:layout_marginBottom="@dimen/text_input_margin"
-                    android:hint="@string/profile_old_password">
+                    android:hint="@string/profile_old_password"
+                    app:passwordToggleEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/input_current_password"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textPassword"
-                        app:errorEnabled="true"/>
+                        app:errorEnabled="true" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textview.MaterialTextView
