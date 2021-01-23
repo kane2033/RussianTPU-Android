@@ -6,7 +6,7 @@
     <string name="firstname_error">Character limit exceeded</string>
     <string name="middlename_error">Character limit exceeded</string>
     <string name="language_error">Language not selected</string>
-    <string name="phone_error">Character limit exceeded</string>
+    <string name="phone_error">Phone number is incorrect</string>
     <string name="empty_field_error">Field cannot be empty</string>
     <string name="checkbox_error">You must agree for user data usage</string>
 

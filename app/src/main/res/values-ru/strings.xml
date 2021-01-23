@@ -52,7 +52,7 @@
     <string name="firstname_error">Превышен лимит символов</string>
     <string name="middlename_error">Превышен лимит символов</string>
     <string name="language_error">Язык не выбран</string>
-    <string name="phone_error">Превышен лимит символов</string>
+    <string name="phone_error">Некорректный номер телефона</string>
     <string name="empty_field_error">Поле должно быть заполнено</string>
     <string name="checkbox_error">Вы должны согласиться на обработку персональных данных</string>
     <string name="auth_error">Ошибка при попытке авторизоваться</string>

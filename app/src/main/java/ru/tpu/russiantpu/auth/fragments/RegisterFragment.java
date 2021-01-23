@@ -77,7 +77,7 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
     @NotEmpty(messageResId = R.string.empty_field_error)
     private Spinner languageInput; //список выбора языка
 
-    @Pattern(regex = "^(?=.{0,20}$).*", messageResId = R.string.phone_number) //optional, max 20
+    @Pattern(regex = "(^$)|(^[+]\\d+$)", messageResId = R.string.phone_error) //optional, max 20
     private TextInputEditText phoneNumberInput;
 
     @Checked(messageResId = R.string.checkbox_error)

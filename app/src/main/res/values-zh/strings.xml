@@ -7,7 +7,7 @@
     <string name="firstname_error">超出字符数限制</string>
     <string name="middlename_error">超出字符数限制</string>
     <string name="language_error">未选择语言</string>
-    <string name="phone_error">超出字符数限制</string>
+    <string name="phone_error">电话号码不正确</string>
     <string name="empty_field_error">栏位不能为空</string>
     <string name="checkbox_error">您必须同意使用用户数据</string>
     <string name="auth_error">尝试授权时出错</string>

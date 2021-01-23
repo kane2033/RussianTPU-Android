@@ -71,7 +71,7 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
     private Spinner languageInput; //список выбора языка
     private final List<LanguageDTO> languageDTOS = new ArrayList<>(); //пустой список заполнится после получение результата с сервиса
 
-    @Pattern(regex = "^(?=.{0,20}$).*", messageResId = R.string.phone_number) //optional, max 20
+    @Pattern(regex = "(^$)|(^[+]\\d+$)", messageResId = R.string.phone_error) //optional, max 20
     private TextInputEditText phoneNumberInput;
 
     @Pattern(regex = "(^$)|(^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d!&^%$#@_|\\/\\\\]{8,}$)", messageResId = R.string.password_error)

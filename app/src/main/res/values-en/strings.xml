@@ -14,7 +14,7 @@
     <string name="lastname_error">Character limit exceeded</string>
     <string name="firstname_error">Character limit exceeded</string>
     <string name="middlename_error">Character limit exceeded</string>
-    <string name="phone_error">Character limit exceeded</string>
+    <string name="phone_error">Phone number is incorrect</string>
     <string name="empty_field_error">Field cannot be empty</string>
     <string name="gender">Gender</string>
     <string name="password_error">"Password must be a minimum of 8 characters in length, contain at least one uppercase letter and one digit. Allowed characters:  ! &amp; ^ % $ # @ _ | \\ / "</string>
