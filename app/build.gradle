@@ -10,8 +10,8 @@ android {
         applicationId "ru.tpu.russiantpu"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 13
-        versionName "0.3.3"
+        versionCode 14
+        versionName "0.3.4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -52,9 +52,9 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'com.squareup.okhttp3:okhttp:4.7.2'
     implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'com.google.android.gms:play-services-auth:18.1.0'
-    implementation 'com.facebook.android:facebook-android-sdk:7.1.0'
-    implementation 'com.vk:androidsdk:2.2.4'
+    implementation 'com.google.android.gms:play-services-auth:19.0.0'
+    implementation 'com.facebook.android:facebook-android-sdk:8.1.0'
+    implementation 'com.vk:androidsdk:2.6.0'
     implementation 'com.mobsandgeeks:android-saripaar:2.0.3'
     implementation 'com.squareup.picasso:picasso:2.8'
     implementation 'com.yqritc:android-scalablevideoview:1.0.4'

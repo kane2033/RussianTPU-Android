@@ -148,9 +148,11 @@ class StartFragment : Fragment(), View.OnClickListener {
 
     // Если токен валиден, переходим в основное приложение
     private fun loggedInAction() {
-        val intent = Intent(requireContext(), MainActivity::class.java)
-        startActivity(intent)
-        requireActivity().finish() //закрываем активити логина
+        context?.let {
+            val intent = Intent(it, MainActivity::class.java)
+            startActivity(intent)
+            requireActivity().finish() //закрываем активити логина
+        }
     }
 
     // Если токен не валиден, запускаем видео и прячем окно анимации

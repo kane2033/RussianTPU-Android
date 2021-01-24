@@ -15,6 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.textfield.TextInputEditText;
@@ -297,6 +298,8 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
                     TokensDTO tokens = new GsonService().fromJsonToObject(jsonBody, TokensDTO.class);
                     SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(requireActivity());
                     AuthService.INSTANCE.login(tokens, requestService, sharedPreferencesService);
+
+                    getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
                     // Переходим в основное приложение
                     Intent intent = new Intent(getContext(), MainActivity.class);
