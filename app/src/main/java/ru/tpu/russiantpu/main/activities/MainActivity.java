@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Menu menu = navigationView.getMenu();
 
         // первый элемент - календарь событий
-        menu.add(0, 0, 0, getString(R.string.calendar_name));
+        menu.add(0, 0, 0, getString(R.string.calendar_title));
 
         //заполняем боковое меню пунктами 1 уровня
         for (int i = 1; i <= drawerItems.size(); i++) {

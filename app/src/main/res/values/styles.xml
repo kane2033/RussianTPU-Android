@@ -106,4 +106,9 @@
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Display1</item>
     </style>
 
+    <style name="floating_button" parent="Widget.MaterialComponents.ExtendedFloatingActionButton">
+        <item name="android:textColor">#ffffff</item>
+        <item name="backgroundTint">@color/colorPrimary</item>
+    </style>
+
 </resources>

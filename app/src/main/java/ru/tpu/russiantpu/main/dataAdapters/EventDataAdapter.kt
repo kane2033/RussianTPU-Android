@@ -9,7 +9,7 @@ import ru.tpu.russiantpu.dto.EventDTO
 import java.text.SimpleDateFormat
 import java.util.*
 
-class EventDataAdapter(private val clickListener: (position: Int) -> Unit)
+class EventDataAdapter(private val clickListener: (position: String) -> Unit)
     : RecyclerView.Adapter<EventDataAdapter.ViewHolder>() {
 
     private var events: List<EventDTO> = emptyList()
@@ -40,7 +40,7 @@ class EventDataAdapter(private val clickListener: (position: Int) -> Unit)
         init {
             itemView.setOnClickListener {
                 if (adapterPosition != RecyclerView.NO_POSITION) {
-                    clickListener(adapterPosition)
+                    clickListener(events[adapterPosition].id)
                 }
             }
         }

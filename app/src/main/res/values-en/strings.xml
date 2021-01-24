@@ -93,7 +93,10 @@
     <string name="portal_payment">Payment</string>
     <string name="portal_my_payments">My payments</string>
     <string name="portal_name">TPU portal profile</string>
-    <string name="calendar_name">Events calendar</string>
+    <string name="calendar_title">Events calendar</string>
     <string name="calendar_get_error">Error while trying to get events</string>
     <string name="calendar_today_date">This day, %1$s</string>
+    <string name="calendar_participate">Participate</string>
+    <string name="calendar_title_details">Event</string>
+    <string name="calendar_event_details_missing">Event details are missing.</string>
 </resources>
