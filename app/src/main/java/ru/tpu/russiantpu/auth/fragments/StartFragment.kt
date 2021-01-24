@@ -25,6 +25,11 @@ import java.util.*
 
 
 class StartFragment : Fragment(), View.OnClickListener {
+
+    companion object {
+        private const val ANIMATION_KEY = "ANIMATION"
+    }
+
     // implement TextureView.SurfaceTextureListener to use TextureView
     private val fragmentTag = R.string.prev_auth_frag_tag.toString()
 
@@ -58,6 +63,8 @@ class StartFragment : Fragment(), View.OnClickListener {
         startUi = layoutInflater.findViewById(R.id.start_views)
         splashView = layoutInflater.findViewById(R.id.splash_layout) as View
         val progressBar = splashView.findViewById(R.id.progress_bar) as ContentLoadingProgressBar
+
+        isAnimationFinished = savedInstanceState?.getBoolean(ANIMATION_KEY) ?: false
 
         // Показываем анимацию и делаем запрос, только если анимация еще не проигралась
         if (!isAnimationFinished) {
@@ -141,10 +148,6 @@ class StartFragment : Fragment(), View.OnClickListener {
 
     // Если токен валиден, переходим в основное приложение
     private fun loggedInAction() {
-        // Надо ли подписываться на уведомления тут, если подписка есть при логине??
-        //FirebaseNotificationService.subscribeToNotifications(languageShortName) //подписываем пользователя на уведомления по языку
-        //val languageId: String = sharedPreferencesService.languageName
-        //FirebaseNotificationService.subscribeUserToNotifications(requestService, email, languageId) //подисываем конкретного юзера на уведомления
         val intent = Intent(requireContext(), MainActivity::class.java)
         startActivity(intent)
         requireActivity().finish() //закрываем активити логина
@@ -167,6 +170,12 @@ class StartFragment : Fragment(), View.OnClickListener {
             else -> {
             }
         }
+    }
+
+    override fun onSaveInstanceState(bundle: Bundle) {
+        super.onSaveInstanceState(bundle)
+        // Сохраняем, проиграна анимация или нет
+        bundle.putBoolean(ANIMATION_KEY, isAnimationFinished)
     }
 
     override fun onDetach() {

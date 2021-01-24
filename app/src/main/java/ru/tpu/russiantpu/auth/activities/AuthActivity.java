@@ -25,10 +25,10 @@ public class AuthActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
 
         /*
-        *
-        * Отключение темной темы во всем приложении
-        *
-        * */
+         *
+         * Отключение темной темы во всем приложении
+         *
+         * */
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         final SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(this);
@@ -40,48 +40,14 @@ public class AuthActivity extends FragmentActivity {
 
         setContentView(R.layout.activity_auth);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.fragment_container,
-                new StartFragment()).commit();
-
-/*        //получение JWT токена
-        final String token = sharedPreferencesService.getToken();
-        final String email = sharedPreferencesService.getEmail();
-
-        //если запрос успешен (код 200), вызовется коллбэк с переходом в главную активити
-        //(запрос успешен, если токен валиден)
-        GenericCallback<String> callback = new GenericCallback<String>() {
-            @Override
-            public void onResponse(String value) {
-                FirebaseNotificationService.subscribeToNotifications(languageShortName); //подписываем пользователя на уведомления по языку
-                final String languageId = sharedPreferencesService.getLanguageName();
-                FirebaseNotificationService.subscribeUserToNotifications(requestService, email, languageId); //подисываем конкретного юзера на уведомления
-                Intent intent = new Intent(AuthActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish(); //закрываем активити логина
-            }
-
-            //иначе запускаем фрагмент логина
-            @Override
-            public void onError(String message) {
-                goToStartFragment();
-            }
-
-            @Override
-            public void onFailure(String message) {
-                goToStartFragment();
-            }
-        };
-
-        requestService.doRequest("token/status", languageShortName, callback, "token", token, "email", email);*/
+        // Не даем активити добавить еще один фрагмент, если восстанавливаем состояние
+        // (пр.: смена ориентации)
+        if (savedInstanceState == null) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.fragment_container,
+                    new StartFragment()).commit();
+        }
     }
-
-/*    //метод запуска фрагмета логина
-    private void goToStartFragment() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.fragment_container,
-                new StartFragment()).commit();
-    }*/
 
     @Override
     public void onBackPressed() {
