@@ -44,6 +44,11 @@ class StartFragment : Fragment(), View.OnClickListener {
     private var isAnimationFinished = false
     private var isTokenValid: Boolean? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        isAnimationFinished = savedInstanceState?.getBoolean(ANIMATION_KEY) ?: false
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val layoutInflater = inflater.inflate(R.layout.fragment_start, container, false)
 
@@ -63,8 +68,6 @@ class StartFragment : Fragment(), View.OnClickListener {
         startUi = layoutInflater.findViewById(R.id.start_views)
         splashView = layoutInflater.findViewById(R.id.splash_layout) as View
         val progressBar = splashView.findViewById(R.id.progress_bar) as ContentLoadingProgressBar
-
-        isAnimationFinished = savedInstanceState?.getBoolean(ANIMATION_KEY) ?: false
 
         // Показываем анимацию и делаем запрос, только если анимация еще не проигралась
         if (!isAnimationFinished) {
