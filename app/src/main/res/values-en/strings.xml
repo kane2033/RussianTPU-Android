@@ -99,4 +99,8 @@
     <string name="calendar_participate">Participate</string>
     <string name="calendar_title_details">Event</string>
     <string name="calendar_event_details_missing">Event details are missing.</string>
+    <string-array name="docs_selector_tabs">
+        <item>New documents</item>
+        <item>Seen documents</item>
+    </string-array>
 </resources>

@@ -99,4 +99,8 @@
     <string name="calendar_participate">参加</string>
     <string name="calendar_title_details">事件</string>
     <string name="calendar_event_details_missing">活动详细信息丢失。</string>
+    <string-array name="docs_selector_tabs">
+        <item>新文件</item>
+        <item>看到的文件</item>
+    </string-array>
 </resources>

@@ -55,6 +55,12 @@
     <string name="documents_name">Documents</string>
     <string name="portal_name">TPU portal profile</string>
 
+    <!--Документы-->
+    <string-array name="docs_selector_tabs">
+        <item>New documents</item>
+        <item>Seen documents</item>
+    </string-array>
+
     <!--Строки для профиля пользователя-->
     <string name="profile_greeting">Welcome!</string>
     <string name="profile_title">My profile</string>

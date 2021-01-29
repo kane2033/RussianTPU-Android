@@ -109,4 +109,8 @@
     <string name="calendar_participate">Участвовать</string>
     <string name="calendar_title_details">Событие</string>
     <string name="calendar_event_details_missing">Информация о событии отсутствует.</string>
+    <string-array name="docs_selector_tabs">
+        <item>Новые документы</item>
+        <item>Просмотренные документы</item>
+    </string-array>
 </resources>
