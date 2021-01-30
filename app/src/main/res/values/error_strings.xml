@@ -27,7 +27,7 @@
     <string name="token_expired_error">Your session is expired, please login again</string>
     <string name="reset_password_error">Error while trying to reset password</string>
     <string name="calendar_get_error">Error while trying to get events</string>
-
+    <string name="calendar_participate_error">Could not open link</string>
 
     <string name="token_invalid_error">You need to be logged in</string>
 </resources>

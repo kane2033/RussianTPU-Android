@@ -39,50 +39,56 @@ public class ProfileActivity extends AppCompatActivity {
         //нажатие кнопки назад
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
+        ImageButton editButton = findViewById(R.id.button_edit);
         ImageButton logoutButton = findViewById(R.id.button_logout);
         //выход из учетной записи юзера
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //действия при нажатии кнопок диалогового окна
-                DialogCallback dialogCallback = new DialogCallback() {
-                    @Override
-                    public void onPositiveButton() { //выходим из учетной записи
-                        // Отписываемся от всех уведомлений и удаляем из памяти токены
-                        AuthService.INSTANCE.logout(
-                                new RequestService(
-                                        sharedPreferencesService,
-                                        new StartActivityService(ProfileActivity.this)
-                                ),
-                                sharedPreferencesService
-                        );
-                        //переходим на авторизацию
-                        Intent intent = new Intent(ProfileActivity.this, AuthActivity.class);
-                        startActivity(intent);
-                        finishAffinity(); //закрываем активити профиля и главную
-                    }
+        logoutButton.setOnClickListener(v -> {
+            //действия при нажатии кнопок диалогового окна
+            DialogCallback dialogCallback = new DialogCallback() {
+                @Override
+                public void onPositiveButton() { //выходим из учетной записи
+                    // Отписываемся от всех уведомлений и удаляем из памяти токены
+                    AuthService.INSTANCE.logout(
+                            new RequestService(
+                                    sharedPreferencesService,
+                                    new StartActivityService(ProfileActivity.this)
+                            ),
+                            sharedPreferencesService
+                    );
+                    //переходим на авторизацию
+                    Intent intent = new Intent(ProfileActivity.this, AuthActivity.class);
+                    startActivity(intent);
+                    finishAffinity(); //закрываем активити профиля и главную
+                }
 
-                    @Override
-                    public void onNegativeButton() {
-                        //ничего не делаем
-                    }
-                };
-                DialogService.showDialog(getResources().getString(R.string.profile_logout), getResources().getString(R.string.profile_logout_confirm), getSupportFragmentManager(), dialogCallback);
-            }
+                @Override
+                public void onNegativeButton() {
+                    //ничего не делаем
+                }
+            };
+            DialogService.showDialog(getResources().getString(R.string.profile_logout), getResources().getString(R.string.profile_logout_confirm), getSupportFragmentManager(), dialogCallback);
         });
 
         //настраиваем ViewPager (две вкладки фрагментов в одной активити)
         ProfileFragmentsAdapter adapter = new ProfileFragmentsAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, getResources());
         ViewPager viewPager = findViewById(R.id.viewpager);
         viewPager.setAdapter(adapter);
-        viewPager.setOffscreenPageLimit(3);
+        // Показываем кнопку "редактировать" (карандаш) только если отображается фрагмент "Профиль"
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            public void onPageScrollStateChanged(int state) {
+            }
+
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            public void onPageSelected(int position) {
+                int visibility = position == 0 ? View.VISIBLE : View.GONE;
+                editButton.setVisibility(visibility);
+            }
+        });
+        viewPager.setOffscreenPageLimit(4);
         viewPager.setCurrentItem(0);
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);

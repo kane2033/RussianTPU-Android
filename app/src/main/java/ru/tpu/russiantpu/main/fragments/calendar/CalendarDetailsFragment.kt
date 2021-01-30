@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.View
 import android.webkit.WebView
 import android.widget.Button
+import android.widget.Toast
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.fragment.app.Fragment
 import ru.tpu.russiantpu.R
@@ -45,7 +46,7 @@ class CalendarDetailsFragment : Fragment(R.layout.fragment_calendar_details) {
         val participateButton = view.findViewById(R.id.participate_button) as Button
         participateButton.setOnClickListener {
             eventDetails?.onlineMeetingLink?.let {
-                requireActivity().openLink(it)
+                activity?.openLink(it)
             }
         }
 
@@ -106,6 +107,7 @@ class CalendarDetailsFragment : Fragment(R.layout.fragment_calendar_details) {
             val uri = Uri.parse(url)
             this.startActivity(Intent(Intent.ACTION_VIEW, uri))
         } catch (e: ActivityNotFoundException) {
+            context?.let { Toast.makeText(it, R.string.calendar_participate_error, Toast.LENGTH_SHORT).show() }
             Log.d("FRAGMENT_REPLACER", "Не удалось открыть ссылку $url")
         }
     }

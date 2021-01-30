@@ -54,6 +54,7 @@
     <string name="personal_info_name">Profile</string>
     <string name="documents_name">Documents</string>
     <string name="portal_name">TPU portal profile</string>
+    <string name="notifications_name">Notifications</string>
 
     <!--Документы-->
     <string-array name="docs_selector_tabs">

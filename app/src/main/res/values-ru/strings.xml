@@ -113,4 +113,6 @@
         <item>Новые документы</item>
         <item>Просмотренные документы</item>
     </string-array>
+    <string name="notifications_name">Уведомления</string>
+    <string name="calendar_participate_error">Не получилось открыть ссылку</string>
 </resources>

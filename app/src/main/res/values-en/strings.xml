@@ -103,4 +103,6 @@
         <item>New documents</item>
         <item>Seen documents</item>
     </string-array>
+    <string name="notifications_name">Notifications</string>
+    <string name="calendar_participate_error">Could not open link</string>
 </resources>
