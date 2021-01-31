@@ -10,8 +10,6 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
-import java.io.File;
-
 import ru.tpu.russiantpu.R;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
@@ -24,23 +22,21 @@ public class DownloadFileFromUrl {
     public static void downloadFile(String url, String fileName, String token, Fragment fragment) {
         if (isStoragePermissionGranted(fragment)) { //проверяем, есть ли разрешение на скачку файлов
             try {
-                //сохраняем в папку download
-                File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileName);
                 DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url))
                         .addRequestHeader("Authorization", "Bearer " + token) //JWT
                         .setTitle(fileName)
                         .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                        .setDestinationUri(Uri.fromFile(file))
+                        .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName)
                         .setAllowedOverRoaming(true);
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                     request.setRequiresCharging(false)
                             .setAllowedOverMetered(true)
                             .setAllowedOverRoaming(true);
                 }
-                DownloadManager downloadManager = (DownloadManager)fragment.getActivity().getSystemService(DOWNLOAD_SERVICE);
+                DownloadManager downloadManager = (DownloadManager) fragment.getActivity().getSystemService(DOWNLOAD_SERVICE);
                 downloadManager.enqueue(request);
-            }
-            catch (Exception e) { //отображаем сообщение об ошибке при неудачной скачке
+            } catch (Exception e) { //отображаем сообщение об ошибке при неудачной скачке
+                e.printStackTrace();
                 Toast.makeText(fragment.getContext(), R.string.docs_download_error, Toast.LENGTH_SHORT).show();
             }
         }

@@ -11,9 +11,10 @@ import ru.tpu.russiantpu.dto.DocumentDTO
 class DocumentsDataAdapter(private val clickListener: (document: DocumentDTO) -> Unit)
     : RecyclerView.Adapter<DocumentsDataAdapter.ViewHolder>() {
 
-    private var documents: List<DocumentDTO> = emptyList() // текущие отображаемые
-    private var newDocuments: List<DocumentDTO> = emptyList() // новые, не просмотренные документы
-    private var seenDocuments: List<DocumentDTO> = emptyList() // уже скачанные, просмотренные доки
+    private var documents: List<DocumentDTO> = emptyList() // новые, не просмотренные документы
+    private var newDocuments: MutableList<DocumentDTO> = mutableListOf()
+    private var seenDocuments: MutableList<DocumentDTO> = mutableListOf() // уже скачанные, просмотренные доки
+    private var newDocsOpen = true // дает знать, какие документы отображаются - новые или просмотренные
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DocumentsDataAdapter.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -26,7 +27,7 @@ class DocumentsDataAdapter(private val clickListener: (document: DocumentDTO) ->
     override fun getItemCount() = documents.size
 
     private fun initRecycler(list: List<DocumentDTO>) {
-        if (documents != list) {
+        if (documents !== list) {
             documents = list
             notifyDataSetChanged()
         }
@@ -37,19 +38,21 @@ class DocumentsDataAdapter(private val clickListener: (document: DocumentDTO) ->
     * Если lastUseDate != null, значит документ был скачан хотя бы один раз, следовательно,
     * просмотрен.
     * */
-    fun updateList(newDocuments: List<DocumentDTO>) {
+    fun updateList(newDocuments: Collection<DocumentDTO>) {
         val (seenList, newList) = newDocuments.partition { it.lastUseDate != null }
-        this.newDocuments = newList
-        this.seenDocuments = seenList
+        this.newDocuments = newList.toMutableList()
+        this.seenDocuments = seenList.toMutableList()
         initRecycler(this.newDocuments)
     }
 
     fun showNewDocuments() {
         initRecycler(newDocuments)
+        newDocsOpen = true
     }
 
     fun showSeenDocuments() {
         initRecycler(seenDocuments)
+        newDocsOpen = false
     }
 
     inner class ViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
@@ -61,7 +64,14 @@ class DocumentsDataAdapter(private val clickListener: (document: DocumentDTO) ->
         init {
             itemView.setOnClickListener {
                 if (adapterPosition != RecyclerView.NO_POSITION) {
-                    clickListener(documents[adapterPosition])
+                    val clickedDoc = documents[adapterPosition]
+                    clickListener(clickedDoc)
+                    if (newDocsOpen) {
+                        newDocuments.removeAt(adapterPosition)
+                        documents = newDocuments
+                        seenDocuments.add(clickedDoc)
+                        notifyItemRemoved(adapterPosition)
+                    }
                 }
             }
         }

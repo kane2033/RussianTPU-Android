@@ -115,4 +115,5 @@
     </string-array>
     <string name="notifications_name">Уведомления</string>
     <string name="calendar_participate_error">Не получилось открыть ссылку</string>
+    <string name="docs_open_error">Ошибка при попытке открыть документ</string>
 </resources>

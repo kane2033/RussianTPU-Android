@@ -105,4 +105,5 @@
     </string-array>
     <string name="notifications_name">通知事项</string>
     <string name="calendar_participate_error">无法打开链接</string>
+    <string name="docs_open_error">尝试打开文档时出错</string>
 </resources>

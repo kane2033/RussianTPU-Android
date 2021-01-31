@@ -1,5 +1,6 @@
 package ru.tpu.russiantpu.main.fragments.profile
 
+import android.content.*
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
@@ -21,6 +22,7 @@ import ru.tpu.russiantpu.utility.callbacks.GenericCallback
 import ru.tpu.russiantpu.utility.requests.GsonService
 import ru.tpu.russiantpu.utility.requests.RequestService
 import java.util.*
+
 
 class DocumentsFragment : Fragment(R.layout.fragment_documents) {
     private var requestService: RequestService? = null
@@ -70,9 +72,7 @@ class DocumentsFragment : Fragment(R.layout.fragment_documents) {
                 }
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                // Ничего не делаем
-            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
         progressBar = view.findViewById(R.id.progress_bar)

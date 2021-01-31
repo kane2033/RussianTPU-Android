@@ -105,4 +105,5 @@
     </string-array>
     <string name="notifications_name">Notifications</string>
     <string name="calendar_participate_error">Could not open link</string>
+    <string name="docs_open_error">Error while trying to open a document</string>
 </resources>
