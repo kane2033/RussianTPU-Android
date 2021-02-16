@@ -57,7 +57,7 @@
     <style name="item_doc_layout">
         <item name="android:layout_margin">4dp</item>
         <item name="android:padding">4dp</item>
-        <item name="android:background">#e9e9e9</item>
+        <item name="android:background">#FFFFFF</item>
     </style>
 
     <!--Элементы заголовка выдвижной шторки-->

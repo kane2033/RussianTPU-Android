@@ -12,7 +12,7 @@
 
         <Spinner
             android:id="@+id/docs_selector"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="24dp"
             android:entries="@array/docs_selector_tabs"
