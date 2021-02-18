@@ -44,6 +44,7 @@
     <string name="choose_language">Language*</string>
     <string name="language">Language</string>
     <string name="phone_number">Phone number</string>
+    <string name="phone_number_hint" translatable="false">+7XXXXXXXXXX</string>
     <string name="checkbox">Data use agreement*</string>
     <string name="register">Register</string>
     <!--Текст ошибок и статусов выполнения-->
@@ -90,6 +91,20 @@
     <string name="calendar_today_date">This day, %1$s</string>
     <string name="calendar_participate">Participate</string>
     <string name="calendar_event_details_missing">Event details are missing.</string>
+
+    <!--Месяцы для календаря-->
+    <string name="january">January</string>
+    <string name="february">February</string>
+    <string name="march">March</string>
+    <string name="april">April</string>
+    <string name="may">May</string>
+    <string name="june">June</string>
+    <string name="july">July</string>
+    <string name="august">August</string>
+    <string name="september">September</string>
+    <string name="october">October</string>
+    <string name="november">November</string>
+    <string name="december">December</string>
 
     <!--DialogFragments-->
     <string name="dialog_ok">OK</string>

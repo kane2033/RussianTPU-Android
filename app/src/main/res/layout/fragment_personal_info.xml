@@ -115,15 +115,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/text_input_margin"
                 android:layout_marginBottom="@dimen/text_input_margin"
-                android:hint="@string/phone_number">
+                android:hint="@string/phone_number"
+                app:placeholderText="@string/phone_number_hint">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/input_phone_number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="phone"
-                    app:errorEnabled="true"
-                    />
+                    android:digits="0123456789+"
+                    app:errorEnabled="true" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout

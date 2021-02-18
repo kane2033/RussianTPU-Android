@@ -106,4 +106,16 @@
     <string name="notifications_name">通知事项</string>
     <string name="calendar_participate_error">无法打开链接</string>
     <string name="docs_open_error">尝试打开文档时出错</string>
+    <string name="january">一月</string>
+    <string name="february">二月</string>
+    <string name="march">三月</string>
+    <string name="april">四月</string>
+    <string name="may">五月</string>
+    <string name="june">六月</string>
+    <string name="july">七月</string>
+    <string name="august">八月</string>
+    <string name="september">九月</string>
+    <string name="october">十月</string>
+    <string name="november">十一月</string>
+    <string name="december">十二月</string>
 </resources>

@@ -14,7 +14,7 @@ import ru.tpu.russiantpu.auth.fragments.StartFragment;
 import ru.tpu.russiantpu.utility.LocaleService;
 import ru.tpu.russiantpu.utility.SharedPreferencesService;
 import ru.tpu.russiantpu.utility.auth.VKAuthService;
-import ru.tpu.russiantpu.utility.requests.RequestService;
+import ru.tpu.russiantpu.utility.notifications.NotificationResolver;
 
 public class AuthActivity extends FragmentActivity {
 
@@ -32,7 +32,6 @@ public class AuthActivity extends FragmentActivity {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         final SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(this);
-        final RequestService requestService = new RequestService();
 
         final String languageShortName = sharedPreferencesService.getLanguageName().equals("") ? Locale.getDefault().getLanguage() : sharedPreferencesService.getLanguageName();
         //установка языка приложения
@@ -40,12 +39,23 @@ public class AuthActivity extends FragmentActivity {
 
         setContentView(R.layout.activity_auth);
 
+        // Этот фрагмент будет открыт первым (стартовый)
+        StartFragment startFragment = new StartFragment();
+
+        // Передаем апп линк в фрагмент, если имеется
+        String linkTo = getIntent().getStringExtra(NotificationResolver.APP_LINK_KEY);
+        if (linkTo != null) {
+            Bundle bundle = new Bundle();
+            bundle.putString(NotificationResolver.APP_LINK_KEY, linkTo);
+            startFragment.setArguments(bundle);
+        }
+
         // Не даем активити добавить еще один фрагмент, если восстанавливаем состояние
         // (пр.: смена ориентации)
         if (savedInstanceState == null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.fragment_container,
-                    new StartFragment()).commit();
+                    startFragment).commit();
         }
     }
 

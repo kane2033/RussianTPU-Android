@@ -22,6 +22,7 @@ import ru.tpu.russiantpu.utility.SharedPreferencesService;
 import ru.tpu.russiantpu.utility.StartActivityService;
 import ru.tpu.russiantpu.utility.callbacks.DialogCallback;
 import ru.tpu.russiantpu.utility.dialogFragmentServices.DialogService;
+import ru.tpu.russiantpu.utility.notifications.NotificationResolver;
 import ru.tpu.russiantpu.utility.requests.RequestService;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -88,8 +89,26 @@ public class ProfileActivity extends AppCompatActivity {
                 editButton.setVisibility(visibility);
             }
         });
+
+        // Получаем ссылку на необходимый фрагмент из AuthActivity
+        String linkTo = getIntent().getStringExtra(NotificationResolver.APP_LINK_KEY);
+        if (linkTo != null) {
+            switch (linkTo) {
+                case NotificationResolver.DOCUMENT:
+                    viewPager.setCurrentItem(2);
+                    break;
+                case NotificationResolver.NOTIFICATION:
+                    viewPager.setCurrentItem(3);
+                    break;
+                default:
+                    viewPager.setCurrentItem(0);
+                    break;
+            }
+        } else {
+            viewPager.setCurrentItem(0);
+        }
+
         viewPager.setOffscreenPageLimit(4);
-        viewPager.setCurrentItem(0);
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
     }

@@ -17,8 +17,10 @@ import androidx.fragment.app.Fragment
 import com.yqritc.scalablevideoview.ScalableVideoView
 import ru.tpu.russiantpu.R
 import ru.tpu.russiantpu.main.activities.MainActivity
+import ru.tpu.russiantpu.main.activities.ProfileActivity
 import ru.tpu.russiantpu.utility.SharedPreferencesService
 import ru.tpu.russiantpu.utility.callbacks.GenericCallback
+import ru.tpu.russiantpu.utility.notifications.NotificationResolver
 import ru.tpu.russiantpu.utility.requests.RequestService
 import java.io.IOException
 import java.util.*
@@ -28,6 +30,7 @@ class StartFragment : Fragment(), View.OnClickListener {
 
     companion object {
         private const val ANIMATION_KEY = "ANIMATION"
+        const val APP_LINK_KEY = "APP_LINK"
     }
 
     // implement TextureView.SurfaceTextureListener to use TextureView
@@ -151,8 +154,16 @@ class StartFragment : Fragment(), View.OnClickListener {
 
     // Если токен валиден, переходим в основное приложение
     private fun loggedInAction() {
+        val linkTo = arguments?.getString(APP_LINK_KEY)
         context?.let {
-            val intent = Intent(it, MainActivity::class.java)
+            val intent = if (linkTo != null) {
+                // Если приложение открыто через уведомление, открываем профиль
+                Intent(it, ProfileActivity::class.java).apply {
+                    putExtra(NotificationResolver.APP_LINK_KEY, linkTo)
+                }
+            } else {
+                Intent(it, MainActivity::class.java)
+            }
             startActivity(intent)
             requireActivity().finish() //закрываем активити логина
         }

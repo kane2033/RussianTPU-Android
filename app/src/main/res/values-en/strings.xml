@@ -106,4 +106,16 @@
     <string name="notifications_name">Notifications</string>
     <string name="calendar_participate_error">Could not open link</string>
     <string name="docs_open_error">Error while trying to open a document</string>
+    <string name="january">January</string>
+    <string name="february">February</string>
+    <string name="march">March</string>
+    <string name="april">April</string>
+    <string name="may">May</string>
+    <string name="june">June</string>
+    <string name="july">July</string>
+    <string name="august">August</string>
+    <string name="september">September</string>
+    <string name="october">October</string>
+    <string name="november">November</string>
+    <string name="december">December</string>
 </resources>
