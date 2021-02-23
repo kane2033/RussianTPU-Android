@@ -16,6 +16,7 @@ import androidx.core.widget.ContentLoadingProgressBar
 import androidx.fragment.app.Fragment
 import com.yqritc.scalablevideoview.ScalableVideoView
 import ru.tpu.russiantpu.R
+import ru.tpu.russiantpu.main.activities.CalendarActivity
 import ru.tpu.russiantpu.main.activities.MainActivity
 import ru.tpu.russiantpu.main.activities.ProfileActivity
 import ru.tpu.russiantpu.utility.SharedPreferencesService
@@ -156,13 +157,21 @@ class StartFragment : Fragment(), View.OnClickListener {
     private fun loggedInAction() {
         val linkTo = arguments?.getString(APP_LINK_KEY)
         context?.let {
-            val intent = if (linkTo != null) {
+            val intent = when (linkTo) {
                 // Если приложение открыто через уведомление, открываем профиль
-                Intent(it, ProfileActivity::class.java).apply {
-                    putExtra(NotificationResolver.APP_LINK_KEY, linkTo)
+                NotificationResolver.EVENT -> {
+                    Intent(it, CalendarActivity::class.java).apply {
+                        putExtra(NotificationResolver.APP_LINK_KEY, linkTo)
+                    }
                 }
-            } else {
-                Intent(it, MainActivity::class.java)
+                NotificationResolver.DOCUMENT, NotificationResolver.NOTIFICATION -> {
+                    Intent(it, ProfileActivity::class.java).apply {
+                        putExtra(NotificationResolver.APP_LINK_KEY, linkTo)
+                    }
+                }
+                else -> {
+                    Intent(it, MainActivity::class.java)
+                }
             }
             startActivity(intent)
             requireActivity().finish() //закрываем активити логина

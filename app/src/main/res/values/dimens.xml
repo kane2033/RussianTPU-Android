@@ -11,4 +11,5 @@
     <dimen name="doc_text_margin">4dp</dimen>
     <dimen name="recycler_margin">8dp</dimen>
     <dimen name="item_padding">4dp</dimen>
+    <dimen name="menu_icon_size">24dp</dimen>
 </resources>

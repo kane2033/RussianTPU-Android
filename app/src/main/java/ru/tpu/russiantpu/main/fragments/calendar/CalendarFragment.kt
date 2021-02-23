@@ -77,17 +77,10 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
 
         val token = sharedPreferencesService.token
 
-        requestService.doRequest("user/calendarEvents", object : GenericCallback<String> {
+        requestService.doRequest("calendarEvent", object : GenericCallback<String> {
             override fun onResponse(json: String?) {
                 // события
                 events = gsonService.fromJsonToArrayList(json, EventDTO::class.java)
-
-                //mock
-/*                events!!.add(EventDTO("someid", "mock title1", "mock description1", events!![0].timestamp, "ALL"))
-                events!!.add(EventDTO("someid", "mock title2", "mock description2", events!![0].timestamp, "ALL"))
-                events!!.add(EventDTO("someid", "mock title3", "mock description3", events!![0].timestamp, "ALL"))
-                events!!.add(EventDTO("someid", "mock title4", "mock description4", events!![0].timestamp, "ALL"))*/
-
                 // временные отметки календаря materialCalendarView
                 events?.let {
                     dates.addAll(it.map { event ->

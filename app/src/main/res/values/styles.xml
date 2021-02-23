@@ -24,9 +24,16 @@
 
     <!--Элементы item_feed и item_list-->
     <style name="item_header_text">
-        <item name="android:textSize">28sp</item>
+        <item name="android:textSize">22sp</item>
         <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body1</item>
         <item name="android:padding">4dp</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="item_links_header_text">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body1</item>
+
         <item name="android:textAlignment">center</item>
     </style>
 

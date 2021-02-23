@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
@@ -19,8 +20,8 @@ import ru.tpu.russiantpu.main.items.LinkItem;
 //DataAdapter для списка ссылок
 public class LinksDataAdapter extends RecyclerView.Adapter<LinksDataAdapter.ViewHolder> {
 
-    private LayoutInflater inflater;
-    private List<LinkItem> items;
+    private final LayoutInflater inflater;
+    private final List<LinkItem> items;
     private static ClickListener clickListener;
 
     public LinksDataAdapter(Context context, List<LinkItem> items) {
@@ -29,8 +30,9 @@ public class LinksDataAdapter extends RecyclerView.Adapter<LinksDataAdapter.View
     }
 
     //создание объекта ViewHolder, хранящего данные по одному пункту LinkItem
+    @NonNull
     @Override
-    public LinksDataAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public LinksDataAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.item_list, parent, false);
         return new ViewHolder(view);
     }
@@ -42,7 +44,6 @@ public class LinksDataAdapter extends RecyclerView.Adapter<LinksDataAdapter.View
         String text = item.getName();
         holder.nameText.setText(text);
         if (item.getImage() != null) { //если есть картинка
-            holder.image.setVisibility(View.VISIBLE); //делаем view видимым
             //устанавливаем картинку из url в imageView форматом Bitmap
             Picasso.get().load(item.getImage()).into(holder.image);
         }

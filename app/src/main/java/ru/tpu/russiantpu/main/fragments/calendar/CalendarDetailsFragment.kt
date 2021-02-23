@@ -61,7 +61,7 @@ class CalendarDetailsFragment : Fragment(R.layout.fragment_calendar_details) {
         val eventId = arguments?.getString("eventId") ?: ""
 
         requestService?.let {
-            it.doRequest("user/calendarEvent/$eventId/detailed", object : GenericCallback<String> {
+            it.doRequest("calendarEvent/$eventId/detailed", object : GenericCallback<String> {
                 override fun onResponse(json: String?) {
                     eventDetails = gsonService.fromJsonToObject(json, EventDetailsDTO::class.java)
 

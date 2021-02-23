@@ -3,6 +3,7 @@ package ru.tpu.russiantpu.utility.notifications
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import ru.tpu.russiantpu.main.activities.CalendarActivity
 import ru.tpu.russiantpu.main.activities.ProfileActivity
 
 // Объект, ответственный за открытие
@@ -13,6 +14,7 @@ object NotificationResolver {
     const val APP_LINK_KEY = "APP_LINK"
     const val DOCUMENT = "DOCUMENT"
     const val NOTIFICATION = "NOTIFICATION"
+    const val EVENT = "CALENDAR_EVENT"
 
     fun getPendingIntent(link: String?, context: Context): PendingIntent? {
         val intent = when (link) {
@@ -24,6 +26,11 @@ object NotificationResolver {
             NOTIFICATION -> {
                 Intent(context, ProfileActivity::class.java).apply {
                     putExtra(APP_LINK_KEY, NOTIFICATION)
+                }
+            }
+            EVENT -> {
+                Intent(context, CalendarActivity::class.java).apply {
+                    putExtra(APP_LINK_KEY, EVENT)
                 }
             }
             else -> return null
