@@ -118,4 +118,5 @@
     <string name="october">十月</string>
     <string name="november">十一月</string>
     <string name="december">十二月</string>
+    <string name="link_open_error">尝试打开链接时出错</string>
 </resources>

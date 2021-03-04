@@ -19,6 +19,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import ru.tpu.russiantpu.R;
 import ru.tpu.russiantpu.dto.UserDTO;
@@ -26,6 +27,7 @@ import ru.tpu.russiantpu.main.items.Item;
 import ru.tpu.russiantpu.main.items.LinkItem;
 import ru.tpu.russiantpu.utility.FragmentReplacer;
 import ru.tpu.russiantpu.utility.LocaleService;
+import ru.tpu.russiantpu.utility.MainActivityItems;
 import ru.tpu.russiantpu.utility.SharedPreferencesService;
 import ru.tpu.russiantpu.utility.StartActivityService;
 import ru.tpu.russiantpu.utility.ToastService;
@@ -34,7 +36,8 @@ import ru.tpu.russiantpu.utility.requests.GsonService;
 import ru.tpu.russiantpu.utility.requests.RequestService;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+        MainActivityItems {
 
     private FragmentReplacer fragmentReplacer;
     private RequestService requestService;
@@ -43,6 +46,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private ArrayList<LinkItem> drawerItems;
     private final String drawerItemsKey = "drawerItems";
+
+    @NonNull
+    @Override
+    public List<LinkItem> getItems() {
+        return drawerItems;
+    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {

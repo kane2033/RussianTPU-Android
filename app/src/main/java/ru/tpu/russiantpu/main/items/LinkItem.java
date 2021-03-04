@@ -3,6 +3,8 @@ package ru.tpu.russiantpu.main.items;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.Nullable;
+
 import java.util.ArrayList;
 
 import ru.tpu.russiantpu.main.enums.ContentType;
@@ -16,6 +18,7 @@ public class LinkItem extends Item implements Parcelable {
     //айди статьи, по которой будет получена полная статья
     private String idArticle;
     //дочерние пункты
+    @Nullable
     private ArrayList<LinkItem> children;
     //картинка
     private String image;
@@ -44,11 +47,13 @@ public class LinkItem extends Item implements Parcelable {
         this.idArticle = idArticle;
     }
 
+    @Nullable
     public ArrayList<LinkItem> getChildren() {
         return children;
     }
 
-    public void setChildren(ArrayList<LinkItem> children) {
+
+    public void setChildren(@Nullable ArrayList<LinkItem> children) {
         this.children = children;
     }
 
@@ -58,6 +63,9 @@ public class LinkItem extends Item implements Parcelable {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public LinkItem() {
     }
 
     @Override

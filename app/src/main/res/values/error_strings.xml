@@ -16,6 +16,7 @@
     <string name="register_error">Error while trying to register</string>
     <string name="drawer_error">Error while trying to get drawer items list</string>
     <string name="article_error">Error while trying to get article</string>
+    <string name="link_open_error">Error while trying to open the link</string>
     <string name="feed_error">Error while trying to get list of articles</string>
     <string name="get_groups_error">Error while trying to get list of groups</string>
     <string name="get_languages_error">Error while trying to get list of languages</string>

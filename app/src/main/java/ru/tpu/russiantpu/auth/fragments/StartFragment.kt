@@ -180,7 +180,7 @@ class StartFragment : Fragment(), View.OnClickListener {
 
     // Если токен не валиден, запускаем видео и прячем окно анимации
     private fun notLoggedInAction() {
-        splashView.visibility = View.GONE
+        activity?.runOnUiThread { splashView.visibility = View.GONE }
     }
 
     override fun onClick(v: View) {

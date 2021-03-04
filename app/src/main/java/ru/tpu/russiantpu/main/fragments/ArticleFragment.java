@@ -1,14 +1,17 @@
 package ru.tpu.russiantpu.main.fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,7 +21,10 @@ import androidx.fragment.app.Fragment;
 
 import ru.tpu.russiantpu.R;
 import ru.tpu.russiantpu.main.items.Article;
+import ru.tpu.russiantpu.utility.ArticleUrlParser;
 import ru.tpu.russiantpu.utility.ChromeClient;
+import ru.tpu.russiantpu.utility.FragmentReplacer;
+import ru.tpu.russiantpu.utility.MainActivityItems;
 import ru.tpu.russiantpu.utility.SharedPreferencesService;
 import ru.tpu.russiantpu.utility.StartActivityService;
 import ru.tpu.russiantpu.utility.ToastService;
@@ -29,7 +35,6 @@ import ru.tpu.russiantpu.utility.requests.RequestService;
 //фрагмент, отображающий список статей (новостей)
 public class ArticleFragment extends Fragment {
 
-    private WebView webView;
     private TextView missingContentText;
     private FrameLayout frameLayout;
     private ContentLoadingProgressBar progressBar;
@@ -43,30 +48,60 @@ public class ArticleFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         //отображаем в фрагменте
         LinearLayout layoutInflater = (LinearLayout) inflater.inflate(R.layout.fragment_article, container, false);
-        webView = layoutInflater.findViewById(R.id.fullArticle); //статья
         missingContentText = layoutInflater.findViewById(R.id.missingContentText);
         frameLayout = layoutInflater.findViewById(R.id.fullscreen_container); //контейнер для полноэкранного режима
         progressBar = getActivity().findViewById(R.id.progress_bar);
+
         return layoutInflater;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        final Activity activity = getActivity();
+
+        WebView webView = getView().findViewById(R.id.fullArticle); //статья
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                boolean isUrlValid = URLUtil.isValidUrl(url);
+                if (isUrlValid) {
+                    // Если ссылка валидна,
+                    // она открывается в webview
+                    view.loadUrl(url);
+                    return false;
+                } else {
+                    // Если ссылка не валидна
+                    progressBar.show();
+                    openDeepLink(url);
+                    return true;
+                }
+            }
+        });
+
+        // Возвращаемся на предыдущую ссылку вместо закрытия экрана
+        webView.setOnKeyListener((v, keyCode, event) -> {
+            if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    if (webView.canGoBack()) {
+                        webView.goBack();
+                        return true;
+                    }
+                }
+            }
+            return false;
+        });
 
         //восстанавливаем элементы из временной памяти
         // (пр.: смена ориентации)
         if (savedInstanceState != null && savedInstanceState.getParcelable(articleKey) != null) {
             article = savedInstanceState.getParcelable(articleKey);
-            showArticle(activity);
-        }
-        else { //иначе делаем запрос на сервис
+            showArticle(webView);
+        } else { //иначе делаем запрос на сервис
             //вспомогательные классы
-            final SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(activity);
+            final SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(requireActivity());
             final GsonService gsonService = new GsonService();
             final ToastService toastService = new ToastService(getContext());
-            requestService = new RequestService(sharedPreferencesService, new StartActivityService(activity));
+            requestService = new RequestService(sharedPreferencesService, new StartActivityService(requireActivity()));
 
             String selectedArticleId = getArguments().getString("id");
 
@@ -77,41 +112,27 @@ public class ArticleFragment extends Fragment {
                 @Override
                 public void onResponse(String jsonBody) {
                     article = gsonService.fromJsonToObject(jsonBody, Article.class);
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (article.getTopic() == null) { //если нет контента, уведомляем
-                                missingContentText.setText(R.string.missing_content);
-                            }
-                            else { //иначе заполняем фрагмент содержимым статьи
-                                showArticle(activity);
-                            }
-                            progressBar.hide();
+                    requireActivity().runOnUiThread(() -> {
+                        if (article.getTopic() == null) { //если нет контента, уведомляем
+                            missingContentText.setText(R.string.missing_content);
+                        } else { //иначе заполняем фрагмент содержимым статьи
+                            showArticle(webView);
                         }
+                        progressBar.hide();
                     });
                 }
 
                 @Override
                 public void onError(String message) {
                     //выключаем прогресс бар
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            progressBar.hide();
-                        }
-                    });
+                    requireActivity().runOnUiThread(() -> progressBar.hide());
                     toastService.showToast(message);
                 }
 
                 @Override
                 public void onFailure(String message) {
                     //выключаем прогресс бар
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            progressBar.hide();
-                        }
-                    });
+                    requireActivity().runOnUiThread((Runnable) () -> progressBar.hide());
                     toastService.showToast(R.string.article_error);
                 }
             };
@@ -125,13 +146,29 @@ public class ArticleFragment extends Fragment {
     }
 
     //метод выводит полученную статью на экран
-    private void showArticle(Activity activity) {
+    private void showArticle(WebView webView) {
         //настройки для отображения видео
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebChromeClient(new ChromeClient(webView, frameLayout));
         //отображение в формате html
         webView.loadDataWithBaseURL("https://internationals.tpu.ru:8080",
                 article.getText(), "text/html", "UTF-8", null);
+    }
+
+    // Асинхронно парсим диплинк и открываем соответсвующий фрагмент, если парсинг успешен
+    private void openDeepLink(String url) {
+        ArticleUrlParser.INSTANCE.navigateDeepLink(url, (MainActivityItems) getActivity(), item -> {
+            if (item != null) {
+                FragmentReplacer fragmentReplacer =
+                        new FragmentReplacer((AppCompatActivity) requireActivity());
+                fragmentReplacer.goToFragment(item);
+            } else {
+                // Показываем ошибку, если это не веб ссылка и не диплинк
+                Toast.makeText(getContext(), R.string.link_open_error, Toast.LENGTH_SHORT).show();
+            }
+            progressBar.hide();
+            return null;
+        });
     }
 
     @Override

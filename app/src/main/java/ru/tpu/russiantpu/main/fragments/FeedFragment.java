@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import ru.tpu.russiantpu.R;
+import ru.tpu.russiantpu.dto.FeedItemListDTO;
 import ru.tpu.russiantpu.main.dataAdapters.ClickListener;
 import ru.tpu.russiantpu.main.dataAdapters.FeedDataAdapter;
 import ru.tpu.russiantpu.main.enums.ContentType;
@@ -86,8 +87,8 @@ public class FeedFragment extends Fragment {
                 String selectedItemId = null; //айди родительского пункта
                 if (getArguments() != null) {
                     selectedItemId = getArguments().getString("id");
-                    String header = getArguments().getString("header"); //название выбранного пункта будет отображаться в тулбаре
-                    activity.setTitle(header); //установка названия пункта в тулбар
+                    //String header = getArguments().getString("header"); //название выбранного пункта будет отображаться в тулбаре
+                    //activity.setTitle(header); //установка названия пункта в тулбар
                 }
 
                 progressBar.show(); //включаем прогресс бар
@@ -95,46 +96,33 @@ public class FeedFragment extends Fragment {
                 GenericCallback<String> callback = new GenericCallback<String>() {
                     @Override
                     public void onResponse(String jsonBody) {
-                        items.addAll(gsonService.fromJsonToArrayList(jsonBody, FeedItem.class));
+                        FeedItemListDTO dto = gsonService.fromJsonToObject(jsonBody, FeedItemListDTO.class);
+                        items.addAll(dto.getArticles());
 
                         //отрисовываем список статей в потоке интерфейса
-                        activity.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (items.size() != 0) { //если нет контента, уведомляем
-                                    Log.d("FEED_FRAGMENT", "Сколько статей получено: " + items.size());
-                                    adapter.notifyDataSetChanged();
-                                }
-                                else {
-                                    missingContentText.setText(R.string.missing_content);
-                                }
-                                progressBar.hide(); //выключаем прогресс бар
+                        activity.runOnUiThread(() -> {
+                            activity.setTitle(dto.getTitle());
+                            if (items.size() != 0) { //если нет контента, уведомляем
+                                Log.d("FEED_FRAGMENT", "Сколько статей получено: " + items.size());
+                                adapter.notifyDataSetChanged();
+                            } else {
+                                missingContentText.setText(R.string.missing_content);
                             }
-
+                            progressBar.hide(); //выключаем прогресс бар
                         });
                     }
 
                     @Override
                     public void onError(String message) {
                         //выключаем прогресс бар
-                        activity.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                progressBar.hide();
-                            }
-                        });
+                        activity.runOnUiThread(() -> progressBar.hide());
                         toastService.showToast(message);
                     }
 
                     @Override
                     public void onFailure(String message) {
                         //выключаем прогресс бар
-                        activity.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                progressBar.hide();
-                            }
-                        });
+                        activity.runOnUiThread(() -> progressBar.hide());
                         toastService.showToast(R.string.feed_error);
                     }
                 };
