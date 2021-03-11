@@ -11,6 +11,7 @@ import androidx.core.widget.ContentLoadingProgressBar
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import ru.tpu.russiantpu.R
 import ru.tpu.russiantpu.dto.DocumentDTO
 import ru.tpu.russiantpu.main.dataAdapters.DocumentsDataAdapter
@@ -76,6 +77,21 @@ class DocumentsFragment : Fragment(R.layout.fragment_documents) {
         }
 
         progressBar = view.findViewById(R.id.progress_bar)
+
+        // Берем с сервиса документы
+        getDocuments(language, email, gsonService, adapter, toastService)
+
+        // Также делаем запрос повторно при свайпе вверх
+        val refreshLayout = view.findViewById<SwipeRefreshLayout>(R.id.swipe_refresh)
+        refreshLayout?.setOnRefreshListener {
+            getDocuments(language, email, gsonService, adapter, toastService)
+            refreshLayout.isRefreshing = false
+        }
+    }
+
+    private fun getDocuments(language: String, email: String,
+                             gsonService: GsonService, adapter: DocumentsDataAdapter,
+                             toastService: ToastService) {
         progressBar?.show() //включаем прогресс бар
 
         //реализация коллбека - что произойдет при получении данных с сервера

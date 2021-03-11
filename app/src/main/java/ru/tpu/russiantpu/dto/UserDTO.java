@@ -17,8 +17,11 @@ public class UserDTO implements Parcelable {
     private String provider;
     //поле для активити профиля
     private String newPassword;
+    private String academicPlanUrl;
+    private String scheduleUrl;
 
-    public UserDTO() {}
+    public UserDTO() {
+    }
 
     //конструктор для обновления информации о пользователе в активити профиля
     public UserDTO(String email, String password, String newPassword, String firstName,
@@ -156,9 +159,25 @@ public class UserDTO implements Parcelable {
         this.newPassword = newPassword;
     }
 
+    public String getAcademicPlanUrl() {
+        return academicPlanUrl;
+    }
+
+    public void setAcademicPlanUrl(String academicPlanUrl) {
+        this.academicPlanUrl = academicPlanUrl;
+    }
+
+    public String getScheduleUrl() {
+        return scheduleUrl;
+    }
+
+    public void setScheduleUrl(String scheduleUrl) {
+        this.scheduleUrl = scheduleUrl;
+    }
+
     /*
-    * Реализация Parcelable
-    * */
+     * Реализация Parcelable
+     * */
     @Override
     public int describeContents() {
         return 0;

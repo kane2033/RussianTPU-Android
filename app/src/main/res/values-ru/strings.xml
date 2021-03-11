@@ -129,4 +129,7 @@
     <string name="november">Ноябрь</string>
     <string name="december">Декабрь</string>
     <string name="link_open_error">Ошибка при открытии ссылки</string>
+    <string name="portal_academic_plan">Учебный план</string>
+    <string name="portal_schedule">Расписание</string>
+    <string name="portal_mail">Почта ТПУ</string>
 </resources>

@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
 
@@ -59,6 +60,10 @@ public class FeedFragment extends Fragment {
         final ToastService toastService = new ToastService(getContext());
         requestService = new RequestService(sharedPreferencesService, new StartActivityService(activity));
 
+        //получение JWT токена
+        String token = sharedPreferencesService.getToken();
+        String language = sharedPreferencesService.getLanguageId();
+
         final FeedDataAdapter adapter = new FeedDataAdapter(getContext(), items);
         adapter.setOnItemClickListener(new ClickListener() {
             @Override
@@ -67,6 +72,7 @@ public class FeedFragment extends Fragment {
                 selectedItem.setType(ContentType.ARTICLE);
                 fragmentReplacer.goToFragment(selectedItem);
             }
+
             //пока не используется, оставлен на будущее
             @Override
             public void onItemLongClick(int position, View v) {
@@ -82,62 +88,67 @@ public class FeedFragment extends Fragment {
             if (savedInstanceState != null) {
                 items.addAll(savedInstanceState.<FeedItem>getParcelableArrayList(itemsKey));
                 adapter.notifyDataSetChanged();
-            }
-            else { //иначе делаем запрос на сервис
-                String selectedItemId = null; //айди родительского пункта
-                if (getArguments() != null) {
-                    selectedItemId = getArguments().getString("id");
-                    //String header = getArguments().getString("header"); //название выбранного пункта будет отображаться в тулбаре
-                    //activity.setTitle(header); //установка названия пункта в тулбар
-                }
-
-                progressBar.show(); //включаем прогресс бар
-                //реализация коллбека - что произойдет при получении данных с сервера
-                GenericCallback<String> callback = new GenericCallback<String>() {
-                    @Override
-                    public void onResponse(String jsonBody) {
-                        FeedItemListDTO dto = gsonService.fromJsonToObject(jsonBody, FeedItemListDTO.class);
-                        items.addAll(dto.getArticles());
-
-                        //отрисовываем список статей в потоке интерфейса
-                        activity.runOnUiThread(() -> {
-                            activity.setTitle(dto.getTitle());
-                            if (items.size() != 0) { //если нет контента, уведомляем
-                                Log.d("FEED_FRAGMENT", "Сколько статей получено: " + items.size());
-                                adapter.notifyDataSetChanged();
-                            } else {
-                                missingContentText.setText(R.string.missing_content);
-                            }
-                            progressBar.hide(); //выключаем прогресс бар
-                        });
-                    }
-
-                    @Override
-                    public void onError(String message) {
-                        //выключаем прогресс бар
-                        activity.runOnUiThread(() -> progressBar.hide());
-                        toastService.showToast(message);
-                    }
-
-                    @Override
-                    public void onFailure(String message) {
-                        //выключаем прогресс бар
-                        activity.runOnUiThread(() -> progressBar.hide());
-                        toastService.showToast(R.string.feed_error);
-                    }
-                };
-
-                //получение JWT токена
-                String token = sharedPreferencesService.getToken();
-                String language = sharedPreferencesService.getLanguageId();
-
-                //запрос за получение списка статей по айди пункта меню
-                requestService.doRequest("article/list/" + selectedItemId, callback, token, language);
+            } else { //иначе делаем запрос на сервис
+                getFeedItems(token, language, gsonService, adapter, missingContentText, toastService);
             }
         }
 
+        // Также делаем все запросы повторно при свайпе вверх
+        SwipeRefreshLayout swipeRefreshLayout = getActivity().findViewById(R.id.swipe_refresh);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            getFeedItems(token, language, gsonService, adapter, missingContentText, toastService);
+            swipeRefreshLayout.setRefreshing(false);
+        });
+
 
         return layoutInflater;
+    }
+
+    private void getFeedItems(String token, String language, GsonService gsonService,
+                              FeedDataAdapter adapter, TextView missingContentText, ToastService toastService) {
+        String selectedItemId = null; //айди родительского пункта
+        if (getArguments() != null) {
+            selectedItemId = getArguments().getString("id");
+        }
+
+        progressBar.show(); //включаем прогресс бар
+        //реализация коллбека - что произойдет при получении данных с сервера
+        GenericCallback<String> callback = new GenericCallback<String>() {
+            @Override
+            public void onResponse(String jsonBody) {
+                FeedItemListDTO dto = gsonService.fromJsonToObject(jsonBody, FeedItemListDTO.class);
+                items.addAll(dto.getArticles());
+
+                //отрисовываем список статей в потоке интерфейса
+                getActivity().runOnUiThread(() -> {
+                    getActivity().setTitle(dto.getTitle());
+                    if (items.size() != 0) { //если нет контента, уведомляем
+                        Log.d("FEED_FRAGMENT", "Сколько статей получено: " + items.size());
+                        adapter.notifyDataSetChanged();
+                    } else {
+                        missingContentText.setText(R.string.missing_content);
+                    }
+                    progressBar.hide(); //выключаем прогресс бар
+                });
+            }
+
+            @Override
+            public void onError(String message) {
+                //выключаем прогресс бар
+                getActivity().runOnUiThread(() -> progressBar.hide());
+                toastService.showToast(message);
+            }
+
+            @Override
+            public void onFailure(String message) {
+                //выключаем прогресс бар
+                getActivity().runOnUiThread(() -> progressBar.hide());
+                toastService.showToast(R.string.feed_error);
+            }
+        };
+
+        //запрос за получение списка статей по айди пункта меню
+        requestService.doRequest("article/list/" + selectedItemId, callback, token, language);
     }
 
     @Override

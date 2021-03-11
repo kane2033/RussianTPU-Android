@@ -79,11 +79,14 @@
     <string name="profile_save_success">The changes have been successfully saved</string>
 
     <!--TPU Portal-->
+    <string name="portal_academic_plan">Academic plan</string>
+    <string name="portal_schedule">Schedule</string>
     <string name="portal_personal_card">Personal card</string>
     <string name="portal_grades">Grades</string>
     <string name="portal_scholarship">Scholarship</string>
     <string name="portal_payment">Payment</string>
     <string name="portal_my_payments">My payments</string>
+    <string name="portal_mail">TPU email</string>
 
     <!--Календарь событий-->
     <string name="calendar_title">Events calendar</string>
@@ -118,6 +121,8 @@
     <string name="notification_channel_description">TPU news</string>
 
     <string name="missing_content">Content is missing</string>
+
+    <item type="id" name="pager" />
 
     <!--Тэг, необходимый для перехода на предыдущий фрагмент-->
     <string name="prev_frag_tag" translatable="false">PREV_FRAGMENT</string>

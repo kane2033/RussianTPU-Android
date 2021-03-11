@@ -119,4 +119,7 @@
     <string name="november">十一月</string>
     <string name="december">十二月</string>
     <string name="link_open_error">尝试打开链接时出错</string>
+    <string name="portal_academic_plan">学术计划</string>
+    <string name="portal_schedule">日程</string>
+    <string name="portal_mail">TPU电子邮件</string>
 </resources>

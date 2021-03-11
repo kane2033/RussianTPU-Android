@@ -14,39 +14,60 @@
             android:orientation="vertical">
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_academic_plan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/portal_academic_plan" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_schedule"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/portal_schedule" />
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_personal_card"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/portal_personal_card" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_grades"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/portal_grades" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_scholarship"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/portal_scholarship" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_payment"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/portal_payment" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_my_payments"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/portal_my_payments" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_mail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/portal_mail" />
 
         </LinearLayout>
 

@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import ru.tpu.russiantpu.R;
 import ru.tpu.russiantpu.main.items.Article;
@@ -103,45 +104,61 @@ public class ArticleFragment extends Fragment {
             final ToastService toastService = new ToastService(getContext());
             requestService = new RequestService(sharedPreferencesService, new StartActivityService(requireActivity()));
 
-            String selectedArticleId = getArguments().getString("id");
-
-            progressBar.show(); //включаем прогресс бар
-
-            //реализация коллбека - что произойдет при получении данных с сервера
-            GenericCallback<String> callback = new GenericCallback<String>() {
-                @Override
-                public void onResponse(String jsonBody) {
-                    article = gsonService.fromJsonToObject(jsonBody, Article.class);
-                    requireActivity().runOnUiThread(() -> {
-                        if (article.getTopic() == null) { //если нет контента, уведомляем
-                            missingContentText.setText(R.string.missing_content);
-                        } else { //иначе заполняем фрагмент содержимым статьи
-                            showArticle(webView);
-                        }
-                        progressBar.hide();
-                    });
-                }
-
-                @Override
-                public void onError(String message) {
-                    //выключаем прогресс бар
-                    requireActivity().runOnUiThread(() -> progressBar.hide());
-                    toastService.showToast(message);
-                }
-
-                @Override
-                public void onFailure(String message) {
-                    //выключаем прогресс бар
-                    requireActivity().runOnUiThread((Runnable) () -> progressBar.hide());
-                    toastService.showToast(R.string.article_error);
-                }
-            };
-
             //получение JWT токена
-            String token = sharedPreferencesService.getToken();
-            String language = sharedPreferencesService.getLanguageId();
-            //запрос за получение списка статей по айди пункта меню
-            requestService.doRequest("article/" + selectedArticleId, callback, token, language);
+            final String token = sharedPreferencesService.getToken();
+            final String language = sharedPreferencesService.getLanguageId();
+
+            getArticle(token, language, webView, gsonService, toastService);
+
+            // Также делаем все запросы повторно при свайпе вверх
+            SwipeRefreshLayout swipeRefreshLayout = getActivity().findViewById(R.id.swipe_refresh);
+            swipeRefreshLayout.setOnRefreshListener(() -> {
+                getArticle(token, language, webView, gsonService, toastService);
+                swipeRefreshLayout.setRefreshing(false);
+            });
+        }
+    }
+
+    private void getArticle(String token, String language, WebView webView,
+                            GsonService gsonService, ToastService toastService) {
+        progressBar.show(); //включаем прогресс бар
+        //реализация коллбека - что произойдет при получении данных с сервера
+        GenericCallback<String> callback = new GenericCallback<String>() {
+            @Override
+            public void onResponse(String jsonBody) {
+                article = gsonService.fromJsonToObject(jsonBody, Article.class);
+                requireActivity().runOnUiThread(() -> {
+                    if (article.getTopic() == null) { //если нет контента, уведомляем
+                        missingContentText.setText(R.string.missing_content);
+                    } else { //иначе заполняем фрагмент содержимым статьи
+                        showArticle(webView);
+                    }
+                    progressBar.hide();
+                });
+            }
+
+            @Override
+            public void onError(String message) {
+                //выключаем прогресс бар
+                requireActivity().runOnUiThread(() -> progressBar.hide());
+                toastService.showToast(message);
+            }
+
+            @Override
+            public void onFailure(String message) {
+                //выключаем прогресс бар
+                requireActivity().runOnUiThread(() -> progressBar.hide());
+                toastService.showToast(R.string.article_error);
+            }
+        };
+
+        //запрос за получение списка статей по айди пункта меню
+        final String selectedArticleId = getArguments().getString("id");
+        if (selectedArticleId == null) {
+            requestService.doRequest("article", callback, token, language);
+        } else {
+            requestService.doRequest("article", callback, token, language,
+                    "id", selectedArticleId);
         }
     }
 

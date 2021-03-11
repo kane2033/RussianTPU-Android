@@ -84,15 +84,26 @@ public class FragmentReplacer {
                 }
                 fragment.setArguments(args);
                 return fragment;
-                default:
-                    return null;
+            default:
+                return null;
         }
     }
 
     //метод установки изначального фрагмента без добавления в стэк
     public void setInitialFragment(Item item) {
         Fragment fragment = getFragmentByItem(item);
-        int i = fragmentManager.getBackStackEntryCount();
+        if (fragment != null) {
+            fragmentManager.beginTransaction().replace(R.id.fragment_container,
+                    fragment).commit();
+        }
+    }
+
+    // Очищает стек и добавляет фрагмент
+    public void refreshFragment(Item item) {
+        Fragment fragment = getFragmentByItem(item);
+        for (int i = 0; i < fragmentManager.getBackStackEntryCount(); ++i) {
+            fragmentManager.popBackStack();
+        }
         if (fragment != null) {
             fragmentManager.beginTransaction().replace(R.id.fragment_container,
                     fragment).commit();

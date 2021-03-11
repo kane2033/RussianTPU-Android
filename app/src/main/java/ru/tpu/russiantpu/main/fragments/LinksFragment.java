@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
 
@@ -20,6 +21,7 @@ import ru.tpu.russiantpu.main.dataAdapters.ClickListener;
 import ru.tpu.russiantpu.main.dataAdapters.LinksDataAdapter;
 import ru.tpu.russiantpu.main.items.LinkItem;
 import ru.tpu.russiantpu.utility.FragmentReplacer;
+import ru.tpu.russiantpu.utility.MainActivityItems;
 
 //фрагмент, отображающий список статей (новостей)
 public class LinksFragment extends Fragment {
@@ -60,6 +62,7 @@ public class LinksFragment extends Fragment {
                     LinkItem selectedItem = items.get(position);
                     fragmentReplacer.goToFragment(selectedItem);
                 }
+
                 //пока не используется, оставлен на будущее
                 @Override
                 public void onItemLongClick(int position, View v) {
@@ -68,6 +71,15 @@ public class LinksFragment extends Fragment {
             //устанавливаем для списка адаптер
             recyclerView.setAdapter(adapter);
         }
+
+        // Также делаем все запросы повторно при свайпе вверх
+        SwipeRefreshLayout swipeRefreshLayout = getActivity().findViewById(R.id.swipe_refresh);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            MainActivityItems mainActivity = (MainActivityItems) getActivity();
+            fragmentReplacer.refreshFragment(mainActivity.getItems().get(0));
+            swipeRefreshLayout.setRefreshing(false);
+        });
+
         return layoutInflater;
     }
 

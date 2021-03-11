@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -36,12 +38,12 @@ import ru.tpu.russiantpu.dto.UserDTO;
 import ru.tpu.russiantpu.main.activities.MainActivity;
 import ru.tpu.russiantpu.utility.FormService;
 import ru.tpu.russiantpu.utility.LocaleService;
+import ru.tpu.russiantpu.utility.PersonalInfoContent;
 import ru.tpu.russiantpu.utility.SharedPreferencesService;
 import ru.tpu.russiantpu.utility.StartActivityService;
 import ru.tpu.russiantpu.utility.ToastService;
 import ru.tpu.russiantpu.utility.adapters.LanguagesAdapter;
 import ru.tpu.russiantpu.utility.callbacks.GenericCallback;
-import ru.tpu.russiantpu.utility.callbacks.ListDialogCallback;
 import ru.tpu.russiantpu.utility.dialogFragmentServices.ErrorDialogService;
 import ru.tpu.russiantpu.utility.dialogFragmentServices.SearchListDialogService;
 import ru.tpu.russiantpu.utility.notifications.FirebaseNotificationService;
@@ -162,21 +164,13 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
         validator.registerAdapter(TextInputLayout.class, new TextInputLayoutValidatorAdapter());
 
         //при нажатии кнопки "сохранить изменения"
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                validator.validate();
-            }
-        });
+        saveButton.setOnClickListener(v -> validator.validate());
 
         //редактирование информации юзера
-        editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //включаем/выключаем поля для редактирования
-                areFieldsEditable = !areFieldsEditable;
-                enableEditableFields(areFieldsEditable);
-            }
+        editButton.setOnClickListener(v -> {
+            //включаем/выключаем поля для редактирования
+            areFieldsEditable = !areFieldsEditable;
+            enableEditableFields(areFieldsEditable);
         });
 
         progressBar.show(); //включаем прогресс бар перед отправкой запросов
@@ -187,6 +181,65 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
         final String email = sharedPreferencesService.getEmail();
         requestService = new RequestService(sharedPreferencesService, new StartActivityService(activity));
 
+        //инициализация адаптера выбора языка
+        final LanguagesAdapter languagesInputAdapter = new LanguagesAdapter(requireContext(), languageDTOS);
+        languagesInputAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        languageInput.setAdapter(languagesInputAdapter);
+
+        //при нажатии на group input отображаем диалог со списком
+        groupInput.setOnClickListener(view -> {
+            //выводим выбранную группу через dialog fragment в text view
+            SearchListDialogService.showDialog(R.layout.fragment_search_list, groupNames, getFragmentManager(),
+                    selectedGroup -> groupInput.setText(selectedGroup));
+        });
+
+        // Делаем все запросы - получаем список языков, список групп, инфу о юзере
+        doAllPersonalInfoRequests(token, language, email, languagesInputAdapter);
+
+        // Также делаем все запросы повторно при свайпе вверх
+        SwipeRefreshLayout swipeRefreshLayout = layoutInflater.findViewById(R.id.swipe_refresh);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            doAllPersonalInfoRequests(token, language, email, languagesInputAdapter);
+            swipeRefreshLayout.setRefreshing(false);
+        });
+
+        return layoutInflater;
+    }
+
+    private void doAllPersonalInfoRequests(String token, String languageId, String email, LanguagesAdapter adapter) {
+        getLanguages(languageId, adapter);
+        getGroups(languageId);
+        getUserProfile(languageId, email, token);
+    }
+
+    private void getLanguages(String language, LanguagesAdapter adapter) {
+        //получение списка языков из бд
+        requestService.doRequest("language", language, new GenericCallback<String>() {
+            @Override
+            public void onResponse(String json) {
+                //полученные языки заносим в список (спиннер)
+                languageDTOS.addAll(gsonService.fromJsonToArrayList(json, LanguageDTO.class));
+                //уведомляем адаптер о получении языков
+                getActivity().runOnUiThread(adapter::notifyDataSetChanged);
+            }
+
+            @Override
+            public void onError(String message) {
+                //выключаем прогресс бар
+                getActivity().runOnUiThread(() -> progressBar.hide());
+                toastService.showToast(R.string.get_languages_error);
+            }
+
+            @Override
+            public void onFailure(String message) {
+                //выключаем прогресс бар
+                getActivity().runOnUiThread(() -> progressBar.hide());
+                toastService.showToast(R.string.get_languages_error);
+            }
+        });
+    }
+
+    private void getGroups(String language) {
         //получение списка групп с сервиса
         requestService.doRequest("studyGroup", language, new GenericCallback<String>() {
             @Override
@@ -201,106 +254,44 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
             @Override
             public void onError(String message) {
                 //выключаем прогресс бар
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressBar.hide();
-                    }
-                });
+                getActivity().runOnUiThread(() -> progressBar.hide());
                 toastService.showToast(message);
             }
 
             @Override
             public void onFailure(String message) {
                 //выключаем прогресс бар
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressBar.hide();
-                    }
-                });
+                getActivity().runOnUiThread(() -> progressBar.hide());
                 toastService.showToast(R.string.get_groups_error);
             }
         });
+    }
 
-        //при нажатии на group input отображаем диалог со списком
-        groupInput.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //выводим выбранную группу через dialog fragment в text view
-                SearchListDialogService.showDialog(R.layout.fragment_search_list, groupNames, getFragmentManager(), new ListDialogCallback() {
-                    @Override
-                    public void onItemClick(String selectedGroup) {
-                        groupInput.setText(selectedGroup);
-                    }
-                });
-            }
-        });
-
-        //инициализация адаптера выбора языка
-        final LanguagesAdapter languagesInputAdapter = new LanguagesAdapter(requireContext(), languageDTOS);
-        languagesInputAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        languageInput.setAdapter(languagesInputAdapter);
-
-        //получение списка языков из бд
-        requestService.doRequest("language", language, new GenericCallback<String>() {
-            @Override
-            public void onResponse(String json) {
-                //полученные языки заносим в список (спиннер)
-                languageDTOS.addAll(gsonService.fromJsonToArrayList(json, LanguageDTO.class));
-                //уведомляем адаптер о получении языков
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        languagesInputAdapter.notifyDataSetChanged();
-                    }
-                });
-            }
-
-            @Override
-            public void onError(String message) {
-                //выключаем прогресс бар
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressBar.hide();
-                    }
-                });
-                toastService.showToast(R.string.get_languages_error);
-            }
-
-            @Override
-            public void onFailure(String message) {
-                //выключаем прогресс бар
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressBar.hide();
-                    }
-                });
-                toastService.showToast(R.string.get_languages_error);
-            }
-        });
+    private void getUserProfile(String language, String email, String token) {
 
         final GenericCallback<String> getPersonalInfoCallback = new GenericCallback<String>() {
             @Override
             public void onResponse(String jsonBody) {
                 //получаем всю информацию о юзере с сервиса
                 final UserDTO user = gsonService.fromJsonToObject(jsonBody, UserDTO.class);
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //выключаем прогресс бар
-                        progressBar.hide();
-                        //заполняем поля
-                        lastNameInput.setText(user.getLastName());
-                        firstNameInput.setText(user.getFirstName());
-                        middleNameInput.setText(user.getMiddleName());
-                        groupInput.setText(formService.setGroup(user.getGroupName(), getResources().getString(R.string.dialog_none)));
-                        formService.setSelectedGender(genderInput, user.getGender());
-                        formService.setSelectedLanguage(languageInput, user.getLanguageId(), languageDTOS);
-                        phoneNumberInput.setText(user.getPhoneNumber());
-                    }
+                Log.d("", "");
+                getActivity().runOnUiThread(() -> {
+                    //выключаем прогресс бар
+                    progressBar.hide();
+                    //заполняем поля
+                    lastNameInput.setText(user.getLastName());
+                    firstNameInput.setText(user.getFirstName());
+                    middleNameInput.setText(user.getMiddleName());
+                    groupInput.setText(formService.setGroup(user.getGroupName(), getResources().getString(R.string.dialog_none)));
+                    formService.setSelectedGender(genderInput, user.getGender());
+                    formService.setSelectedLanguage(languageInput, user.getLanguageId(), languageDTOS);
+                    phoneNumberInput.setText(user.getPhoneNumber());
+
+
+                    PersonalInfoContent tpuPortalFragment = (PersonalInfoContent) getActivity().getSupportFragmentManager()
+                            .findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + 1);
+                    tpuPortalFragment.onAcademicPlanUrlReceived(user.getAcademicPlanUrl());
+                    tpuPortalFragment.onScheduleUrlReceived(user.getScheduleUrl());
                 });
 
             }
@@ -308,31 +299,19 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
             @Override
             public void onError(String message) {
                 //выключаем прогресс бар
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressBar.hide();
-                    }
-                });
+                getActivity().runOnUiThread(() -> progressBar.hide());
                 toastService.showToast(message);
             }
 
             @Override
             public void onFailure(String message) {
                 //выключаем прогресс бар
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressBar.hide();
-                    }
-                });
+                getActivity().runOnUiThread(() -> progressBar.hide());
                 toastService.showToast(R.string.profile_get_error);
             }
         };
 
         requestService.doRequest("user/profile/", getPersonalInfoCallback, token, language, "email", email);
-
-        return layoutInflater;
     }
 
     //метод активации и деактивации полей формы
@@ -413,15 +392,12 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
             @Override
             public void onError(String message) {
                 //выключаем прогресс бар и включаем кнопку сохранения
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //очищаем поля с паролями
-                        currentPasswordInput.setText("");
-                        newPasswordInput.setText("");
-                        progressBar.hide();
-                        saveButton.setEnabled(true);
-                    }
+                activity.runOnUiThread(() -> {
+                    //очищаем поля с паролями
+                    currentPasswordInput.setText("");
+                    newPasswordInput.setText("");
+                    progressBar.hide();
+                    saveButton.setEnabled(true);
                 });
                 ErrorDialogService.showDialog(getResources().getString(R.string.profile_save_error), message, getFragmentManager());
             }
@@ -429,15 +405,12 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
             @Override
             public void onFailure(String message) {
                 //выключаем прогресс бар и включаем кнопку сохранения
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //очищаем поля с паролями
-                        currentPasswordInput.setText("");
-                        newPasswordInput.setText("");
-                        progressBar.hide();
-                        saveButton.setEnabled(true);
-                    }
+                activity.runOnUiThread(() -> {
+                    //очищаем поля с паролями
+                    currentPasswordInput.setText("");
+                    newPasswordInput.setText("");
+                    progressBar.hide();
+                    saveButton.setEnabled(true);
                 });
                 toastService.showToast(R.string.profile_save_error);
             }
