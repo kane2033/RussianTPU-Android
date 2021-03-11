@@ -10,8 +10,8 @@ android {
         applicationId "ru.tpu.russiantpu"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 23
-        versionName "0.3.6.6"
+        versionCode 24
+        versionName "0.3.6.7"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

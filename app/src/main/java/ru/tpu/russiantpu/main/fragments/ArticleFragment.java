@@ -5,11 +5,13 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.webkit.URLUtil;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +42,10 @@ public class ArticleFragment extends Fragment {
     private FrameLayout frameLayout;
     private ContentLoadingProgressBar progressBar;
     private RequestService requestService;
+    private WebView webView;
+    private SwipeRefreshLayout swipeRefreshLayout;
+
+    private ViewTreeObserver.OnScrollChangedListener mOnScrollChangedListener;
 
     private Article article;
     private final String articleKey = "article";
@@ -48,10 +54,12 @@ public class ArticleFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         //отображаем в фрагменте
-        LinearLayout layoutInflater = (LinearLayout) inflater.inflate(R.layout.fragment_article, container, false);
+        View layoutInflater = inflater.inflate(R.layout.fragment_article, container, false);
+        webView = layoutInflater.findViewById(R.id.fullArticle); //статья
         missingContentText = layoutInflater.findViewById(R.id.missingContentText);
         frameLayout = layoutInflater.findViewById(R.id.fullscreen_container); //контейнер для полноэкранного режима
         progressBar = getActivity().findViewById(R.id.progress_bar);
+        swipeRefreshLayout = getActivity().findViewById(R.id.swipe_refresh);
 
         return layoutInflater;
     }
@@ -60,7 +68,6 @@ public class ArticleFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        WebView webView = getView().findViewById(R.id.fullArticle); //статья
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -76,6 +83,19 @@ public class ArticleFragment extends Fragment {
                     openDeepLink(url);
                     return true;
                 }
+            }
+
+            @Override
+            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+                if (!request.isForMainFrame() && request.getUrl().getPath().endsWith("/favicon.ico")) {
+                    try {
+                        return new WebResourceResponse("image/png", null, null);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                return null;
             }
         });
 
@@ -111,7 +131,7 @@ public class ArticleFragment extends Fragment {
             getArticle(token, language, webView, gsonService, toastService);
 
             // Также делаем все запросы повторно при свайпе вверх
-            SwipeRefreshLayout swipeRefreshLayout = getActivity().findViewById(R.id.swipe_refresh);
+            swipeRefreshLayout = getActivity().findViewById(R.id.swipe_refresh);
             swipeRefreshLayout.setOnRefreshListener(() -> {
                 getArticle(token, language, webView, gsonService, toastService);
                 swipeRefreshLayout.setRefreshing(false);
@@ -194,6 +214,19 @@ public class ArticleFragment extends Fragment {
         bundle.putParcelable(articleKey, article);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        swipeRefreshLayout.getViewTreeObserver().addOnScrollChangedListener(mOnScrollChangedListener =
+                () -> {
+                    if (webView.getScrollY() == 0)
+                        swipeRefreshLayout.setEnabled(true);
+                    else
+                        swipeRefreshLayout.setEnabled(false);
+
+                });
+    }
+
     /*
      * Прячем тулбар в onResume и onStop
      * */
@@ -206,6 +239,7 @@ public class ArticleFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
+        swipeRefreshLayout.getViewTreeObserver().removeOnScrollChangedListener(mOnScrollChangedListener);
         ((AppCompatActivity) getActivity()).getSupportActionBar().show();
     }
 
