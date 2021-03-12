@@ -1,5 +1,7 @@
 package ru.tpu.russiantpu.main.fragments;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -71,20 +73,19 @@ public class ArticleFragment extends Fragment {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                boolean isUrlValid = URLUtil.isValidUrl(url);
-                if (isUrlValid) {
-                    // Если ссылка валидна,
-                    // она открывается в webview
-                    view.loadUrl(url);
-                    return false;
+                if (URLUtil.isNetworkUrl(url)) {
+                    // Если ссылка валидна, открывается в браузере
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
                 } else {
                     // Если ссылка не валидна
+                    // пробуем открыть диплинк
                     progressBar.show();
                     openDeepLink(url);
-                    return true;
                 }
+                return true;
             }
 
+            // Отключаем скачивание картинки сайта, которой нет (засоряет лог сервиса)
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
                 if (!request.isForMainFrame() && request.getUrl().getPath().endsWith("/favicon.ico")) {
@@ -196,12 +197,18 @@ public class ArticleFragment extends Fragment {
     private void openDeepLink(String url) {
         ArticleUrlParser.INSTANCE.navigateDeepLink(url, (MainActivityItems) getActivity(), item -> {
             if (item != null) {
+                // Открываем соответствующий фрагмент, если парсинг успешен
                 FragmentReplacer fragmentReplacer =
                         new FragmentReplacer((AppCompatActivity) requireActivity());
                 fragmentReplacer.goToFragment(item);
             } else {
-                // Показываем ошибку, если это не веб ссылка и не диплинк
-                Toast.makeText(getContext(), R.string.link_open_error, Toast.LENGTH_SHORT).show();
+                try {
+                    // Пробуем открыть в качестве иной ссылки (позвонить, открыть почтовой клиент и др.)
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+                } catch (Exception e) {
+                    // Показываем ошибку, если это не веб ссылка и не диплинк
+                    Toast.makeText(getContext(), R.string.link_open_error, Toast.LENGTH_SHORT).show();
+                }
             }
             progressBar.hide();
             return null;
@@ -214,17 +221,13 @@ public class ArticleFragment extends Fragment {
         bundle.putParcelable(articleKey, article);
     }
 
+    // Фикс бага, при котором нельзя скроллить вверх,
+    // когда достигли самого низа webview и есть swipeRefreshLayout
     @Override
     public void onStart() {
         super.onStart();
         swipeRefreshLayout.getViewTreeObserver().addOnScrollChangedListener(mOnScrollChangedListener =
-                () -> {
-                    if (webView.getScrollY() == 0)
-                        swipeRefreshLayout.setEnabled(true);
-                    else
-                        swipeRefreshLayout.setEnabled(false);
-
-                });
+                () -> swipeRefreshLayout.setEnabled(webView.getScrollY() == 0));
     }
 
     /*

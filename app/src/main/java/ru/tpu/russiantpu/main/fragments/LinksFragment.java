@@ -26,6 +26,8 @@ public class LinksFragment extends Fragment {
 
     private ArrayList<LinkItem> items;
     private final String itemsKey = "items";
+    private String header = "";
+    private final String headerKey = "header";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,11 +37,11 @@ public class LinksFragment extends Fragment {
         // (пр.: смена ориентации)
         if (savedInstanceState != null) {
             items = savedInstanceState.getParcelableArrayList(itemsKey);
+            header = savedInstanceState.getString(headerKey);
         } else { //иначе достаем список из args
             items = getArguments().getParcelableArrayList("children"); //получение пунктов из родительского фрагмента
+            header = getArguments().getString("header"); //название выбранного пункта будет отображаться в тулбаре
         }
-        String header = getArguments().getString("header"); //название выбранного пункта будет отображаться в тулбаре
-        getActivity().setTitle(header); //установка названия пункта в тулбар
     }
 
     @Nullable
@@ -51,10 +53,13 @@ public class LinksFragment extends Fragment {
         RecyclerView recyclerView = layoutInflater.findViewById(R.id.list); //список
         final FragmentReplacer fragmentReplacer = new FragmentReplacer(activity);
 
+        if (!header.isEmpty()) {
+            getActivity().setTitle(header); //установка названия пункта в тулбар
+        }
+
         if (items == null) { //если нет контента, уведомляем
             contentMissingText.setText(R.string.missing_content);
-        }
-        else { //иначе заполняем recycleview
+        } else { //иначе заполняем recycleview
             //создаем адаптер
             LinksDataAdapter adapter = new LinksDataAdapter(this.getContext(), items);
             //установка действия при клике
@@ -74,14 +79,6 @@ public class LinksFragment extends Fragment {
             recyclerView.setAdapter(adapter);
         }
 
-        /*// Также делаем все запросы повторно при свайпе вверх
-        SwipeRefreshLayout swipeRefreshLayout = getActivity().findViewById(R.id.swipe_refresh);
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-            MainActivityItems mainActivity = (MainActivityItems) getActivity();
-            fragmentReplacer.refreshFragment(mainActivity.getItems().get(0));
-            swipeRefreshLayout.setRefreshing(false);
-        });*/
-
         return layoutInflater;
     }
 
@@ -89,5 +86,6 @@ public class LinksFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle bundle) {
         super.onSaveInstanceState(bundle);
         bundle.putParcelableArrayList(itemsKey, items);
+        bundle.putString(headerKey, header);
     }
 }
