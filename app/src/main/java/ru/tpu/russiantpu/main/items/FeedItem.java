@@ -9,7 +9,7 @@ import ru.tpu.russiantpu.main.enums.ContentType;
 public class FeedItem extends Item implements Parcelable {
     private String topic; //заголовок
     private String briefText;
-    private String subject;
+    private String name;
     private String createDate; //дата - пока что строка, с форматом даты не определились
     private String articleImage; //картинка хранится строкой base64
 
@@ -29,12 +29,12 @@ public class FeedItem extends Item implements Parcelable {
         this.briefText = briefText;
     }
 
-    public String getSubject() {
-        return subject;
+    public String getName() {
+        return name;
     }
 
-    public void setSubject(String subject) {
-        this.subject = subject;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getCreateDate() {
@@ -53,11 +53,11 @@ public class FeedItem extends Item implements Parcelable {
         this.articleImage = articleImage;
     }
 
-    public FeedItem(String id, int position, String topic, String briefText, String subject, String createDate, String articleImage) {
+    public FeedItem(String id, int position, String topic, String briefText, String name, String createDate, String articleImage) {
         super(id, position, ContentType.ARTICLE);
         this.topic = topic;
         this.briefText = briefText;
-        this.subject = subject;
+        this.name = name;
         this.createDate = createDate;
         this.articleImage = articleImage;
     }
@@ -72,7 +72,7 @@ public class FeedItem extends Item implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.topic);
         dest.writeString(this.briefText);
-        dest.writeString(this.subject);
+        dest.writeString(this.name);
         dest.writeString(this.createDate);
         dest.writeString(this.articleImage);
         dest.writeString(this.getId());
@@ -85,7 +85,7 @@ public class FeedItem extends Item implements Parcelable {
     protected FeedItem(Parcel in) {
         this.topic = in.readString();
         this.briefText = in.readString();
-        this.subject = in.readString();
+        this.name = in.readString();
         this.createDate = in.readString();
         this.articleImage = in.readString();
         setId(in.readString());

@@ -48,7 +48,7 @@ public class FeedDataAdapter extends RecyclerView.Adapter<FeedDataAdapter.ViewHo
             holder.image.setImageBitmap(imgBitmap);
         }
 
-        holder.header.setText(item.getTopic());
+        holder.header.setText(item.getName());
         holder.previewText.setText(item.getBriefText());
         holder.date.setText(item.getCreateDate());
     }

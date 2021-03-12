@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe_refresh);
         swipeRefreshLayout.setOnRefreshListener(() -> {
             getItemsRequest(token, user, navigationView, toggle);
+            fragmentReplacer.refreshFragment(drawerItems.get(0));
             swipeRefreshLayout.setRefreshing(false);
         });
 

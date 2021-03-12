@@ -40,15 +40,27 @@ public class FeedFragment extends Fragment {
     private RequestService requestService;
     private ContentLoadingProgressBar progressBar;
 
-    private ArrayList<FeedItem> items = new ArrayList<>();
+    private final ArrayList<FeedItem> items = new ArrayList<>();
+    private String title = "";
     private final String itemsKey = "items";
+    private final String titleKey = "title";
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Восстановление состояния (при смене ориентации)
+        if (savedInstanceState != null) {
+            items.addAll(savedInstanceState.getParcelableArrayList(itemsKey));
+            title = savedInstanceState.getString(titleKey);
+        }
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final Activity activity = getActivity();
 
-        final RelativeLayout layoutInflater = (RelativeLayout)inflater.inflate(R.layout.fragment_feed, container, false);
+        final RelativeLayout layoutInflater = (RelativeLayout) inflater.inflate(R.layout.fragment_feed, container, false);
         final RecyclerView recyclerView = layoutInflater.findViewById(R.id.list); //список
         final TextView missingContentText = layoutInflater.findViewById(R.id.missingContentText); //уведомление об отутствии контента
         progressBar = activity.findViewById(R.id.progress_bar);
@@ -80,17 +92,16 @@ public class FeedFragment extends Fragment {
         });
         recyclerView.setAdapter(adapter);
 
+        if (!title.isEmpty()) {
+            getActivity().setTitle(title);
+        }
+
         //загружаем предметы, только если массив предмет пуст;
         // он не пуст, если фрагмент восстанавливается из бэкстека
-        if (items.size() == 0) {
-            //восстанавливаем элементы из временной памяти
-            // (пр.: смена ориентации)
-            if (savedInstanceState != null) {
-                items.addAll(savedInstanceState.<FeedItem>getParcelableArrayList(itemsKey));
-                adapter.notifyDataSetChanged();
-            } else { //иначе делаем запрос на сервис
-                getFeedItems(token, language, gsonService, adapter, missingContentText, toastService);
-            }
+        if (items == null || items.size() == 0) {
+            getFeedItems(token, language, gsonService, adapter, missingContentText, toastService);
+        } else {
+            adapter.notifyDataSetChanged();
         }
 
         // Также делаем все запросы повторно при свайпе вверх
@@ -99,7 +110,6 @@ public class FeedFragment extends Fragment {
             getFeedItems(token, language, gsonService, adapter, missingContentText, toastService);
             swipeRefreshLayout.setRefreshing(false);
         });
-
 
         return layoutInflater;
     }
@@ -117,11 +127,13 @@ public class FeedFragment extends Fragment {
             @Override
             public void onResponse(String jsonBody) {
                 FeedItemListDTO dto = gsonService.fromJsonToObject(jsonBody, FeedItemListDTO.class);
+                items.clear();
                 items.addAll(dto.getArticles());
 
                 //отрисовываем список статей в потоке интерфейса
                 getActivity().runOnUiThread(() -> {
-                    getActivity().setTitle(dto.getTitle());
+                    title = dto.getTitle();
+                    getActivity().setTitle(title);
                     if (items.size() != 0) { //если нет контента, уведомляем
                         Log.d("FEED_FRAGMENT", "Сколько статей получено: " + items.size());
                         adapter.notifyDataSetChanged();
@@ -155,6 +167,7 @@ public class FeedFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle bundle) {
         super.onSaveInstanceState(bundle);
         bundle.putParcelableArrayList(itemsKey, items);
+        bundle.putString(titleKey, title);
     }
 
     @Override

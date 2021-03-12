@@ -12,7 +12,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
 
@@ -21,7 +20,6 @@ import ru.tpu.russiantpu.main.dataAdapters.ClickListener;
 import ru.tpu.russiantpu.main.dataAdapters.LinksDataAdapter;
 import ru.tpu.russiantpu.main.items.LinkItem;
 import ru.tpu.russiantpu.utility.FragmentReplacer;
-import ru.tpu.russiantpu.utility.MainActivityItems;
 
 //фрагмент, отображающий список статей (новостей)
 public class LinksFragment extends Fragment {
@@ -29,25 +27,29 @@ public class LinksFragment extends Fragment {
     private ArrayList<LinkItem> items;
     private final String itemsKey = "items";
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final AppCompatActivity activity = (AppCompatActivity) getActivity();
-        RelativeLayout layoutInflater = (RelativeLayout)inflater.inflate(R.layout.fragment_links, container, false);
-        TextView contentMissingText = layoutInflater.findViewById(R.id.missingContentText);
-        RecyclerView recyclerView = layoutInflater.findViewById(R.id.list); //список
-        final FragmentReplacer fragmentReplacer = new FragmentReplacer(activity);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         //восстанавливаем элементы из временной памяти
         // (пр.: смена ориентации)
         if (savedInstanceState != null) {
             items = savedInstanceState.getParcelableArrayList(itemsKey);
-        }
-        else { //иначе достаем список из args
+        } else { //иначе достаем список из args
             items = getArguments().getParcelableArrayList("children"); //получение пунктов из родительского фрагмента
         }
         String header = getArguments().getString("header"); //название выбранного пункта будет отображаться в тулбаре
-        activity.setTitle(header); //установка названия пункта в тулбар
+        getActivity().setTitle(header); //установка названия пункта в тулбар
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        final AppCompatActivity activity = (AppCompatActivity) getActivity();
+        RelativeLayout layoutInflater = (RelativeLayout) inflater.inflate(R.layout.fragment_links, container, false);
+        TextView contentMissingText = layoutInflater.findViewById(R.id.missingContentText);
+        RecyclerView recyclerView = layoutInflater.findViewById(R.id.list); //список
+        final FragmentReplacer fragmentReplacer = new FragmentReplacer(activity);
 
         if (items == null) { //если нет контента, уведомляем
             contentMissingText.setText(R.string.missing_content);
@@ -72,13 +74,13 @@ public class LinksFragment extends Fragment {
             recyclerView.setAdapter(adapter);
         }
 
-        // Также делаем все запросы повторно при свайпе вверх
+        /*// Также делаем все запросы повторно при свайпе вверх
         SwipeRefreshLayout swipeRefreshLayout = getActivity().findViewById(R.id.swipe_refresh);
         swipeRefreshLayout.setOnRefreshListener(() -> {
             MainActivityItems mainActivity = (MainActivityItems) getActivity();
             fragmentReplacer.refreshFragment(mainActivity.getItems().get(0));
             swipeRefreshLayout.setRefreshing(false);
-        });
+        });*/
 
         return layoutInflater;
     }
