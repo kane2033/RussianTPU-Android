@@ -30,6 +30,7 @@ import ru.tpu.russiantpu.utility.FragmentReplacer;
 import ru.tpu.russiantpu.utility.LocaleService;
 import ru.tpu.russiantpu.utility.MainActivityItems;
 import ru.tpu.russiantpu.utility.MenuItemIconLoader;
+import ru.tpu.russiantpu.utility.OnActivityRefreshRetained;
 import ru.tpu.russiantpu.utility.SharedPreferencesService;
 import ru.tpu.russiantpu.utility.StartActivityService;
 import ru.tpu.russiantpu.utility.ToastService;
@@ -39,7 +40,7 @@ import ru.tpu.russiantpu.utility.requests.RequestService;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
-        MainActivityItems {
+        MainActivityItems, OnActivityRefreshRetained {
 
     private FragmentReplacer fragmentReplacer;
     private RequestService requestService;
@@ -49,10 +50,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ArrayList<LinkItem> drawerItems;
     private final String drawerItemsKey = "drawerItems";
 
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private SwipeRefreshLayout.OnRefreshListener refreshListener;
+
     @NonNull
     @Override
     public List<LinkItem> getItems() {
         return drawerItems;
+    }
+
+    @Override
+    public void retainActivityRefresh() {
+        swipeRefreshLayout.setOnRefreshListener(refreshListener);
     }
 
     @Override
@@ -96,6 +105,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // осуществляющий переход между фрагментами
         fragmentReplacer = new FragmentReplacer(this);
 
+        final ContentLoadingProgressBar progressBar = findViewById(R.id.progress_bar);
+
         //восстанавливаем элементы из временной памяти
         // (пр.: смена ориентации)
         if (savedInstanceState != null) {
@@ -103,21 +114,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             populateMenu(navigationView, toggle); //заполняем боковое меню
         } else { //иначе делаем запрос на сервис
             //запрос на сервис для получения пунктов выдвижного меню
-            getItemsRequest(token, user, navigationView, toggle);
+            getItemsRequest(token, user, progressBar, navigationView, toggle);
         }
 
         // Также делаем все запросы повторно при свайпе вверх
-        SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe_refresh);
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-            getItemsRequest(token, user, navigationView, toggle);
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh);
+        refreshListener = () -> {
+            getItemsRequest(token, user, progressBar, navigationView, toggle);
             fragmentReplacer.refreshFragment(drawerItems.get(0));
             swipeRefreshLayout.setRefreshing(false);
-        });
+        };
+        swipeRefreshLayout.setOnRefreshListener(refreshListener);
 
     }
 
-    private void getItemsRequest(String token, UserDTO user, NavigationView navigationView, ActionBarDrawerToggle toggle) {
-        final ContentLoadingProgressBar progressBar = findViewById(R.id.progress_bar);
+    private void getItemsRequest(String token, UserDTO user, ContentLoadingProgressBar progressBar, NavigationView navigationView, ActionBarDrawerToggle toggle) {
         progressBar.show(); //включаем прогресс бар
 
         final GsonService gsonService = new GsonService();
@@ -190,10 +201,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         toggle.syncState();
-    }
-
-    private void loadIconsIntoMenu() {
-
     }
 
     @Override

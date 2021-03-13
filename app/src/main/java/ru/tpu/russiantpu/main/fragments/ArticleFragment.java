@@ -120,10 +120,10 @@ public class ArticleFragment extends Fragment {
             showArticle(webView);
         } else { //иначе делаем запрос на сервис
             //вспомогательные классы
-            final SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(requireActivity());
+            final SharedPreferencesService sharedPreferencesService = new SharedPreferencesService(getActivity());
             final GsonService gsonService = new GsonService();
             final ToastService toastService = new ToastService(getContext());
-            requestService = new RequestService(sharedPreferencesService, new StartActivityService(requireActivity()));
+            requestService = new RequestService(sharedPreferencesService, new StartActivityService(getActivity()));
 
             //получение JWT токена
             final String token = sharedPreferencesService.getToken();
@@ -148,27 +148,33 @@ public class ArticleFragment extends Fragment {
             @Override
             public void onResponse(String jsonBody) {
                 article = gsonService.fromJsonToObject(jsonBody, Article.class);
-                requireActivity().runOnUiThread(() -> {
-                    if (article.getTopic() == null) { //если нет контента, уведомляем
-                        missingContentText.setText(R.string.missing_content);
-                    } else { //иначе заполняем фрагмент содержимым статьи
-                        showArticle(webView);
-                    }
-                    progressBar.hide();
-                });
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        if (article.getTopic() == null) { //если нет контента, уведомляем
+                            missingContentText.setText(R.string.missing_content);
+                        } else { //иначе заполняем фрагмент содержимым статьи
+                            showArticle(webView);
+                        }
+                        progressBar.hide();
+                    });
+                }
             }
 
             @Override
             public void onError(String message) {
                 //выключаем прогресс бар
-                requireActivity().runOnUiThread(() -> progressBar.hide());
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> progressBar.hide());
+                }
                 toastService.showToast(message);
             }
 
             @Override
             public void onFailure(String message) {
                 //выключаем прогресс бар
-                requireActivity().runOnUiThread(() -> progressBar.hide());
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> progressBar.hide());
+                }
                 toastService.showToast(R.string.article_error);
             }
         };
@@ -199,7 +205,7 @@ public class ArticleFragment extends Fragment {
             if (item != null) {
                 // Открываем соответствующий фрагмент, если парсинг успешен
                 FragmentReplacer fragmentReplacer =
-                        new FragmentReplacer((AppCompatActivity) requireActivity());
+                        new FragmentReplacer((AppCompatActivity) getActivity());
                 fragmentReplacer.goToFragment(item);
             } else {
                 try {
