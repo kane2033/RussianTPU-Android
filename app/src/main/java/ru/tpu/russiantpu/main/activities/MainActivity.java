@@ -106,6 +106,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fragmentReplacer = new FragmentReplacer(this);
 
         final ContentLoadingProgressBar progressBar = findViewById(R.id.progress_bar);
+        final GsonService gsonService = new GsonService();
+        final ToastService toastService = new ToastService(this);
 
         //восстанавливаем элементы из временной памяти
         // (пр.: смена ориентации)
@@ -114,13 +116,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             populateMenu(navigationView, toggle); //заполняем боковое меню
         } else { //иначе делаем запрос на сервис
             //запрос на сервис для получения пунктов выдвижного меню
-            getItemsRequest(token, user, progressBar, navigationView, toggle);
+            getItemsRequest(token, user.getLanguageId(), user.getEmail(),
+                    gsonService, toastService, progressBar, navigationView, toggle);
         }
 
         // Также делаем все запросы повторно при свайпе вверх
         swipeRefreshLayout = findViewById(R.id.swipe_refresh);
         refreshListener = () -> {
-            getItemsRequest(token, user, progressBar, navigationView, toggle);
+            final String languageId = sharedPreferencesService.getLanguageId();
+            getItemsRequest(token, languageId, user.getEmail(),
+                    gsonService, toastService, progressBar, navigationView, toggle);
             fragmentReplacer.refreshFragment(drawerItems.get(0));
             swipeRefreshLayout.setRefreshing(false);
         };
@@ -128,11 +133,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    private void getItemsRequest(String token, UserDTO user, ContentLoadingProgressBar progressBar, NavigationView navigationView, ActionBarDrawerToggle toggle) {
+    private void getItemsRequest(String token, String languageId, String email,
+                                 GsonService gsonService,
+                                 ToastService toastService,
+                                 ContentLoadingProgressBar progressBar,
+                                 NavigationView navigationView,
+                                 ActionBarDrawerToggle toggle) {
         progressBar.show(); //включаем прогресс бар
 
-        final GsonService gsonService = new GsonService();
-        final ToastService toastService = new ToastService(this);
 
         //реализация коллбека - что произойдет при получении данных с сервиса
         GenericCallback<String> callback = new GenericCallback<String>() {
@@ -170,8 +178,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         };
         //делаем запрос на получение пунктов меню на языке пользователя
-        requestService.doRequest("menu", callback, token, user.getLanguageId(),
-                "language", user.getLanguageId(), "email", user.getEmail());
+        requestService.doRequest("menu", callback, token, languageId,
+                "language", languageId, "email", email);
     }
 
     //To keep them in memory
