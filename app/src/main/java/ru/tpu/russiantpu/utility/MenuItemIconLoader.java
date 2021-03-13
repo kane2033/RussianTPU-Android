@@ -4,6 +4,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.view.MenuItem;
 
 import com.squareup.picasso.Picasso;
@@ -38,10 +39,14 @@ public class MenuItemIconLoader {
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
             MenuItem menuItem = itemWeakReference.get();
             if (menuItem != null) {
-                Drawable drawable = new BitmapDrawable(resources, bitmap);
+                final Drawable drawable = new BitmapDrawable(resources, bitmap);
                 drawable.setBounds(0, 0, targetWidth, targetHeight);
-                drawable.mutate();
+                // Без установок tint = null, иконки будут черными
                 drawable.setTintMode(null);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    drawable.setTintBlendMode(null);
+                }
+                drawable.setTintList(null);
                 menuItem.setIcon(drawable);
             }
         }
