@@ -54,7 +54,6 @@ public class LinksDataAdapter extends RecyclerView.Adapter<LinksDataAdapter.View
         return items.size();
     }
 
-
     //класс, хранящий элементы управления
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         final TextView nameText;

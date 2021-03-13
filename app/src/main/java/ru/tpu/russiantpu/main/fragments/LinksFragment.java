@@ -61,12 +61,14 @@ public class LinksFragment extends Fragment {
             activity.retainActivityRefresh();
         }
 
-
         if (!header.isEmpty()) {
             getActivity().setTitle(header); //установка названия пункта в тулбар
         }
 
         //создаем адаптер
+        if (items == null) {
+            items = new ArrayList<>();
+        }
         final LinksDataAdapter adapter = new LinksDataAdapter(getContext(), items);
         //установка действия при клике
         adapter.setOnItemClickListener(new ClickListener() {
@@ -84,7 +86,7 @@ public class LinksFragment extends Fragment {
         //устанавливаем для списка адаптер
         recyclerView.setAdapter(adapter);
 
-        if (items == null) { //если нет контента, уведомляем
+        if (items.size() == 0) { //если нет контента, уведомляем
             contentMissingText.setText(R.string.missing_content);
         }
 
