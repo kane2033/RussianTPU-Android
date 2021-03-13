@@ -29,6 +29,7 @@ import ru.tpu.russiantpu.main.items.LinkItem;
 import ru.tpu.russiantpu.utility.FragmentReplacer;
 import ru.tpu.russiantpu.utility.LocaleService;
 import ru.tpu.russiantpu.utility.MainActivityItems;
+import ru.tpu.russiantpu.utility.MenuItemIconLoader;
 import ru.tpu.russiantpu.utility.SharedPreferencesService;
 import ru.tpu.russiantpu.utility.StartActivityService;
 import ru.tpu.russiantpu.utility.ToastService;
@@ -162,19 +163,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 "language", user.getLanguageId(), "email", user.getEmail());
     }
 
+    //To keep them in memory
+    final List<MenuItemIconLoader> iconLoaderList = new ArrayList<>();
+
     //метод заполнения боковой шторки
     private void populateMenu(NavigationView navigationView, ActionBarDrawerToggle toggle) {
         Menu menu = navigationView.getMenu();
+        if (menu.size() > 0) {
+            menu.clear();
+            iconLoaderList.clear();
+        }
 
         // первый элемент - календарь событий
         menu.add(0, 0, 0, getString(R.string.calendar_title));
 
         //заполняем боковое меню пунктами 1 уровня
         for (int i = 1; i <= drawerItems.size(); i++) {
-            menu.add(1, i, 0, drawerItems.get(i - 1).getName());
+            final MenuItem menuItem = menu.add(1, i, 0, drawerItems.get(i - 1).getName());
+            iconLoaderList.add(new MenuItemIconLoader(getResources(), menuItem));
+        }
+        // Загрузка картинок в шторку
+        for (int i = 0; i < drawerItems.size(); i++) {
+            LinkItem item = drawerItems.get(i);
+            MenuItemIconLoader iconLoader = iconLoaderList.get(i);
+            iconLoader.load(item);
         }
 
         toggle.syncState();
+    }
+
+    private void loadIconsIntoMenu() {
+
     }
 
     @Override
