@@ -8,7 +8,6 @@ public class UserDTO implements Parcelable {
     private String password;
     private String firstName;
     private String lastName;
-    private String middleName;
     private String gender;
     private String languageId;
     private String languageName;
@@ -25,14 +24,13 @@ public class UserDTO implements Parcelable {
 
     //конструктор для обновления информации о пользователе в активити профиля
     public UserDTO(String email, String password, String newPassword, String firstName,
-                   String lastName, String middleName, String groupName, String gender,
+                   String lastName, String groupName, String gender,
                    String languageId, String languageName, String phoneNumber) {
         this.email = email;
         this.password = password;
         this.newPassword = newPassword;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.middleName = middleName;
         this.groupName = groupName;
         this.gender = gender;
         this.languageId = languageId;
@@ -50,13 +48,12 @@ public class UserDTO implements Parcelable {
     //метод используется в тех случаях, когда нельзя создавать новый экземпляр объекта,
     //потому что в нем может храниться информация (provider)
     public void updateFields(String email, String password, String firstName,
-                             String lastName, String middleName, String groupName, String gender,
+                             String lastName, String groupName, String gender,
                              String language, String phoneNumber) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.middleName = middleName;
         this.groupName = groupName;
         this.gender = gender;
         this.languageId = language;
@@ -93,14 +90,6 @@ public class UserDTO implements Parcelable {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public String getMiddleName() {
-        return middleName;
-    }
-
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
     }
 
     public String getGroupName() {

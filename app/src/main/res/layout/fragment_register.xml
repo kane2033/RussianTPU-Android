@@ -63,21 +63,6 @@
                     android:inputType="textCapWords" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!--  Name Label -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/text_input_margin"
-                android:layout_marginBottom="@dimen/text_input_margin"
-                android:hint="@string/middle_name">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/input_middlename"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textCapWords" />
-            </com.google.android.material.textfield.TextInputLayout>
-
             <!-- Email Label -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"

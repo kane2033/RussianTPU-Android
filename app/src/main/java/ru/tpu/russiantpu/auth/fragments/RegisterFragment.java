@@ -42,7 +42,6 @@ import ru.tpu.russiantpu.utility.SharedPreferencesService;
 import ru.tpu.russiantpu.utility.ToastService;
 import ru.tpu.russiantpu.utility.adapters.LanguagesAdapter;
 import ru.tpu.russiantpu.utility.callbacks.GenericCallback;
-import ru.tpu.russiantpu.utility.callbacks.ListDialogCallback;
 import ru.tpu.russiantpu.utility.dialogFragmentServices.ErrorDialogService;
 import ru.tpu.russiantpu.utility.dialogFragmentServices.SearchListDialogService;
 import ru.tpu.russiantpu.utility.requests.GsonService;
@@ -66,9 +65,6 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
 
     @NotEmpty(messageResId = R.string.empty_field_error)
     private TextInputEditText firstNameInput;
-
-    @Pattern(regex = "^(?=.{0,50}$).*", messageResId = R.string.middlename_error) //optional, max 50
-    private TextInputEditText middleNameInput;
 
     private final List<String> groupNames = new ArrayList<>();
     private TextView groupInput;
@@ -109,7 +105,6 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
         passwordInput = layoutInflater.findViewById(R.id.input_password);
         firstNameInput = layoutInflater.findViewById(R.id.input_firstname);
         lastNameInput = layoutInflater.findViewById(R.id.input_lastname);
-        middleNameInput = layoutInflater.findViewById(R.id.input_middlename);
         groupInput = layoutInflater.findViewById(R.id.input_group_dialog);
         genderInput = layoutInflater.findViewById(R.id.input_gender_spinner);
         languageInput = layoutInflater.findViewById(R.id.input_language_spinner);
@@ -145,40 +140,23 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
             @Override
             public void onError(String message) {
                 //выключаем прогресс бар
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressBar.hide();
-                    }
-                });
+                activity.runOnUiThread(() -> progressBar.hide());
                 toastService.showToast(R.string.get_groups_error);
             }
 
             @Override
             public void onFailure(String message) {
                 //выключаем прогресс бар
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressBar.hide();
-                    }
-                });
+                activity.runOnUiThread(() -> progressBar.hide());
                 toastService.showToast(R.string.get_groups_error);
             }
         });
 
         //при нажатии на group input отображаем диалог со списком
-        groupInput.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //выводим выбранную группу через dialog fragment в text view
-                SearchListDialogService.showDialog(R.layout.fragment_search_list, groupNames, getFragmentManager(), new ListDialogCallback() {
-                    @Override
-                    public void onItemClick(String selectedGroup) {
-                        groupInput.setText(selectedGroup);
-                    }
-                });
-            }
+        groupInput.setOnClickListener(view -> {
+            //выводим выбранную группу через dialog fragment в text view
+            SearchListDialogService.showDialog(R.layout.fragment_search_list, groupNames, getFragmentManager(),
+                    selectedGroup -> groupInput.setText(selectedGroup));
         });
 
         //инициализация адаптера выбора языка
@@ -194,35 +172,20 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
                 //полученные языки заносим в список (спиннер)
                 languageDTOS.addAll(gsonService.fromJsonToArrayList(json, LanguageDTO.class));
                 //уведомляем адаптер о получении языков
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        languagesInputAdapter.notifyDataSetChanged();
-                    }
-                });
+                activity.runOnUiThread(languagesInputAdapter::notifyDataSetChanged);
             }
 
             @Override
             public void onError(String message) {
                 //выключаем прогресс бар
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressBar.hide();
-                    }
-                });
+                activity.runOnUiThread(() -> progressBar.hide());
                 toastService.showToast(R.string.get_languages_error);
             }
 
             @Override
             public void onFailure(String message) {
                 //выключаем прогресс бар
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressBar.hide();
-                    }
-                });
+                activity.runOnUiThread(() -> progressBar.hide());
                 toastService.showToast(R.string.get_languages_error);
             }
         });
@@ -268,7 +231,6 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
         String password = formService.getTextFromInput(passwordInput);
         String firstName = formService.getTextFromInput(firstNameInput);
         String lastName = formService.getTextFromInput(lastNameInput);
-        String middleName = formService.getTextFromInput(middleNameInput);
         String groupName = formService.getGroup(groupInput, groupNames);
         String gender = formService.getSelectedGender(genderInput); //пол не обязательное поле, поэтому может быть null
         String selectedLanguage = formService.getSelectedLanguage(languageInput).getId();
@@ -276,19 +238,17 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
 
         //заполняем дто регистрации, которое будем отправлять на сервис
         //если поля не заполнены, они равны null
-        dto.updateFields(email, password, firstName, lastName, middleName, groupName, gender, selectedLanguage, phoneNumber);
+        dto.updateFields(email, password, firstName, lastName, groupName,
+                gender, selectedLanguage, phoneNumber);
 
         final GenericCallback<String> callback = new GenericCallback<String>() {
             @Override
             public void onResponse(String jsonBody) {
                 //сразу авторизуемся после регистрации, если логин через соцсети
                 //выключаем прогресс бар и включаем кнопку регистрации
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressBar.hide();
-                        registerButton.setEnabled(true);
-                    }
+                activity.runOnUiThread(() -> {
+                    progressBar.hide();
+                    registerButton.setEnabled(true);
                 });
                 toastService.showToast(R.string.reg_success);
 
@@ -315,12 +275,9 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
             @Override
             public void onError(String message) {
                 //выключаем прогресс бар и включаем кнопку регистрации
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressBar.hide();
-                        registerButton.setEnabled(true);
-                    }
+                activity.runOnUiThread(() -> {
+                    progressBar.hide();
+                    registerButton.setEnabled(true);
                 });
                 ErrorDialogService.showDialog(getResources().getString(R.string.register_error), message, getFragmentManager());
             }
@@ -328,12 +285,9 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
             @Override
             public void onFailure(String message) {
                 //выключаем прогресс бар и включаем кнопку регистрации
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressBar.hide();
-                        registerButton.setEnabled(true);
-                    }
+                activity.runOnUiThread(() -> {
+                    progressBar.hide();
+                    registerButton.setEnabled(true);
                 });
                 toastService.showToast(R.string.register_error);
             }
@@ -342,12 +296,9 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
         //если регистрация происходит через сторонние сервисы (поле != null), выбираем соответствующий юрл
         final String url = dto.getProvider() != null ? "auth/provider/registration" : "auth/local/registration";
 
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                final String json = gsonService.fromObjectToJson(dto);
-                requestService.doPostRequest(url, callback, language, json);
-            }
+        activity.runOnUiThread(() -> {
+            final String json = gsonService.fromObjectToJson(dto);
+            requestService.doPostRequest(url, callback, language, json);
         });
 
     }

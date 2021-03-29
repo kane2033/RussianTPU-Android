@@ -60,9 +60,6 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
     @NotEmpty(messageResId = R.string.empty_field_error)
     private TextInputEditText firstNameInput;
 
-    @Pattern(regex = "^(?=.{0,50}$).*", messageResId = R.string.middlename_error) //optional, max 50
-    private TextInputEditText middleNameInput;
-
     private TextView groupInput;
     private List<String> groupNames = new ArrayList<>();
 
@@ -121,7 +118,6 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
 
         lastNameInput = formContainer.findViewById(R.id.input_lastname);
         firstNameInput = formContainer.findViewById(R.id.input_firstname);
-        middleNameInput = formContainer.findViewById(R.id.input_middlename);
         groupInput = formContainer.findViewById(R.id.input_group_dialog);
         genderInput = formContainer.findViewById(R.id.input_gender_spinner);
         languageInput = formContainer.findViewById(R.id.input_language_spinner);
@@ -281,7 +277,6 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
                     //заполняем поля
                     lastNameInput.setText(user.getLastName());
                     firstNameInput.setText(user.getFirstName());
-                    middleNameInput.setText(user.getMiddleName());
                     groupInput.setText(formService.setGroup(user.getGroupName(), getResources().getString(R.string.dialog_none)));
                     formService.setSelectedGender(genderInput, user.getGender());
                     formService.setSelectedLanguage(languageInput, user.getLanguageId(), languageDTOS);
@@ -340,7 +335,6 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
         String newPassword = formService.getTextFromInput(newPasswordInput);
         String firstName = formService.getTextFromInput(firstNameInput);
         String lastName = formService.getTextFromInput(lastNameInput);
-        String middleName = formService.getTextFromInput(middleNameInput);
         final String groupName = formService.getGroup(groupInput, groupNames);
         String gender = formService.getSelectedGender(genderInput);
         final LanguageDTO languageDTO = formService.getSelectedLanguage(languageInput);
@@ -349,41 +343,38 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
         final String oldLanguageShortName = sharedPreferencesService.getLanguageName();
         final String oldGroupName = sharedPreferencesService.getGroupName();
         String phoneNumber = formService.getTextFromInput(phoneNumberInput);
-        final UserDTO dto = new UserDTO(email, currentPassword, newPassword, firstName, lastName, middleName, groupName, gender, languageId, languageDTO.getShortName(), phoneNumber);
+        final UserDTO dto = new UserDTO(email, currentPassword, newPassword, firstName, lastName,
+                groupName, gender, languageId, languageDTO.getShortName(), phoneNumber);
 
         final GenericCallback<String> callback = new GenericCallback<String>() {
             @Override
             public void onResponse(String message) {
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //очищаем поля с паролями
-                        currentPasswordInput.setText("");
-                        newPasswordInput.setText("");
+                activity.runOnUiThread(() -> {
+                    //очищаем поля с паролями
+                    currentPasswordInput.setText("");
+                    newPasswordInput.setText("");
 
-                        progressBar.hide(); //выключаем прогресс бар
-                        saveButton.setEnabled(true); //включаем кнопку сохранения
-                        toastService.showToast(R.string.profile_save_success);
-                        enableEditableFields(false); //отключаем редактирование полей
-                        sharedPreferencesService.setUser(dto); //запись в память новой информации о пользователе
+                    progressBar.hide(); //выключаем прогресс бар
+                    saveButton.setEnabled(true); //включаем кнопку сохранения
+                    toastService.showToast(R.string.profile_save_success);
+                    enableEditableFields(false); //отключаем редактирование полей
+                    sharedPreferencesService.setUser(dto); //запись в память новой информации о пользователе
 
-                        //если поменялся язык
-                        if (!languageId.equals(oldLanguageId)) {
-                            FirebaseNotificationService.unsubscribeFromNotifications(oldLanguageShortName); //отписываемся от рассылки уведомлений на текущий язык
-                            FirebaseNotificationService.subscribeToNotifications(languageDTO.getShortName()); //подписываемся на новый язык
-                            LocaleService.setLocale(activity, languageDTO.getShortName()); //установка нового языка приложения
+                    //если поменялся язык
+                    if (!languageId.equals(oldLanguageId)) {
+                        FirebaseNotificationService.unsubscribeFromNotifications(oldLanguageShortName); //отписываемся от рассылки уведомлений на текущий язык
+                        FirebaseNotificationService.subscribeToNotifications(languageDTO.getShortName()); //подписываемся на новый язык
+                        LocaleService.setLocale(activity, languageDTO.getShortName()); //установка нового языка приложения
+                        Intent intent = new Intent(activity, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                    } else {
+                        String newGroupName = groupName == null ? "" : groupName; //новая группа, избегаем npe
+                        if (!newGroupName.equals(oldGroupName)) { //если поменялась группа
+                            //перезапускаем главное активити, чтобы заново загрузить меню 1 уровня и новую ссылку на расписание
                             Intent intent = new Intent(activity, MainActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
-                        }
-                        else {
-                            String newGroupName = groupName == null ? "" : groupName; //новая группа, избегаем npe
-                            if (!newGroupName.equals(oldGroupName)) { //если поменялась группа
-                                //перезапускаем главное активити, чтобы заново загрузить меню 1 уровня и новую ссылку на расписание
-                                Intent intent = new Intent(activity, MainActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                startActivity(intent);
-                            }
                         }
                     }
                 });
