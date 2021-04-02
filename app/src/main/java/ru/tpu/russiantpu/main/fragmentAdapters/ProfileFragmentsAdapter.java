@@ -11,11 +11,10 @@ import ru.tpu.russiantpu.R;
 import ru.tpu.russiantpu.main.fragments.profile.DocumentsFragment;
 import ru.tpu.russiantpu.main.fragments.profile.NotificationsFragment;
 import ru.tpu.russiantpu.main.fragments.profile.PersonalInfoFragment;
-import ru.tpu.russiantpu.main.fragments.profile.TpuPortalFragment;
 
 public class ProfileFragmentsAdapter extends FragmentPagerAdapter {
 
-    private final int itemsSize = 4;
+    private final int itemsSize = 3;
     private final String[] tabTitles;
 
     public ProfileFragmentsAdapter(@NonNull FragmentManager fm, int behavior, Resources resources) {
@@ -28,9 +27,8 @@ public class ProfileFragmentsAdapter extends FragmentPagerAdapter {
     private String[] getTabTitles(Resources resources) {
         String[] titles = new String[itemsSize];
         titles[0] = resources.getString(R.string.personal_info_name);
-        titles[1] = resources.getString(R.string.portal_name);
-        titles[2] = resources.getString(R.string.documents_name);
-        titles[3] = resources.getString(R.string.notifications_name);
+        titles[1] = resources.getString(R.string.documents_name);
+        titles[2] = resources.getString(R.string.notifications_name);
         return titles;
     }
 
@@ -39,10 +37,8 @@ public class ProfileFragmentsAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 1:
-                return new TpuPortalFragment();
-            case 2:
                 return new DocumentsFragment();
-            case 3:
+            case 2:
                 return new NotificationsFragment();
             default:
                 return new PersonalInfoFragment();

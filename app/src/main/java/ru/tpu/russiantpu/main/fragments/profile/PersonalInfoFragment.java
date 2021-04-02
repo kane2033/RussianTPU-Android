@@ -28,24 +28,18 @@ import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.mobsandgeeks.saripaar.annotation.Pattern;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import ru.tpu.russiantpu.R;
-import ru.tpu.russiantpu.dto.GroupsDTO;
-import ru.tpu.russiantpu.dto.LanguageDTO;
 import ru.tpu.russiantpu.dto.UserDTO;
 import ru.tpu.russiantpu.main.activities.MainActivity;
 import ru.tpu.russiantpu.utility.FormService;
 import ru.tpu.russiantpu.utility.LocaleService;
-import ru.tpu.russiantpu.utility.PersonalInfoContent;
 import ru.tpu.russiantpu.utility.SharedPreferencesService;
 import ru.tpu.russiantpu.utility.StartActivityService;
 import ru.tpu.russiantpu.utility.ToastService;
-import ru.tpu.russiantpu.utility.adapters.LanguagesAdapter;
 import ru.tpu.russiantpu.utility.callbacks.GenericCallback;
 import ru.tpu.russiantpu.utility.dialogFragmentServices.ErrorDialogService;
-import ru.tpu.russiantpu.utility.dialogFragmentServices.SearchListDialogService;
 import ru.tpu.russiantpu.utility.notifications.FirebaseNotificationService;
 import ru.tpu.russiantpu.utility.requests.GsonService;
 import ru.tpu.russiantpu.utility.requests.RequestService;
@@ -60,15 +54,15 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
     @NotEmpty(messageResId = R.string.empty_field_error)
     private TextInputEditText firstNameInput;
 
-    private TextView groupInput;
-    private List<String> groupNames = new ArrayList<>();
+/*    private TextView groupInput;
+    private List<String> groupNames = new ArrayList<>();*/
 
     //ввод пола не валидируется
     private Spinner genderInput;
 
-    @NotEmpty(messageResId = R.string.empty_field_error)
+    /*@NotEmpty(messageResId = R.string.empty_field_error)
     private Spinner languageInput; //список выбора языка
-    private final List<LanguageDTO> languageDTOS = new ArrayList<>(); //пустой список заполнится после получение результата с сервиса
+    private final List<LanguageDTO> languageDTOS = new ArrayList<>(); //пустой список заполнится после получение результата с сервиса*/
 
     @Pattern(regex = "(^$)|(^[+]\\d+$)", messageResId = R.string.phone_error) //optional, max 20
     private TextInputEditText phoneNumberInput;
@@ -118,9 +112,9 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
 
         lastNameInput = formContainer.findViewById(R.id.input_lastname);
         firstNameInput = formContainer.findViewById(R.id.input_firstname);
-        groupInput = formContainer.findViewById(R.id.input_group_dialog);
+        //groupInput = formContainer.findViewById(R.id.input_group_dialog);
         genderInput = formContainer.findViewById(R.id.input_gender_spinner);
-        languageInput = formContainer.findViewById(R.id.input_language_spinner);
+        //languageInput = formContainer.findViewById(R.id.input_language_spinner);
         phoneNumberInput = formContainer.findViewById(R.id.input_phone_number);
         newPasswordInput = formContainer.findViewById(R.id.input_new_password);
         currentPasswordInput = formContainer.findViewById(R.id.input_current_password);
@@ -177,7 +171,7 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
         final String email = sharedPreferencesService.getEmail();
         requestService = new RequestService(sharedPreferencesService, new StartActivityService(activity));
 
-        //инициализация адаптера выбора языка
+        /*//инициализация адаптера выбора языка
         final LanguagesAdapter languagesInputAdapter = new LanguagesAdapter(requireContext(), languageDTOS);
         languagesInputAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         languageInput.setAdapter(languagesInputAdapter);
@@ -187,28 +181,28 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
             //выводим выбранную группу через dialog fragment в text view
             SearchListDialogService.showDialog(R.layout.fragment_search_list, groupNames, getFragmentManager(),
                     selectedGroup -> groupInput.setText(selectedGroup));
-        });
+        });*/
 
         // Делаем все запросы - получаем список языков, список групп, инфу о юзере
-        doAllPersonalInfoRequests(token, language, email, languagesInputAdapter);
+        doAllPersonalInfoRequests(token, language, email);
 
         // Также делаем все запросы повторно при свайпе вверх
         SwipeRefreshLayout swipeRefreshLayout = layoutInflater.findViewById(R.id.swipe_refresh);
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            doAllPersonalInfoRequests(token, language, email, languagesInputAdapter);
+            doAllPersonalInfoRequests(token, language, email);
             swipeRefreshLayout.setRefreshing(false);
         });
 
         return layoutInflater;
     }
 
-    private void doAllPersonalInfoRequests(String token, String languageId, String email, LanguagesAdapter adapter) {
-        getLanguages(languageId, adapter);
-        getGroups(languageId);
+    private void doAllPersonalInfoRequests(String token, String languageId, String email) {
+        //getLanguages(languageId);
+        //getGroups(languageId);
         getUserProfile(languageId, email, token);
     }
 
-    private void getLanguages(String language, LanguagesAdapter adapter) {
+    /*private void getLanguages(String language, LanguagesAdapter adapter) {
         //получение списка языков из бд
         requestService.doRequest("language", language, new GenericCallback<String>() {
             @Override
@@ -233,9 +227,9 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
                 toastService.showToast(R.string.get_languages_error);
             }
         });
-    }
+    }*/
 
-    private void getGroups(String language) {
+    /*private void getGroups(String language) {
         //получение списка групп с сервиса
         requestService.doRequest("studyGroup", language, new GenericCallback<String>() {
             @Override
@@ -261,7 +255,7 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
                 toastService.showToast(R.string.get_groups_error);
             }
         });
-    }
+    }*/
 
     private void getUserProfile(String language, String email, String token) {
 
@@ -277,16 +271,16 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
                     //заполняем поля
                     lastNameInput.setText(user.getLastName());
                     firstNameInput.setText(user.getFirstName());
-                    groupInput.setText(formService.setGroup(user.getGroupName(), getResources().getString(R.string.dialog_none)));
+                    //groupInput.setText(formService.setGroup(user.getGroupName(), getResources().getString(R.string.dialog_none)));
                     formService.setSelectedGender(genderInput, user.getGender());
-                    formService.setSelectedLanguage(languageInput, user.getLanguageId(), languageDTOS);
+                    //formService.setSelectedLanguage(languageInput, user.getLanguageId(), languageDTOS);
                     phoneNumberInput.setText(user.getPhoneNumber());
 
 
-                    PersonalInfoContent tpuPortalFragment = (PersonalInfoContent) getActivity().getSupportFragmentManager()
+/*                    PersonalInfoContent tpuPortalFragment = (PersonalInfoContent) getActivity().getSupportFragmentManager()
                             .findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + 1);
                     tpuPortalFragment.onAcademicPlanUrlReceived(user.getAcademicPlanUrl());
-                    tpuPortalFragment.onScheduleUrlReceived(user.getScheduleUrl());
+                    tpuPortalFragment.onScheduleUrlReceived(user.getScheduleUrl());*/
                 });
 
             }
@@ -335,16 +329,16 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
         String newPassword = formService.getTextFromInput(newPasswordInput);
         String firstName = formService.getTextFromInput(firstNameInput);
         String lastName = formService.getTextFromInput(lastNameInput);
-        final String groupName = formService.getGroup(groupInput, groupNames);
+        final String groupName = "8В7Б";
         String gender = formService.getSelectedGender(genderInput);
-        final LanguageDTO languageDTO = formService.getSelectedLanguage(languageInput);
-        final String languageId = languageDTO.getId();
+        //final LanguageDTO languageDTO = null;
+        final String languageId = "e06ed586-dd3b-4751-9bed-764047793afa";
         final String oldLanguageId = sharedPreferencesService.getLanguageId();
         final String oldLanguageShortName = sharedPreferencesService.getLanguageName();
         final String oldGroupName = sharedPreferencesService.getGroupName();
         String phoneNumber = formService.getTextFromInput(phoneNumberInput);
         final UserDTO dto = new UserDTO(email, currentPassword, newPassword, firstName, lastName,
-                groupName, gender, languageId, languageDTO.getShortName(), phoneNumber);
+                groupName, gender, languageId, "", phoneNumber);
 
         final GenericCallback<String> callback = new GenericCallback<String>() {
             @Override
@@ -363,8 +357,8 @@ public class PersonalInfoFragment extends Fragment implements Validator.Validati
                     //если поменялся язык
                     if (!languageId.equals(oldLanguageId)) {
                         FirebaseNotificationService.unsubscribeFromNotifications(oldLanguageShortName); //отписываемся от рассылки уведомлений на текущий язык
-                        FirebaseNotificationService.subscribeToNotifications(languageDTO.getShortName()); //подписываемся на новый язык
-                        LocaleService.setLocale(activity, languageDTO.getShortName()); //установка нового языка приложения
+                        FirebaseNotificationService.subscribeToNotifications(""); //подписываемся на новый язык
+                        LocaleService.setLocale(activity, ""); //установка нового языка приложения
                         Intent intent = new Intent(activity, MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);

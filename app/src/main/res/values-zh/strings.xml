@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">PreTPU</string>
+    <string name="app_name">Dive In</string>
     <string name="email_error">电子邮件无效</string>
     <string name="password_error">密码长度至少为8个字符，至少包含一个大写字母和一位数字。 允许的字符： ＆^％$＃@ _ | \\ /</string>
     <string name="lastname_error">超出字符数限制</string>

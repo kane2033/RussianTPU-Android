@@ -45,7 +45,7 @@ public class FeedFragment extends Fragment {
     private final String itemsKey = "items";
     private final String titleKey = "title";
 
-    @Override
+/*    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Восстановление состояния (при смене ориентации)
@@ -53,7 +53,7 @@ public class FeedFragment extends Fragment {
             items.addAll(savedInstanceState.getParcelableArrayList(itemsKey));
             title = savedInstanceState.getString(titleKey);
         }
-    }
+    }*/
 
     @Nullable
     @Override
@@ -166,8 +166,8 @@ public class FeedFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle bundle) {
         super.onSaveInstanceState(bundle);
-        bundle.putParcelableArrayList(itemsKey, items);
-        bundle.putString(titleKey, title);
+        //bundle.putParcelableArrayList(itemsKey, items);
+        //bundle.putString(titleKey, title);
     }
 
     @Override

@@ -14,7 +14,6 @@ import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.fragment.app.Fragment
-import com.yqritc.scalablevideoview.ScalableVideoView
 import ru.tpu.russiantpu.R
 import ru.tpu.russiantpu.main.activities.CalendarActivity
 import ru.tpu.russiantpu.main.activities.MainActivity
@@ -23,7 +22,6 @@ import ru.tpu.russiantpu.utility.SharedPreferencesService
 import ru.tpu.russiantpu.utility.callbacks.GenericCallback
 import ru.tpu.russiantpu.utility.notifications.NotificationResolver
 import ru.tpu.russiantpu.utility.requests.RequestService
-import java.io.IOException
 import java.util.*
 
 
@@ -39,13 +37,13 @@ class StartFragment : Fragment(), View.OnClickListener {
 
     private lateinit var loginButton: Button
     private lateinit var gotoRegisterButton: Button
-    private lateinit var videoView: ScalableVideoView
+    //private lateinit var videoView: ScalableVideoView
     private lateinit var splashView: View
     private lateinit var startUi: View
 
     private var requestService: RequestService? = null
 
-    private var isAnimationFinished = false
+    private var isAnimationFinished = true
     private var isTokenValid: Boolean? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +54,7 @@ class StartFragment : Fragment(), View.OnClickListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val layoutInflater = inflater.inflate(R.layout.fragment_start, container, false)
 
-        // Включаем видео на заднем плане из ресурсов
+/*        // Включаем видео на заднем плане из ресурсов
         videoView = layoutInflater.findViewById(R.id.video_view)
 
         try {
@@ -67,7 +65,7 @@ class StartFragment : Fragment(), View.OnClickListener {
             }
         } catch (e: IOException) {
             e.printStackTrace()
-        }
+        }*/
 
         startUi = layoutInflater.findViewById(R.id.start_views)
         splashView = layoutInflater.findViewById(R.id.splash_layout) as View
@@ -212,8 +210,8 @@ class StartFragment : Fragment(), View.OnClickListener {
     override fun onResume() {
         super.onResume()
         // Заново запускаем видео
-        if (videoView != null) {
+/*        if (videoView != null) {
             //videoView.start();
-        }
+        }*/
     }
 }

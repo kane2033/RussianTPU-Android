@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">PreTPU</string>
+    <string name="app_name">Dive In</string>
     <string name="language_error">Language not selected</string>
     <string name="language">Language</string>
     <string name="last_name">Last name</string>

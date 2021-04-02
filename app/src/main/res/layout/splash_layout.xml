@@ -19,7 +19,7 @@
         android:id="@+id/splash_screen_image"
         android:layout_width="256dp"
         android:layout_height="256dp"
-        tools:src="@drawable/ic_tpu_logo_aya_caption"
+        tools:src="@drawable/ic_rosatom_logo_caption"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

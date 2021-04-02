@@ -96,7 +96,7 @@
                     app:errorEnabled="true" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textview.MaterialTextView
+<!--            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/text_input_margin"
@@ -114,7 +114,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:paddingStart="12dp"
-                style="@android:style/Widget.Material.Spinner.Underlined"/>
+                style="@android:style/Widget.Material.Spinner.Underlined"/>-->
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
@@ -133,21 +133,21 @@
                 android:textSize="16sp"
                 style="@android:style/Widget.Material.Spinner.Underlined"/>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/text_input_margin"
-                android:text="@string/choose_language"
-                style="@style/text_view_16"/>
+            <!--            <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/text_input_margin"
+                            android:text="@string/choose_language"
+                            style="@style/text_view_16"/>
 
-            <Spinner
-                android:id="@+id/input_language_spinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/text_input_margin"
-                android:layout_marginBottom="@dimen/text_input_margin"
-                android:textSize="16sp"
-                style="@android:style/Widget.Material.Spinner.Underlined"/>
+                        <Spinner
+                            android:id="@+id/input_language_spinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/text_input_margin"
+                            android:layout_marginBottom="@dimen/text_input_margin"
+                            android:textSize="16sp"
+                            style="@android:style/Widget.Material.Spinner.Underlined"/>-->
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"

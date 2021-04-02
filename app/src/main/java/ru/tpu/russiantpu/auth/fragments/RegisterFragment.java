@@ -26,13 +26,10 @@ import com.mobsandgeeks.saripaar.annotation.Email;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.mobsandgeeks.saripaar.annotation.Pattern;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import ru.tpu.russiantpu.R;
-import ru.tpu.russiantpu.dto.GroupsDTO;
-import ru.tpu.russiantpu.dto.LanguageDTO;
 import ru.tpu.russiantpu.dto.TokensDTO;
 import ru.tpu.russiantpu.dto.UserDTO;
 import ru.tpu.russiantpu.main.activities.MainActivity;
@@ -40,10 +37,8 @@ import ru.tpu.russiantpu.utility.AuthService;
 import ru.tpu.russiantpu.utility.FormService;
 import ru.tpu.russiantpu.utility.SharedPreferencesService;
 import ru.tpu.russiantpu.utility.ToastService;
-import ru.tpu.russiantpu.utility.adapters.LanguagesAdapter;
 import ru.tpu.russiantpu.utility.callbacks.GenericCallback;
 import ru.tpu.russiantpu.utility.dialogFragmentServices.ErrorDialogService;
-import ru.tpu.russiantpu.utility.dialogFragmentServices.SearchListDialogService;
 import ru.tpu.russiantpu.utility.requests.GsonService;
 import ru.tpu.russiantpu.utility.requests.RequestService;
 import ru.tpu.russiantpu.utility.validation.SpinnerValidatorAdapter;
@@ -66,13 +61,13 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
     @NotEmpty(messageResId = R.string.empty_field_error)
     private TextInputEditText firstNameInput;
 
-    private final List<String> groupNames = new ArrayList<>();
-    private TextView groupInput;
+/*    private final List<String> groupNames = new ArrayList<>();
+    private TextView groupInput;*/
 
     private Spinner genderInput;
 
-    @NotEmpty(messageResId = R.string.empty_field_error)
-    private Spinner languageInput; //список выбора языка
+/*    @NotEmpty(messageResId = R.string.empty_field_error)
+    private Spinner languageInput; //список выбора языка*/
 
     @Pattern(regex = "(^$)|(^[+]\\d+$)", messageResId = R.string.phone_error) //optional, max 20
     private TextInputEditText phoneNumberInput;
@@ -105,9 +100,9 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
         passwordInput = layoutInflater.findViewById(R.id.input_password);
         firstNameInput = layoutInflater.findViewById(R.id.input_firstname);
         lastNameInput = layoutInflater.findViewById(R.id.input_lastname);
-        groupInput = layoutInflater.findViewById(R.id.input_group_dialog);
+        //groupInput = layoutInflater.findViewById(R.id.input_group_dialog);
         genderInput = layoutInflater.findViewById(R.id.input_gender_spinner);
-        languageInput = layoutInflater.findViewById(R.id.input_language_spinner);
+        //languageInput = layoutInflater.findViewById(R.id.input_language_spinner);
         phoneNumberInput = layoutInflater.findViewById(R.id.input_phone_number);
         checkBox = layoutInflater.findViewById(R.id.checkbox);
         registerButton = layoutInflater.findViewById(R.id.button_register);
@@ -126,7 +121,7 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
         //получаем язык системы
         language = Locale.getDefault().getLanguage();
 
-        //получение списка групп с сервиса
+        /*//получение списка групп с сервиса
         requestService.doRequest("studyGroup", language, new GenericCallback<String>() {
             @Override
             public void onResponse(String json) {
@@ -157,9 +152,9 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
             //выводим выбранную группу через dialog fragment в text view
             SearchListDialogService.showDialog(R.layout.fragment_search_list, groupNames, getFragmentManager(),
                     selectedGroup -> groupInput.setText(selectedGroup));
-        });
+        });*/
 
-        //инициализация адаптера выбора языка
+/*        //инициализация адаптера выбора языка
         final List<LanguageDTO> languageDTOS = new ArrayList<>(); //пустой список заполнится после получение результата с сервиса
         final LanguagesAdapter languagesInputAdapter = new LanguagesAdapter(requireContext(), languageDTOS);
         languagesInputAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -188,7 +183,7 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
                 activity.runOnUiThread(() -> progressBar.hide());
                 toastService.showToast(R.string.get_languages_error);
             }
-        });
+        });*/
 
         //если юзер регистрируется после авторизации
         //через сторонний сервис, заполняем имеющиеся поля
@@ -231,9 +226,9 @@ public class RegisterFragment extends Fragment implements Validator.ValidationLi
         String password = formService.getTextFromInput(passwordInput);
         String firstName = formService.getTextFromInput(firstNameInput);
         String lastName = formService.getTextFromInput(lastNameInput);
-        String groupName = formService.getGroup(groupInput, groupNames);
+        String groupName = "8В7Б";
         String gender = formService.getSelectedGender(genderInput); //пол не обязательное поле, поэтому может быть null
-        String selectedLanguage = formService.getSelectedLanguage(languageInput).getId();
+        String selectedLanguage = "e06ed586-dd3b-4751-9bed-764047793afa";
         String phoneNumber = formService.getTextFromInput(phoneNumberInput);
 
         //заполняем дто регистрации, которое будем отправлять на сервис

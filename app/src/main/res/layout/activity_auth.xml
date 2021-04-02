@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     tools:context="ru.tpu.russiantpu.auth.activities.AuthActivity">
 
-    <include layout="@layout/background_image" />
+<!--    <include layout="@layout/background_image" />-->
 
     <FrameLayout
         android:id="@+id/fragment_container"

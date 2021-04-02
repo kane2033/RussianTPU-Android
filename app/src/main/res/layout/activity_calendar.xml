@@ -18,7 +18,7 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:title="@string/calendar_title" />
 
-    <include layout="@layout/background_image" />
+<!--    <include layout="@layout/background_image" />-->
 
     <FrameLayout
         android:id="@+id/fragment_container"

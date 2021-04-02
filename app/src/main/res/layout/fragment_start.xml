@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.yqritc.scalablevideoview.ScalableVideoView
+<!--        <com.yqritc.scalablevideoview.ScalableVideoView
             android:id="@+id/video_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -19,7 +19,7 @@
             android:layout_alignParentBottom="true"
             android:layout_gravity="center"
             android:fitsSystemWindows="true"
-            app:scalableType="centerCrop" />
+            app:scalableType="centerCrop" />-->
 
         <ImageView
             android:id="@+id/imageView"
@@ -30,7 +30,7 @@
             android:layout_marginHorizontal="24dp"
             android:layout_marginTop="56dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_tpu_logo_aya_white_caption"
+            android:src="@drawable/ic_rosatom_logo_caption"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -64,7 +64,7 @@
             android:id="@+id/start_views"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="video_view, imageView,
+            app:constraint_referenced_ids="imageView,
         goto_login, goto_register"
             android:visibility="visible"
             tools:visibility="visible" />
